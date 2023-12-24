@@ -2,19 +2,62 @@ import * as React from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#D9695F",
+    fontSize: 60,
+    color: "#948FBF",
   },
 });
 
 function HomeScreen({ navigation }) {
+  let [fontsLoaded] = useFonts({
+    Pacifico_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={styles.title}>Make Deaths Count</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            fontFamily: "Pacifico_400Regular",
+            fontSize: 60,
+            color: "#D9695F",
+          }}
+        >
+          M
+        </Text>
+        <Text style={styles.title}>ake </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            fontFamily: "Pacifico_400Regular",
+            fontSize: 60,
+            color: "#D9695F",
+          }}
+        >
+          D
+        </Text>
+        <Text style={styles.title}>eaths </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            fontFamily: "Pacifico_400Regular",
+            fontSize: 60,
+            color: "#D9695F",
+          }}
+        >
+          C
+        </Text>
+        <Text style={styles.title}>ount</Text>
+      </View>
       <Button
         color="#D9695F"
         title="Sign In"
