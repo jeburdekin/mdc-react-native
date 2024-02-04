@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function SignInScreen({ navigation }) {
+export default function CreateAccountScreen({ navigation }) {
   const [user, onChangeUser] = React.useState("Email Address or Phone Number");
   const [password, onChangePassword] = React.useState("");
 
@@ -55,7 +55,7 @@ export default function SignInScreen({ navigation }) {
       <TouchableOpacity
         onPress={() => navigation.navigate("User Home")}
         style={styles.button}>    
-      <Text style={styles.buttonText}>Sign In</Text></TouchableOpacity>
+      <Text style={styles.buttonText}>Create Account</Text></TouchableOpacity>
     </View>
   );
 }
