@@ -6,6 +6,7 @@ import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import CreateAccountScreen from "./screens/CreateAccountScreen";
 import HomeScreen from "./screens/HomeScreen";
+import FeedbackScreen from './screens/FeedbackScreen';
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 // const styles = StyleSheet.create({});
@@ -20,6 +21,7 @@ function App() {
         <Stack.Screen name="Sign In" component={SignInScreen} />
         <Stack.Screen name="Create Account" component={CreateAccountScreen} />
         <Stack.Screen name="User Home" component={HomeScreen} />
+        <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

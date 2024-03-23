@@ -15,7 +15,10 @@ export default function HomeScreen({ navigation }) {
       <Button title="Download Survey" />
       <Button title="Notes" />
       <Button title="MDC Website" />
-      <Button title="Feedback" />
+      <Button
+        title="Feedback"
+        onPress={() => navigation.navigate("Feedback Screen")}
+      />
       <Button
         title="Log Out"
         onPress={() => navigation.navigate("Make Deaths Count")}
