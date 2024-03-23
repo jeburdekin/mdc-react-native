@@ -10,7 +10,9 @@ import {
   TouchableOpacity
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import DatePicker from "react-native-date-picker";
+// import DatePicker from "react-native-date-picker";
+
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12,
-    borderWidth: 0,
+    borderWidth: 1,
     padding: 10,
     fontSize: 14,
     backgroundColor: "white",
@@ -30,8 +32,9 @@ const styles = StyleSheet.create({
   pickerContainer: { 
     height: 40,
     margin: 12,
-    borderWidth: 1,
+    borderWidth: 0,
     backgroundColor: "white", 
+    borderColor: "black",
     justifyContent: 'center',
   },
   button: {
@@ -67,9 +70,24 @@ const styles = StyleSheet.create({
 export default function CreateAccountScreen({ navigation }) {
   const [user, onChangeUser] = React.useState("");
   const [password, onChangePassword] = React.useState("");
+  const [confirmPassword, onChangeConfirmPassword] = useState("");
+  const [interviewerCode, onChangeInterviewerCode] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const [age, setAge] = React.useState(null); 
+  const [birthDate, setBirthDate] = useState(''); // Make sure this line is uncommented
+  const formatDate = (date) => {
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  };
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setOpen(false); // Hide the picker
+    if (currentDate) {
+      setDate(currentDate);
+      setBirthDate(formatDate(currentDate)); // Update birthDate
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -94,31 +112,37 @@ export default function CreateAccountScreen({ navigation }) {
           secureTextEntry={true}
           placeholder="Confirm password"
           placeholderTextColor="black"
-          onChangeText={onChangePassword}
-          value={password}
+          onChangeText={onChangeConfirmPassword}
+          value={confirmPassword}
         />
         <TextInput
           style={styles.input}
-          secureTextEntry={true}
+          secureTextEntry={false}
           placeholder="Interviewer code, if applicable"
           placeholderTextColor="black"
-          onChangeText={onChangePassword}
-          value={password}
+          onChangeText={onChangeInterviewerCode}
+          value={interviewerCode}
         />
-        <Button title="Click to select age" onPress={() => setOpen(true)} />
-        <DatePicker
-          modal
-          open={open}
-          date={date}
-          mode="date"
-          onConfirm={(date) => {
-            setOpen(false)
-            setDate(date)
-         }}
-          onCancel={() => {
-            setOpen(false)
-          }}
-        />
+        
+
+
+        <TouchableOpacity onPress={() => setOpen(true)}>
+          <Text style={styles.input}>{birthDate || "Click to select birth date"}</Text>
+        </TouchableOpacity>
+        {open && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="date"
+            display="default"
+            is24Hour={true}
+            onChange={onChange}
+            onTouchCancel={() => setOpen(false)}
+          />
+        )}
+
+
+
         <View style={styles.pickerContainer}>
           <RNPickerSelect
             onValueChange={(value) => setGender(value)}
