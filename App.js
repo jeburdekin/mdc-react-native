@@ -22,6 +22,7 @@ function App() {
         <Stack.Screen name="Create Account" component={CreateAccountScreen} />
         <Stack.Screen name="User Home" component={HomeScreen} />
         <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
+        {/* <Stack.screen name="Create Survery Screen" component={SurveyScreen}/> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

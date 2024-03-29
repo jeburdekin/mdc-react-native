@@ -1,28 +1,63 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Button } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 // const styles = StyleSheet.create({});
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={styles.background}>
       <Text>User Home</Text>
-      <Button title="+ Create New Survey" />
-      <Button title="Drafts" />
-      <Button title="Ready to Send" />
-      <Button title="Sent" />
-      <Button title="Download Survey" />
-      <Button title="Notes" />
-      <Button title="MDC Website" />
-      <Button
-        title="Feedback"
-        onPress={() => navigation.navigate("Feedback Screen")}
-      />
-      <Button
-        title="Log Out"
-        onPress={() => navigation.navigate("Make Deaths Count")}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate("Create Survery Screen")}
+        style={styles.button}>
+        <Text style={styles.buttonText}>Create Survery</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Drafts</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Ready to Send</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Sent</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Downlaod Survey</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Notes</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>MDC Website</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Feedback Screen")} style={styles.button}>
+        <Text style={styles.buttonText}>Feedback</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")} style={styles.button}>
+        <Text style={styles.buttonText}>Log out</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  background : {
+    backgroundColor: "#FFFFF0",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button : {
+    backgroundColor: '#E57C63',
+    width: 175,
+    padding: 12,
+    borderRadius:10,
+    marginTop: 15,
+  }
+,
+  buttonText : {
+    textAlign: "center",
+    color: "#202020",
+    fontSize: 20,
+  }
+});

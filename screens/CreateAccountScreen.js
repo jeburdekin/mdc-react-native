@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: '#fffcf7', 
+    backgroundColor: '#fffcf7',
   },
   input: {
     height: 40,
@@ -29,11 +29,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     backgroundColor: "white",
   },
-  pickerContainer: { 
+  pickerContainer: {
     height: 40,
     margin: 12,
     borderWidth: 0,
-    backgroundColor: "white", 
+    backgroundColor: "white",
     borderColor: "black",
     justifyContent: 'center',
   },
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 0,
     color: 'black',
-    paddingRight: 30, 
+    paddingRight: 30,
   },
   inputAndroid: {
     fontSize: 14,
@@ -75,7 +75,7 @@ export default function CreateAccountScreen({ navigation }) {
   const [gender, setGender] = React.useState("");
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [age, setAge] = React.useState(null); 
+  const [age, setAge] = React.useState(null);
   const [birthDate, setBirthDate] = useState(''); // Make sure this line is uncommented
   const formatDate = (date) => {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
@@ -123,7 +123,7 @@ export default function CreateAccountScreen({ navigation }) {
           onChangeText={onChangeInterviewerCode}
           value={interviewerCode}
         />
-        
+
 
 
         <TouchableOpacity onPress={() => setOpen(true)}>

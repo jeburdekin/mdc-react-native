@@ -32,8 +32,9 @@ const FeedbackScreen = () => {
       <View style={styles.container}>
         <Text style={styles.questionText}>How was your experience?</Text>
         <Rating
-          type="star"
+          tintColor='rgba(52, 52, 52, 1)'
           ratingCount={5}
+          startingValue={5}
           imageSize={40}
           showRating
           onFinishRating={ratingCompleted}
@@ -52,14 +53,14 @@ const FeedbackScreen = () => {
           <TouchableOpacity
             style={styles.buttonYesNo}
             onPress={() => setFollowUp(true)}
-          >
-            <Text style={followUp === true ? styles.buttonTextBold : styles.buttonText}>Yes</Text>
+            >
+          <Text style={followUp === true ? styles.buttonTextBold : styles.buttonText}>Yes</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonYesNo}
             onPress={() => setFollowUp(false)}
-          >
-            <Text style={followUp === false ? styles.buttonTextBold : styles.buttonText}>No</Text>
+            >
+          <Text style={followUp === false ? styles.buttonTextBold : styles.buttonText}>No</Text>
           </TouchableOpacity>
         </View>
         <Button
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+
 });
 
 export default FeedbackScreen;

@@ -59,14 +59,14 @@ export default function SplashScreen({ navigation }) {
         <Text style={styles.title}>ount</Text>
       </View>
 
-       <TouchableOpacity onPress={() => navigation.navigate("Sign In")} 
-                style={{backgroundColor: '#D9695F', width: 175, padding: 12, borderRadius:10, marginTop: 40}}>
+      <TouchableOpacity onPress={() => navigation.navigate("Sign In")}
+        style={{backgroundColor: '#D9695F', width: 175, padding: 12, borderRadius:10, marginTop: 40}}>
         <Text style={styles.buttonText}>Sign In</Text>
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => navigation.navigate("Create Account")} 
-                style={styles.button}>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Create Account")}
+        style={styles.button}>
         <Text style={styles.buttonText}>Create Account</Text>
-    </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 }
