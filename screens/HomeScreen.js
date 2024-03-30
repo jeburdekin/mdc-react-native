@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.buttonText}>Sent</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Downlaod Survey</Text>
+            <Text style={styles.buttonText}>Download Survey</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Notes</Text>

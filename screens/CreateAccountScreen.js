@@ -7,12 +7,16 @@ import {
   Text,
   Button,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 // import DatePicker from "react-native-date-picker";
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +68,44 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fffcf7",
     fontSize: 20,
-  }
+  },
+  whiteBlock1: {
+    backgroundColor: "#FFFFFF",
+    width: 300,
+    height: 60,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    top: windowHeight * 0.161,
+    alignItems: "center",
+    zIndex: 1,
+  },
+  whiteBlock2: {
+    backgroundColor: "#FFFFFF",
+    width: 300,
+    height: 60,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    top: windowHeight * 0.165,
+    alignItems: "center",
+    zIndex: 1,
+  },
+  whiteBlock3: {
+    backgroundColor: "#FFFFFF",
+    width: 300,
+    height: 60,
+    borderRadius: 10,
+    top: windowHeight * 0.165,
+    alignItems: "center",
+    zIndex: 1,
+  },
+  orangeBlock: {
+    backgroundColor: "#E57C63",
+    width: windowWidth*0.9,
+    height: windowHeight*0.6,
+    borderRadius: 10,
+    top: windowHeight * 0.04,
+    position: "absolute",
+  },
 });
 
 export default function CreateAccountScreen({ navigation }) {
@@ -125,8 +166,6 @@ export default function CreateAccountScreen({ navigation }) {
           value={interviewerCode}
         />
 
-
-
         <TouchableOpacity onPress={() => setOpen(true)}>
           <Text style={styles.input}>{birthDate || "Click to select birth date"}</Text>
         </TouchableOpacity>
@@ -141,8 +180,6 @@ export default function CreateAccountScreen({ navigation }) {
             onTouchCancel={() => setOpen(false)}
           />
         )}
-
-
 
         <View style={styles.pickerContainer}>
           <RNPickerSelect
@@ -178,15 +215,17 @@ export default function CreateAccountScreen({ navigation }) {
           onChangeText={setLocation}
           value={location}
         />
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")}
+            style={styles.button}>
+            <Text style={styles.buttonText}>Back to Home</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("User Home")}
+            style={styles.button}>
+            <Text style={styles.buttonText}>Create Account</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
-      <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")}
-        style={styles.button}>
-        <Text style={styles.buttonText}>Back to Home</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("User Home")}
-        style={styles.button}>
-        <Text style={styles.buttonText}>Create Account</Text>
-      </TouchableOpacity>
     </View>
   );
 }
