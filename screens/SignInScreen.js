@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#fffcf7",
   },
   input: {
     height: 40,
@@ -37,14 +38,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   image: {
-    width: 100, 
+    width: 100,
     height: 100,
-    resizeMode: 'contain', 
+    resizeMode: 'contain',
   }
 });
 
 export default function SignInScreen({ navigation }) {
-  const [user, onChangeUser] = React.useState("Email Address or Phone Number");
+  const [user, onChangeUser] = React.useState("");
   const [password, onChangePassword] = React.useState("");
 
   return (
@@ -59,7 +60,7 @@ export default function SignInScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          secureTextEntry={true} 
+          secureTextEntry={true}
           placeholder="Password"
           onChangeText={onChangePassword}
           value={password}
@@ -69,7 +70,7 @@ export default function SignInScreen({ navigation }) {
           <Text style={styles.buttonText}>Back to Home</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("User Home")}
-          style={styles.button}>    
+          style={styles.button}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
       </SafeAreaView>

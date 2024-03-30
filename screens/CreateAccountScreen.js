@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     height: 40,
     margin: 12,
-    borderWidth: 0,
+    borderWidth: 1,
     backgroundColor: "white",
     borderColor: "black",
     justifyContent: 'center',
@@ -77,6 +77,7 @@ export default function CreateAccountScreen({ navigation }) {
   const [open, setOpen] = useState(false);
   const [age, setAge] = React.useState(null);
   const [birthDate, setBirthDate] = useState(''); // Make sure this line is uncommented
+  const [location, setLocation] = React.useState("");
   const formatDate = (date) => {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   };
@@ -172,11 +173,10 @@ export default function CreateAccountScreen({ navigation }) {
         </View>
         <TextInput
           style={styles.input}
-          secureTextEntry={true}
           placeholder="Select Location"
           placeholderTextColor="black"
-          onChangeText={onChangePassword}
-          value={password}
+          onChangeText={setLocation}
+          value={location}
         />
       </SafeAreaView>
       <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")}
