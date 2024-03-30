@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFF0",
     width: windowWidth,
     height: windowHeight/9.5,
-    borderBlockColor: "gray",
+    borderBlockColor: "#1D1D1D",
     borderBottomWidth: 4,
     position: "absolute",
   },
@@ -57,6 +57,14 @@ const styles = StyleSheet.create({
     top: windowHeight * 0.013,
     left: windowWidth * 0.775,
     position: "absolute",
+  },
+  logo : {
+    zIndex: 1,
+    width: windowWidth/2,
+    height: windowWidth/5,
+    top: windowHeight * 0.005,
+    left: windowWidth * 0.2,
+    position: "absolute",
   }
 });
 
@@ -69,6 +77,7 @@ export default function HomeScreen({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate("Profile Screen")} style={styles.imageTouch}>
       </TouchableOpacity>
       <Image source={require ("../assets/Layer 1.png")} style={styles.image}/>
+      <Image source={require ("../assets/mdc logo short.png")} style={styles.logo}/>
       <View style={styles.background}>
         <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.navigate("Survey Manager")} style={styles.button}>
