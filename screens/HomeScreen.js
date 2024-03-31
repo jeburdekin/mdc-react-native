@@ -83,7 +83,7 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Survey Manager")} style={styles.button}>
             <Text style={styles.buttonText}>Create Survery</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate("Drafts Screen")} style={styles.button}>
             <Text style={styles.buttonText}>Drafts</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Download Survey</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate("Notes Screen")} style={styles.button}>
             <Text style={styles.buttonText}>Notes</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => Linking.openURL('https://www.makedeathscount.org')} style={styles.button}>

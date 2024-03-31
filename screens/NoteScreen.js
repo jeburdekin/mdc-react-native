@@ -27,24 +27,18 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#D9695F',
-    width: 175,
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "#fffcf7",
-    fontSize: 20,
-  },
+    height: 40,
+    width: 250,
+    margin: 12,
+  }
 });
 
-export default function SurveyScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <SafeAreaView style={{width: '100%', alignItems: "center"}}>
-          <Text>Survey Screen</Text>
-      </SafeAreaView>
-    </View>
-  );
+export default class NoteScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Draft Screen</Text>
+      </View>
+    );
+  }
 }
