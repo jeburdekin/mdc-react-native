@@ -86,13 +86,13 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Drafts Screen")} style={styles.button}>
             <Text style={styles.buttonText}>Drafts</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate("Ready to Send")} style={styles.button}>
             <Text style={styles.buttonText}>Ready to Send</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate("Sent Surveys")} style={styles.button}>
             <Text style={styles.buttonText}>Sent</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate("Download Surveys")} style={styles.button}>
             <Text style={styles.buttonText}>Download Survey</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Notes Screen")} style={styles.button}>

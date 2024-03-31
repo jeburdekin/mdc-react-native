@@ -33,11 +33,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class NoteScreen extends React.Component {
+export default class DownloadSurveyScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Notes Screen</Text>
+        <Text>Download Surveys Screen</Text>
       </View>
     );
   }
