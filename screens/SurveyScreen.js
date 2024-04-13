@@ -83,58 +83,61 @@
 // }
 
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
+
+const questions = [
+  { label: 'Question 1', name: 'question1' },
+  { label: 'Question 2', name: 'question2' },
+  { label: 'Question 3', name: 'question3'},
+  { label: 'Question 4', name: 'question4'},
+  { label: 'Question 5', name: 'question5'},
+  { label: 'Question 6', name: 'question6'},
+  { label: 'Question 7', name: 'question7'},
+  { label: 'Question 8', name: 'question8'},
+  { label: 'Question 9', name: 'question9'},
+  { label: 'Question 10', name: 'question10'},
+  // Add more questions here
+];
+
+const questionsPerPage = [3, 5, 2]; // Define your own values here
 
 export default function SurveyScreen() {
   const { control, handleSubmit, formState: { errors } } = useForm();
   const [currentPage, setCurrentPage] = useState(1);
 
   const onSubmit = (values) => {
-    if (currentPage === 1) {
-      setCurrentPage(2);
+    if (currentPage < questionsPerPage.length) {
+      setCurrentPage(currentPage + 1);
     } else {
       console.log(values);
     }
   };
 
+  const startQuestion = questionsPerPage.slice(0, currentPage - 1).reduce((a, b) => a + b, 0);
+  const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
+
   return (
     <View>
-      {currentPage === 1 && (
+      {questions.slice(startQuestion, endQuestion).map((question, index) => (
         <Controller
+          key={index}
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              label="Question 1"
+              label={question.label}
               onBlur={onBlur}
               onChangeText={value => onChange(value)}
               value={value}
             />
           )}
-          name="question1"
+          name={question.name}
           defaultValue=""
         />
-      )}
-
-      {currentPage === 2 && (
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Question 2"
-              onBlur={onBlur}
-              onChangeText={value => onChange(value)}
-              value={value}
-            />
-          )}
-          name="question2"
-          defaultValue=""
-        />
-      )}
-
+      ))}
       <Button onPress={handleSubmit(onSubmit)}>
-        {currentPage === 1 ? 'Next' : 'Submit'}
+        {currentPage < questionsPerPage.length ? 'Next' : 'Submit'}
       </Button>
     </View>
   );
