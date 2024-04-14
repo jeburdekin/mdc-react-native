@@ -51,7 +51,7 @@
 // }
 
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, TextInput, RadioButton, Text, useTheme } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import Papa from 'papaparse';
@@ -112,11 +112,15 @@ export default function SurveyScreen() {
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
 
   return (
-  <View style={{ flex: 1 }}>
+  <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
+    style={{ flex: 1}}
+    >
     <ScrollView style={styles.container}>
       {questions.slice(startQuestion, endQuestion).map((question, index) => (
         <View style={{marginTop: 10, alignContent: "center"}} key={index}>
-        <Text style={{marginBottom: 10, marginLeft: 3, textAlign:'auto', paddingLeft: 8}}>{question.label}</Text>
+        <Text style={{marginBottom: 10, paddingLeft: 10, textAlign:'auto', marginRight: 3}}>{question.label}</Text>
         {question.questionType === 'Yes or No' ? (
           <RadioButton.Group
             onValueChange={newValue => {
@@ -170,6 +174,6 @@ export default function SurveyScreen() {
         {currentPage < questionsPerPage.length ? 'Next' : 'Submit'}
       </Button>
     </View>
-  </View>
+  </KeyboardAvoidingView>
   );
 }
