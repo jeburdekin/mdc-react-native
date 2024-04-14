@@ -81,7 +81,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.background}>
         <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.navigate("Survey Manager")} style={styles.button}>
-            <Text style={styles.buttonText}>Create Survery</Text>
+            <Text style={styles.buttonText}>Create Survey</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Drafts Screen")} style={styles.button}>
             <Text style={styles.buttonText}>Drafts</Text>
