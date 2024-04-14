@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: windowHeight * 0.48,
     alignItems: "center",
+
   },
   logo: {
     width: windowWidth,
@@ -165,7 +166,7 @@ export default function CreateAccountScreen({ navigation }) {
   };
 
   return (
-      <SafeAreaView style={{width: '100%', alignItems: "center", flex: 1}}>
+    <SafeAreaView style={{width: '100%', alignItems: "center", flex: 1, backgroundColor:"#fffcf7"}}>
       <Image source={require ("../assets/MDC-logo long.png")} style={styles.logo}/>
       <View style={styles.orangeBlock}>
         <View style={styles.whiteBlock1}>
@@ -272,6 +273,6 @@ export default function CreateAccountScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       </View>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 }

@@ -8,7 +8,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   background : {
-    backgroundColor: "#FFFFF0",
+    backgroundColor: "#fffcf7",
     height: windowHeight,
     alignItems: "center",
   },

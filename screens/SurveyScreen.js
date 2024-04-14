@@ -57,33 +57,13 @@ import { useForm, Controller } from 'react-hook-form';
 import Papa from 'papaparse';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
-const questionsPerPage = [3, 5, 2, 6, 10]; // Define your own values here
+const questionsPerPage = [3, 7, 6, 8, 2]; // Define your own values here
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fffcf7",
-  },
-  input: {
-    height: 40,
-    width: 250,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: "white",
-  },
-  button: {
-    backgroundColor: '#D9695F',
-    width: 175,
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "#fffcf7",
-    fontSize: 20,
-  },
+  }
 });
 
 export default function SurveyScreen() {
@@ -132,10 +112,11 @@ export default function SurveyScreen() {
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
 
   return (
+  <View style={{ flex: 1 }}>
     <ScrollView style={styles.container}>
       {questions.slice(startQuestion, endQuestion).map((question, index) => (
-        <View key={index}>
-        <Text style={{margin: 5, textAlign:'auto', paddingLeft:8}}>{question.label}</Text>
+        <View style={{marginTop: 10, alignContent: "center"}} key={index}>
+        <Text style={{marginBottom: 10, marginLeft: 3, textAlign:'auto', paddingLeft: 8}}>{question.label}</Text>
         {question.questionType === 'Yes or No' ? (
           <RadioButton.Group
             onValueChange={newValue => {
@@ -176,18 +157,19 @@ export default function SurveyScreen() {
         )}
       </View>
     ))}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Button style={{margin:10}} onPress={() => {
-          if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-          }
-        }}>
-          Back
-        </Button>
-        <Button style={{margin:10}} onPress={handleSubmit(onSubmit)}>
-          {currentPage < questionsPerPage.length ? 'Next' : 'Submit'}
-        </Button>
-      </View>
     </ScrollView>
+    <View style={{ flexDirection: 'row', padding: 5, paddingLeft:10, paddingRight:10, justifyContent: 'space-between' }}>
+      <Button mode="elevated" style={{margin:10}} onPress={() => {
+        if (currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      }}>
+        Back
+      </Button>
+      <Button mode="elevated" style={{margin:10}} onPress={handleSubmit(onSubmit)}>
+        {currentPage < questionsPerPage.length ? 'Next' : 'Submit'}
+      </Button>
+    </View>
+  </View>
   );
 }
