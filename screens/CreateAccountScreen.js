@@ -2,22 +2,6 @@ import * as React from "react";
 import { useState } from "react";
 
 import {
-  useFonts,
-  OpenSans_300Light,
-  OpenSans_400Regular,
-  OpenSans_500Medium,
-  OpenSans_600SemiBold,
-  OpenSans_700Bold,
-  OpenSans_800ExtraBold,
-  OpenSans_300Light_Italic,
-  OpenSans_400Regular_Italic,
-  OpenSans_500Medium_Italic,
-  OpenSans_600SemiBold_Italic,
-  OpenSans_700Bold_Italic,
-  OpenSans_800ExtraBold_Italic,
-} from '@expo-google-fonts/open-sans';
-
-import {
   SafeAreaView,
   StyleSheet,
   View,
@@ -27,7 +11,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 // import DatePicker from "react-native-date-picker";
@@ -40,7 +25,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fffcf7',
+    justifyContent: "center",
   },
   input: {
     height: 40,
@@ -60,6 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#E2E2E2",
     justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: '#E57C63',
@@ -132,6 +118,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: windowHeight * 0.48,
     alignItems: "center",
+
   },
   logo: {
     width: windowWidth,
@@ -149,7 +136,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10,
     backgroundColor: "#E2E2E2",
-  }
+  },
+  screen: {
+    backgroundColor: "#fffcf7",
+  },
 });
 
 export default function CreateAccountScreen({ navigation }) {
@@ -176,8 +166,7 @@ export default function CreateAccountScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={{width: '100%', alignItems: "center"}}>
+    <SafeAreaView style={{width: '100%', alignItems: "center", flex: 1, backgroundColor:"#fffcf7"}}>
       <Image source={require ("../assets/MDC-logo long.png")} style={styles.logo}/>
       <View style={styles.orangeBlock}>
         <View style={styles.whiteBlock1}>
@@ -284,7 +273,6 @@ export default function CreateAccountScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       </View>
-      </SafeAreaView>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -10,16 +10,19 @@ import {
   TouchableOpacity,
   Image,
   KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  container: {
     backgroundColor: "#fffcf7",
   },
   input: {
@@ -98,7 +101,8 @@ export default function SignInScreen({ navigation }) {
   const [password, onChangePassword] = React.useState("");
 
   return (
-    <KeyboardAvoidingView style={styles.container} keyboardVerticalOffset={100} behavior="padding">
+    <ScrollView contentContainerStyle={styles.screen}>
+    <KeyboardAvoidingView style={styles.container} behavior="position">
       <SafeAreaView style={{width: '100%'}}>
         <Image
           source={require("../assets/mdc-map.png")}
@@ -111,7 +115,7 @@ export default function SignInScreen({ navigation }) {
             <TextInput
               style={styles.input}
               onChangeText={onChangeUser}
-              secureTextEntry={true}
+              secureTextEntry={false}
               value={user}
               placeholder="Email Address or Phone Number"
             />
@@ -138,5 +142,6 @@ export default function SignInScreen({ navigation }) {
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
+    </ScrollView>
   );
 }

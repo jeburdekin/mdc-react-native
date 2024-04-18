@@ -1,7 +1,6 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Button, TouchableOpacity, Image, Linking, Dimensions} from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Button, TouchableOpacity, Image, Linking, Dimensions, ScrollView} from "react-native";
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
-
 // const styles = StyleSheet.create({});
 
 const windowWidth = Dimensions.get('window').width;
@@ -9,7 +8,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   background : {
-    backgroundColor: "#FFFFF0",
+    backgroundColor: "#fffcf7",
     height: windowHeight,
     alignItems: "center",
   },
@@ -78,10 +77,11 @@ export default function HomeScreen({ navigation }) {
       </TouchableOpacity>
       <Image source={require ("../assets/Layer 1.png")} style={styles.image}/>
       <Image source={require ("../assets/mdc logo short.png")} style={styles.logo}/>
+      <ScrollView>
       <View style={styles.background}>
         <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.navigate("Survey Manager")} style={styles.button}>
-            <Text style={styles.buttonText}>Create Survery</Text>
+            <Text style={styles.buttonText}>Create Survey</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Drafts Screen")} style={styles.button}>
             <Text style={styles.buttonText}>Drafts</Text>
@@ -109,6 +109,7 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </SafeAreaView>
       </View>
+      </ScrollView>
     </View>
   );
 }
