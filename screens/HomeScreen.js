@@ -1,114 +1,189 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Button, TouchableOpacity, Image, Linking, Dimensions, ScrollView} from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Linking,
+  Dimensions,
+  ScrollView,
+} from "react-native";
+import { Button } from "react-native-paper";
+
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 // const styles = StyleSheet.create({});
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-  background : {
+  background: {
     backgroundColor: "#fffcf7",
     height: windowHeight,
     alignItems: "center",
   },
-  button : {
-    backgroundColor: '#E57C63',
-    width: windowWidth * 0.75,
+  button: {
+    backgroundColor: "#E57C63",
+    width: windowWidth * 0.85,
     padding: 12,
-    borderRadius:10,
+    borderRadius: 20,
     marginTop: 20,
   },
-  buttonText : {
-    textAlign: "center",
+  buttonText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 20
   },
-  rectangle1 : {
+  rectangle1: {
     zIndex: 1,
     backgroundColor: "#DFDFDF",
     opacity: 0.6,
     width: windowWidth,
-    height: windowHeight/9.5
+    height: windowHeight / 9.5,
   },
-  rectangle2 : {
+  rectangle2: {
     backgroundColor: "#FFFFF0",
     width: windowWidth,
-    height: windowHeight/9.5,
+    height: windowHeight / 9.5,
     borderBlockColor: "#1D1D1D",
     borderBottomWidth: 4,
     position: "absolute",
   },
   imageTouch: {
     zIndex: 3,
-    width: windowWidth/6,
-    height: windowWidth/6,
+    width: windowWidth / 6,
+    height: windowWidth / 6,
     borderRadius: 30,
     top: windowHeight * 0.013,
     left: windowWidth * 0.75,
     position: "absolute",
   },
-  image : {
+  image: {
     zIndex: 2,
-    width: windowWidth/6,
-    height: windowWidth/6,
+    width: windowWidth / 6,
+    height: windowWidth / 6,
     borderRadius: 30,
     top: windowHeight * 0.013,
     left: windowWidth * 0.775,
     position: "absolute",
   },
-  logo : {
+  logo: {
     zIndex: 1,
-    width: windowWidth/2,
-    height: windowWidth/5,
+    width: windowWidth / 2,
+    height: windowWidth / 5,
     top: windowHeight * 0.005,
     left: windowWidth * 0.2,
     position: "absolute",
-  }
+  },
+  buttonIcon: {
+    color: "#FFFFFF",
+    fontSize: 35,
+    flex: 2,
+  },
 });
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View>
-      <View style={styles.rectangle2}/>
-      <View style={styles.rectangle1}>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate("Profile Screen")} style={styles.imageTouch}>
-      </TouchableOpacity>
-      <Image source={require ("../assets/Layer 1.png")} style={styles.image}/>
-      <Image source={require ("../assets/mdc logo short.png")} style={styles.logo}/>
-      <ScrollView>
-      <View style={styles.background}>
-        <SafeAreaView>
-          <TouchableOpacity onPress={() => navigation.navigate("Survey Manager")} style={styles.button}>
-            <Text style={styles.buttonText}>Create Survey</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Drafts Screen")} style={styles.button}>
-            <Text style={styles.buttonText}>Drafts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Ready to Send")} style={styles.button}>
-            <Text style={styles.buttonText}>Ready to Send</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Sent Surveys")} style={styles.button}>
-            <Text style={styles.buttonText}>Sent</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Download Surveys")} style={styles.button}>
-            <Text style={styles.buttonText}>Download Survey</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Notes Screen")} style={styles.button}>
-            <Text style={styles.buttonText}>Notes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => Linking.openURL('https://www.makedeathscount.org')} style={styles.button}>
-            <Text style={styles.buttonText}>MDC Website</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Feedback Screen")} style={styles.button}>
-            <Text style={styles.buttonText}>Feedback</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")} style={styles.button}>
-            <Text style={styles.buttonText}>Log out</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </View>
+    <View style={{flex: 1}}>
+      <View style={styles.rectangle2} />
+      <View style={styles.rectangle1}></View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Profile Screen")}
+        style={styles.imageTouch}
+      ></TouchableOpacity>
+      <Image source={require("../assets/Layer 1.png")} style={styles.image} />
+      <Image
+        source={require("../assets/mdc logo short.png")}
+        style={styles.logo}
+      />
+      <ScrollView style={{flexGrow: 1}}>
+        <View style={styles.background}>
+          <SafeAreaView>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              contentStyle={{ flexDirection: "row"}}
+              icon="circle-edit-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Survey Manager")}
+            >
+              <Text style={styles.buttonText}>Create Survey</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="clipboard-pulse-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Drafts Screen")}
+            >
+              <Text style={styles.buttonText}>Drafts</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="clipboard-arrow-up-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Ready to Send")}
+            >
+              <Text style={styles.buttonText}>Ready to Send</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="clipboard-check-multiple-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Sent Surveys")}
+            >
+              <Text style={styles.buttonText}>Sent Surveys</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="cloud-download-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Download Surveys")}
+            >
+              <Text style={styles.buttonText}>Download Surveys</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="book-open-page-variant-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Notes Screen")}
+            >
+              <Text style={styles.buttonText}>Notes</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="compass-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => Linking.openURL("https://www.makedeathscount.org")}
+            >
+              <Text style={styles.buttonText}>MDC Website</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="comment-question-outline"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Feedback Screen")}
+            >
+              <Text style={styles.buttonText}>Feedback</Text>
+            </Button>
+            <Button
+              mode="elevated"
+              style={styles.button}
+              icon="logout"
+              labelStyle={styles.buttonIcon}
+              onPress={() => navigation.navigate("Make Deaths Count")}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </Button>
+          </SafeAreaView>
+        </View>
       </ScrollView>
     </View>
   );

@@ -48,6 +48,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@iconify/icons-material-symbols": "^1.2.58",
+    "@iconify/react": "^4.1.1",
     "@types/papaparse": "^5.3.14",
     "metro-config": "^0.80.5"
   },
