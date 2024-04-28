@@ -38,7 +38,7 @@ export default function SurveyScreen() {
     const storage = getStorage();
     const storageRef = ref(
       storage,
-      "gs://mdc-app-proto.appspot.com/AutopsyQuestionsFinal.csv"
+      "gs://mdc-app-proto.appspot.com/Interviewer Questions.csv"
     );
 
     getDownloadURL(storageRef)
@@ -50,7 +50,8 @@ export default function SurveyScreen() {
               header: true,
               complete: function (results) {
                 const questions = results.data.map((row) => ({
-                  label: row["#"] + ": " + row["Details"],
+                  order: row["Order"],
+                  details: row["Details"],
                   id: row["Question ID"],
                   questionType: row["Question Type"],
                   response: "",
@@ -118,7 +119,7 @@ export default function SurveyScreen() {
                 marginRight: 3,
               }}
             >
-              {question.label}
+              {`Question ${question.Order}: ${question.details}`}
             </Text>
             {question.questionType === "Y/N" ? (
               <RadioButton.Group
