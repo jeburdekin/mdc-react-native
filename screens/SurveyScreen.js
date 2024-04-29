@@ -78,12 +78,15 @@ const styles = StyleSheet.create({
 
 const questionTypeComponents = {
   text: Text_Q,
+  Text: Text_Q,
+  note: Text_Q,
   today: Today_Q,
   start: Start_Q,
   integer: IntegerInput,
   ageGroup: ageGroup_Q,
   YES_NO: YesNo_Q,
   HIGH_LOW_VERY: HighLowVery_Q,
+  YES_NO_REF: YesNoDKRef_Q,
   YES_NO_DK_REF: YesNoDKRef_Q,
   YesNODKRef2: YesNODKRef2_Q,
   D_M_DK_Ref: D_M_DK_Ref_Q,
@@ -113,7 +116,7 @@ const questionTypeComponents = {
   select_500: select_500_Q,
   select_501: select_501_Q,
   select_502: select_502_Q,
-  Select_510: select_510_Q,
+  select_510: select_510_Q,
   select_512: select_512_Q,
   select_511: select_511_Q,
   select_520: select_520_Q,
@@ -187,7 +190,7 @@ export default function SurveyScreen() {
     // Check if all questions on the current page have been answered
     const allAnswered = questions
       .slice(startQuestion, endQuestion)
-      .every((question) => responses[question.questionID].trim() !== "");
+      .every((question) => responses[question.questionID] !== null && responses[question.questionID] !== undefined);
 
     if (allAnswered) {
       if (currentPage < questionsPerPage.length) {
