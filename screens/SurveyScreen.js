@@ -64,6 +64,14 @@ import {
   Today_Q,
   Start_Q,
   IntegerInput,
+  DateQuestionType,
+  Units_Q,
+  UnitsSC_Q,
+  Units2_Q,
+  Units3_Q,
+  Units1_Q,
+  Units4_Q,
+  Units5_Q,
 } from "../Logic Files/QuestionTypes";
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
@@ -80,8 +88,16 @@ const questionTypeComponents = {
   text: Text_Q,
   Text: Text_Q,
   note: Text_Q,
+  date: DateQuestionType,
   today: Today_Q,
   start: Start_Q,
+  units: Units_Q,
+  unitssc: UnitsSC_Q,
+  units_1: Units1_Q,
+  units_2: Units2_Q,
+  units_3: Units3_Q,
+  units_4: Units4_Q,
+  units_5: Units5_Q,
   integer: IntegerInput,
   ageGroup: ageGroup_Q,
   YES_NO: YesNo_Q,
@@ -136,7 +152,12 @@ export default function SurveyScreen() {
   const [questionsPerPage, setQuestionsPerPage] = useState([]);
   const { colors } = useTheme();
   const [responses, setResponses] = useState({});
+  const [startTime, setStartTime] = useState(new Date());
+
   useEffect(() => {
+    if (!startTime) {
+      setStartTime(new Date());
+    }
     const fetchAndParseCSV = async () => {
       try {
         const storage = getStorage();
@@ -181,6 +202,7 @@ export default function SurveyScreen() {
     fetchAndParseCSV();
   }, []);
 
+
   // Calculate the range of questions on the current page
   const startQuestion = questionsPerPage
     .slice(0, currentPage - 1)
@@ -219,8 +241,7 @@ export default function SurveyScreen() {
     >
       <ScrollView style={styles.container}>
         {questions.slice(startQuestion, endQuestion).map((question, index) => {
-          const QuestionComponent =
-            questionTypeComponents[question.questionType];
+          const QuestionComponent = questionTypeComponents[question.questionType];
           return (
             <View style={{ marginTop: 10, alignContent: "center" }} key={index}>
               <View
@@ -242,6 +263,8 @@ export default function SurveyScreen() {
                 </Text>
               </View>
               {QuestionComponent ? (
+                <>
+                {question.questionType === 'start' && <Start_Q startTime={startTime} />}
                 <QuestionComponent
                   onChange={(newValue) => {
                     setResponses((prevResponses) => ({
@@ -251,6 +274,7 @@ export default function SurveyScreen() {
                   }}
                   value={responses[question.questionID]}
                 />
+                </>
               ) : (
                 <Text>Unsupported question type: {question.questionType}</Text>
               )}
