@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import {
   Button,
-  TextInput,
-  RadioButton,
+  IconButton,
   Text,
   useTheme,
 } from "react-native-paper";
