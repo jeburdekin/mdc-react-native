@@ -14,6 +14,7 @@ import DraftScreen from "./screens/DraftScreen";
 import PreparedSurvScreen from "./screens/PreparedSurvScreen";
 import SentSurvScreen from "./screens/SentSurvScreen";
 import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
+import SurveyManagerScreen from "./screens/SurveyManagerScreen";
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 // const styles = StyleSheet.create({});
@@ -50,13 +51,14 @@ function App() {
         <Stack.Screen name="Create Account" component={CreateAccountScreen} />
         <Stack.Screen name="User Home" component={HomeScreen} />
         <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
-        <Stack.Screen name="Survey Manager" component={SurveyScreen} />
+        <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
         <Stack.Screen name="Profile Screen" component={ProfileScreen} />
         <Stack.Screen name="Notes Screen" component={NoteScreen} />
         <Stack.Screen name="Drafts Screen" component={DraftScreen} />
         <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
         <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
         <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
+        <Stack.Screen name="Survey Screen" component={SurveyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
