@@ -71,6 +71,7 @@ import {
   Units1_Q,
   Units4_Q,
   Units5_Q,
+  Audio_Q,
 } from "../Logic Files/QuestionTypes";
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
@@ -87,6 +88,7 @@ const questionTypeComponents = {
   text: Text_Q,
   Text: Text_Q,
   note: Text_Q,
+//  audio: Audio_Q,
   date: DateQuestionType,
   today: Today_Q,
   start: Start_Q,
@@ -152,6 +154,7 @@ export default function SurveyScreen() {
   const { colors } = useTheme();
   const [responses, setResponses] = useState({});
   const [startTime, setStartTime] = useState(new Date());
+  const [shownTip, setShownTip] = useState(null);
 
   useEffect(() => {
     if (!startTime) {
@@ -181,6 +184,8 @@ export default function SurveyScreen() {
               questionID: row["Question ID"],
               questionType: row["Question Type"],
               details: row["Details"],
+              showCondition: row["Show Condition"],
+              tip: row["Tip"],
               response: "",
             }));
             setQuestions(questions);
@@ -207,6 +212,7 @@ export default function SurveyScreen() {
     .slice(0, currentPage - 1)
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
+  // onSubmit
   const onSubmit = () => {
     // Check if all questions on the current page have been answered
     const allAnswered = questions
@@ -214,8 +220,9 @@ export default function SurveyScreen() {
       .every((question) => responses[question.questionID] !== null && responses[question.questionID] !== undefined);
 
     if (allAnswered) {
-      if (currentPage < questionsPerPage.length) {
-        setCurrentPage(currentPage + 1);
+      let nextPage = currentPage + 1;
+      if (nextPage <= questionsPerPage.length) {
+        setCurrentPage(nextPage);
       } else {
         console.log(responses); // or any other final submission logic
       }
@@ -247,8 +254,13 @@ export default function SurveyScreen() {
                 style={{
                   borderBottomColor: colors.primary,
                   borderBottomWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
                 }}
               >
+                <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1 }}>
                 <Text
                   style={{
                     marginBottom: 10,
@@ -256,11 +268,27 @@ export default function SurveyScreen() {
                     textAlign: "auto",
                     marginRight: 3,
                     fontWeight: "bold",
+                    flexShrink: 1,
+                    flex: 1,
                   }}
                 >
                   {`Question ${question.order}: ${question.details}`}
                 </Text>
+                {question.tip && (
+                  <IconButton
+                    icon="information"
+                    color={colors.primary}
+                    size={20}
+                    onPress={() => setShownTip(shownTip === question.tip ? null : question.tip)}
+                  />
+                )}
+                </View>
               </View>
+              {shownTip === question.tip && (
+                <Text style={{ fontStyle: 'italic', color: colors.secondary, paddingLeft: 5, paddingRight: 5 }}>
+                  {question.tip}
+                </Text>
+              )}
               {QuestionComponent ? (
                 <>
                 {question.questionType === 'start' && <Start_Q startTime={startTime} />}

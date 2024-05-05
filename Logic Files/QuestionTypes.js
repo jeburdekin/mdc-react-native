@@ -9,6 +9,8 @@ import {
 } from "react-native-paper";
 import { View, StyleSheet, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+
 
 const useMyStyles = () => {
   const { colors } = useTheme();
@@ -44,9 +46,89 @@ const useMyStyles = () => {
   return styles;
 };
 
+const CustomRadioButton = ({ label, value, status, onPress }) => {
+  const styles = useMyStyles();
+  return (
+    <View style={styles.radioButton}>
+      <RadioButton.Item
+        label={label}
+        value={value}
+        status={status}
+        onPress={onPress}
+      />
+    </View>
+  );
+};
+
+// Define reusable component for question types
+const QuestionType = ({ value, onChange, options }) => {
+  const styles = useMyStyles();
+  return (
+    <RadioButton.Group
+      style={styles.radioButtonGroup}
+      onValueChange={onChange}
+      value={value}
+    >
+      {options.map((option, index) => (
+        <CustomRadioButton
+          key={index} // Use the index as a key
+          label={option}
+          value={option}
+        />
+      ))}
+    </RadioButton.Group>
+  );
+};
+
+const CheckboxQuestionType = ({ value, handleCheck, options, styles }) => {
+  return (
+    <View style={styles}>
+      {options.map((option) => (
+        <Checkbox.Item
+          key={option}
+          label={option}
+          status={value.includes(option) ? 'checked' : 'unchecked'}
+          onPress={() => handleCheck(option)}
+        />
+      ))}
+    </View>
+  );
+};
+
 export const Text_Q = ({ onChange, value }) => (
   <TextInput value={value} onChangeText={onChange} />
 );
+
+// export const Audio_Q = () => {
+//   const [isRecording, setIsRecording] = useState(false);
+//   const audioRecorderPlayer = new AudioRecorderPlayer();
+//   const styles = useMyStyles();
+
+//   const onStartRecord = async () => {
+//     const result = await audioRecorderPlayer.startRecorder();
+//     audioRecorderPlayer.addRecordBackListener((e) => {
+//       return;
+//     });
+//     setIsRecording(true);
+//     console.log(result);
+//   };
+
+//   const onStopRecord = async () => {
+//     const result = await audioRecorderPlayer.stopRecorder();
+//     audioRecorderPlayer.removeRecordBackListener();
+//     setIsRecording(false);
+//     console.log(result);
+//   };
+
+//   return (
+//     <View>
+//       <Button
+//       title={isRecording ? 'Stop Recording' : 'Start Recording'}
+//       onPress={isRecording ? onStopRecord : onStartRecord}
+//       style={styles.radioButton}/>
+//     </View>
+//   );
+// };
 
 export const DateQuestionType = () => {
   const [date, setDate] = useState(new Date());
@@ -139,39 +221,7 @@ export const YesNo_Q = ({ onChange, value }) => {
   );
 };
 
-// Define reusable component for question types
-const QuestionType = ({ value, onChange, options }) => {
-  const styles = useMyStyles();
-  return (
-    <RadioButton.Group
-      style={styles.radioButtonGroup}
-      onValueChange={onChange}
-      value={value}
-    >
-      {options.map((option) => (
-        <CustomRadioButton
-          label={option}
-          value={option}
-        />
-      ))}
-    </RadioButton.Group>
-  );
-};
 
-const CheckboxQuestionType = ({ value, handleCheck, options, styles }) => {
-  return (
-    <View style={styles}>
-      {options.map((option) => (
-        <Checkbox.Item
-          key={option}
-          label={option}
-          status={value.includes(option) ? 'checked' : 'unchecked'}
-          onPress={() => handleCheck(option)}
-        />
-      ))}
-    </View>
-  );
-};
 
 export const select_510_Q = ({ value, onChange }) => {
   const handleCheck = (choiceValue) => {
@@ -212,19 +262,7 @@ export const select_510_Q = ({ value, onChange }) => {
   );
 };
 
-const CustomRadioButton = ({ label, value, status, onPress }) => {
-  const styles = useMyStyles();
-  return (
-    <View style={styles.radioButton}>
-      <RadioButton.Item
-        label={label}
-        value={value}
-        status={status}
-        onPress={onPress}
-      />
-    </View>
-  );
-};
+
 
 // Define specific question types
 export const HighLowVery_Q = ({ onChange, value }) => {
