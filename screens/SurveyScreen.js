@@ -13,6 +13,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigation } from '@react-navigation/native';
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
@@ -147,6 +148,7 @@ const questionTypeComponents = {
 };
 
 export default function SurveyScreen() {
+  const navigation = useNavigation();
   const { control, handleSubmit } = useForm();
   const [currentPage, setCurrentPage] = useState(1);
   const [questions, setQuestions] = useState([]);
@@ -233,7 +235,7 @@ export default function SurveyScreen() {
 
   useEffect(() => {
     const initialResponses = questions.reduce((acc, question) => {
-      acc[question.questionID] = "";
+      acc[question.questionID] = []; // Initialize as an empty array
       return acc;
     }, {});
     setResponses(initialResponses);
@@ -285,7 +287,7 @@ export default function SurveyScreen() {
                 </View>
               </View>
               {shownTip === question.tip && (
-                <Text style={{ fontStyle: 'italic', color: colors.secondary, paddingLeft: 5, paddingRight: 5 }}>
+                <Text style={{ fontStyle: 'italic', color: colors.secondary, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5 }}>
                   {question.tip}
                 </Text>
               )}
@@ -296,10 +298,10 @@ export default function SurveyScreen() {
                   onChange={(newValue) => {
                     setResponses((prevResponses) => ({
                       ...prevResponses,
-                      [question.questionID]: newValue,
+                      [question.questionID]: Array.isArray(newValue) ? newValue : [newValue],
                     }));
                   }}
-                  value={responses[question.questionID]}
+                  value={Array.isArray(responses[question.questionID]) ? responses[question.questionID] : [responses[question.questionID]]}
                 />
                 </>
               ) : (
@@ -315,9 +317,20 @@ export default function SurveyScreen() {
           padding: 5,
           paddingLeft: 10,
           paddingRight: 10,
-          justifyContent: currentPage === 1 ? "flex-end" : "space-between",
+          justifyContent: "space-between",
         }}
       >
+        {currentPage === 1 && (
+          <Button
+            mode="elevated"
+            style={{ margin: 10 }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            Home
+          </Button>
+        )}
         {currentPage > 1 && (
           <Button
             mode="elevated"
