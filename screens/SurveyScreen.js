@@ -5,6 +5,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import {
   Button,
@@ -157,6 +158,7 @@ export default function SurveyScreen() {
   const [responses, setResponses] = useState({});
   const [startTime, setStartTime] = useState(new Date());
   const [shownTip, setShownTip] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!startTime) {
@@ -164,6 +166,7 @@ export default function SurveyScreen() {
     }
     const fetchAndParseCSV = async () => {
       try {
+        setIsLoading(true); // Set loading to true before starting the fetch operation
         const storage = getStorage();
         const storageRef = ref(
           storage,
@@ -200,13 +203,15 @@ export default function SurveyScreen() {
             setQuestionsPerPage(pageSizes);
           },
         });
+        setIsLoading(false); // Set loading to false after the fetch operation is complete
       } catch (error) {
         console.error("Error fetching and parsing CSV data:", error);
+        setIsLoading(false); // Set loading to false even if there was an error
       }
     };
-
     fetchAndParseCSV();
   }, []);
+
 
 
   // Calculate the range of questions on the current page
@@ -240,6 +245,14 @@ export default function SurveyScreen() {
     }, {});
     setResponses(initialResponses);
   }, [questions]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", backgroundColor: "#fffcf7", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -325,7 +338,7 @@ export default function SurveyScreen() {
             mode="elevated"
             style={{ margin: 10 }}
             onPress={() => {
-              navigation.goBack();
+              
             }}
           >
             Home

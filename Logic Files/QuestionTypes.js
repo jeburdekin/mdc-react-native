@@ -5,9 +5,11 @@ import {
   TextInput,
   useTheme,
   RadioButton,
+  Dialog,
+  Portal,
 } from "react-native-paper";
-import { View, StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Modal, } from "react-native";
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
 
@@ -251,29 +253,58 @@ export const Text_Q = ({ onChange, value }) => (
 
 export const DateQuestionType = () => {
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+  const [tempDate, setTempDate] = useState(date);
+  const [visible, setVisible] = useState(false);
   const styles = useMyStyles();
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios"); // hide the picker on Android after selection
-    setDate(currentDate);
+  const showDatePicker = () => {
+    setTempDate(date); // set tempDate to the current date when the date picker is shown
+    setVisible(true);
+  };
+  const hideDatePicker = () => setVisible(false);
+
+  const handleConfirm = (event, selectedDate) => {
+    const currentDate = selectedDate || tempDate;
+    setTempDate(currentDate);
   };
 
-  const showDatepicker = () => {
-    setShow(true);
+  const handleSetDate = () => {
+    setDate(tempDate);
+    hideDatePicker();
   };
+
+  const formattedDate = date.toLocaleDateString(); // format the date as a string
 
   return (
     <View style={styles.datePicker}>
-      <Button onPress={showDatepicker} title="Show date picker!" />
-      {show && <DateTimePicker value={date} onChange={onChange} />}
-      <Text>{date.toString()}</Text>
+      <TouchableOpacity onPress={showDatePicker}>
+        <Text>{formattedDate}</Text>
+      </TouchableOpacity>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDatePicker}>
+          <Dialog.Title>Select date</Dialog.Title>
+          <Dialog.Content>
+            {visible && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={tempDate}
+                mode={'date'}
+                display="spinner"
+                onChange={handleConfirm}
+              />
+            )}
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDatePicker}>Cancel</Button>
+            <Button onPress={handleSetDate} >Confirm</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
 
-// Define other question types here...
+
 export const ageGroup_Q = ({ value, onChange }) => (
   <QuestionType
     value={value}
@@ -832,7 +863,7 @@ export const select_510_Q = ({ value, onChange }) => {
       styles={styles.checkBoxes}
     />
   );
-}; 
+};
 
 export const select_512_Q = ({ value, onChange }) => {
 
