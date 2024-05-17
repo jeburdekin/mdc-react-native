@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useRef } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,8 +9,9 @@ import {
   Linking,
   Dimensions,
   ScrollView,
+  Animated,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, BottomNavigation } from "react-native-paper";
 
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 // const styles = StyleSheet.create({});
@@ -83,21 +84,98 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function HomeScreen({ navigation }) {
+const HomeRoute = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Home</Text>
+  </View>
+);
+
+const SentSurveysRoute = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Sent Surveys</Text>
+  </View>
+);
+
+const DownloadSurveysRoute = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Download Surveys</Text>
+  </View>
+);
+
+const NotesRoute = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Notes</Text>
+  </View>
+);
+
+const MyBottomNavigation = () => {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'home', title: 'Home', icon: 'home' },
+    { key: 'sentSurveys', title: 'Sent Surveys', icon: 'email' },
+    { key: 'downloadSurveys', title: 'Download Surveys', icon: 'download' },
+    { key: 'notes', title: 'Notes', icon: 'note' },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    sentSurveys: SentSurveysRoute,
+    downloadSurveys: DownloadSurveysRoute,
+    notes: NotesRoute,
+  });
+
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.rectangle2} />
-      <View style={styles.rectangle1}></View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Profile Screen")}
-        style={styles.imageTouch}
-      ></TouchableOpacity>
-      <Image source={require("../assets/Layer 1.png")} style={styles.image} />
-      <Image
-        source={require("../assets/mdc logo short.png")}
-        style={styles.logo}
-      />
-      <ScrollView style={{flexGrow: 1}}>
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={renderScene}
+      activeColor="#E57C63" // color for the active label and icon
+      inactiveColor="#828282" // color for the inactive label and icon
+      barStyle={{ backgroundColor: '#fffcf7', borderTopWidth: 1, borderTopColor: '#E57C63' }} // custom styles for the bottom navigation bar
+    />
+  );
+};
+
+
+export default function HomeScreen({ navigation }) {
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  return (
+    //This one view is the problem
+    <View style={{flex: 1, backgroundColor: '#fffcf7'}}> 
+      <Animated.View
+        style={{
+          transform: [
+            {
+              translateY: scrollY.interpolate({
+                inputRange: [0, 100],
+                outputRange: [0, -100],
+                extrapolate: 'clamp',
+              }),
+            },
+          ],
+        }}
+      >
+        <View style={styles.rectangle2} />
+        <View style={styles.rectangle1}></View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Profile Screen")}
+          style={styles.imageTouch}
+        ></TouchableOpacity>
+        <Image source={require("../assets/Layer 1.png")} style={styles.image} />
+        <Image
+          source={require("../assets/mdc logo short.png")}
+          style={styles.logo}
+        />
+      </Animated.View>
+      <Animated.ScrollView
+        style={{flexGrow: 0}}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
+      >
         <View style={styles.background}>
           <SafeAreaView>
             <Button
@@ -115,7 +193,7 @@ export default function HomeScreen({ navigation }) {
               style={styles.button}
               icon="clipboard-pulse-outline"
               labelStyle={styles.buttonIcon}
-              onPress={() => navigation.navigate("Drafts Screen")}
+              onPress={() => navigation.navigate("Draft Screen")}
             >
               <Text style={styles.buttonText}>Drafts</Text>
             </Button>
@@ -183,8 +261,8 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
           </SafeAreaView>
-        </View>
-      </ScrollView>
+        </View>      
+      </Animated.ScrollView>
     </View>
   );
 }

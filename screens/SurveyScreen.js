@@ -14,7 +14,6 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigation } from '@react-navigation/native';
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
@@ -148,8 +147,7 @@ const questionTypeComponents = {
   confirm: confirm_Q,
 };
 
-export default function SurveyScreen() {
-  const navigation = useNavigation();
+export default function SurveyScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const [currentPage, setCurrentPage] = useState(1);
   const [questions, setQuestions] = useState([]);
@@ -338,7 +336,7 @@ export default function SurveyScreen() {
             mode="elevated"
             style={{ margin: 10 }}
             onPress={() => {
-              
+              navigation.navigate("Draft Screen")
             }}
           >
             Home
