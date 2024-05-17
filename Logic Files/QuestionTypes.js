@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-  RadioButton,
   Checkbox,
   Button,
   TextInput,
-  Text,
   useTheme,
+  RadioButton,
+  Dialog,
+  Portal,
 } from "react-native-paper";
-import { View, StyleSheet, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Modal, } from "react-native";
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
 
@@ -46,57 +47,177 @@ const useMyStyles = () => {
   return styles;
 };
 
-const CustomRadioButton = ({ label, value, status, onPress }) => {
-  const styles = useMyStyles();
-  return (
-    <View style={styles.radioButton}>
-      <RadioButton.Item
-        label={label}
-        value={value}
-        status={status}
-        onPress={onPress}
-      />
-    </View>
-  );
-};
+// const CustomRadioButton = ({ label, value, status, onPress }) => {
+//   const styles = useMyStyles();
+//   return (
+//     <View style={styles.radioButton}>
+//       <RadioButton.Item
+//         label={label}
+//         value={value}
+//         status={status}
+//         onPress={onPress}
+//       />
+//     </View>
+//   );
+// };
 
-// Define reusable component for question types
+const CustomRadioButton = React.memo(({ label, value, selectedValue, setSelectedValue }) => {
+  const { colors } = useTheme();
+  const styles = useMyStyles();
+  const isSelected = selectedValue === value;
+  return (
+    <TouchableOpacity
+      style={[styles.radioButton, {backgroundColor: isSelected ? colors.primary : colors.background}]} // use theme colors
+      onPress={() => setSelectedValue(value)}
+    >
+      <View style={[{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingLeft: 10 }]}>
+        <Text style={{color: isSelected ? 'white' : colors.text}}>{label}</Text>
+        <RadioButton
+          value={value}
+          status={isSelected ? 'checked' : 'unchecked'}
+          color={isSelected ? 'white' : colors.primary}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+});
+
 const QuestionType = ({ value, onChange, options }) => {
   const styles = useMyStyles();
+  const selectedValue = Array.isArray(value) ? value[0] : value;
   return (
     <RadioButton.Group
       style={styles.radioButtonGroup}
-      onValueChange={onChange}
-      value={value}
+      onValueChange={(newValue) => onChange([newValue])}
+      value={selectedValue}
     >
       {options.map((option, index) => (
         <CustomRadioButton
           key={index} // Use the index as a key
           label={option}
           value={option}
+          selectedValue={selectedValue}
+          setSelectedValue={(newValue) => onChange([newValue])}
         />
       ))}
     </RadioButton.Group>
   );
 };
 
-const CheckboxQuestionType = ({ value, handleCheck, options, styles }) => {
+// const CheckboxQuestionType = ({ value, handleCheck, options, styles }) => {
+//   return (
+//     <View style={styles}>
+//       {options.map((option) => (
+//         <Checkbox.Item
+//           key={option}
+//           label={option}
+//           status={value.includes(option) ? 'checked' : 'unchecked'}
+//           onPress={() => handleCheck(option)}
+//         />
+//       ))}
+//     </View>
+//   );
+// };
+
+const CustomCheckbox = ({ label, handleCheck, value, isFirst, isLast, isDisabled }) => {
+  const { colors } = useTheme();
+  const isSelected = value.includes(label);
+  return (
+    <TouchableOpacity
+      style={[
+        {
+          backgroundColor: isSelected ? colors.primary : colors.background,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingLeft: 10,
+          padding: 10,
+          opacity: isDisabled ? 0.2 : 1,
+        },
+        isFirst && { borderTopLeftRadius: 5, borderTopRightRadius: 5 },
+        isLast && { borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
+      ]}
+      onPress={() => {
+        if (!isDisabled) {
+          handleCheck(label);
+        }
+      }}
+      disabled={isDisabled}
+    >
+      <Text style={{color: isSelected ? 'white' : colors.text}}>{label}</Text>
+      <Checkbox
+        status={isSelected ? 'checked' : 'unchecked'}
+        onPress={() => {
+          if (!isDisabled) {
+            handleCheck(label);
+          }
+        }}
+        color={isSelected ? 'white' : colors.primary}
+        uncheckedColor={colors.primary}
+        disabled={isDisabled}
+      />
+    </TouchableOpacity>
+  );
+};
+
+const CheckboxQuestionType = ({ value, onChange, options, styles }) => {
+  const [propValue, setValue] = useState(value);
+
+  useEffect(() => {
+    setValue(propValue);
+  }, [propValue]);
+
+  const handleCheck = (label) => {
+    if (!Array.isArray(propValue)) {
+      console.error('value prop must be an array');
+      return;
+    }
+
+    const isNoneSelected = propValue.some(val => val.includes('None of the above'));
+
+    if (label.includes('None of the above')) {
+      if (isNoneSelected) {
+        // If "None of the above" is already selected, unselect it
+        setValue([]);
+        onChange([]);
+      } else {
+        // If "None of the above" is not selected, select it and unselect all others
+        setValue([label]);
+        onChange([label]);
+      }
+    } else if (isNoneSelected) {
+      return;
+    } else {
+      const newValue = propValue.includes(label) ? propValue.filter(item => item !== label) : [...propValue, label];
+      setValue(newValue);
+      onChange(newValue);
+    }
+  };
+
   return (
     <View style={styles}>
-      {options.map((option) => (
-        <Checkbox.Item
-          key={option}
+      {options.map((option, index) => (
+        <CustomCheckbox
+          key={option} // or key={index} if labels are not unique
           label={option}
-          status={value.includes(option) ? 'checked' : 'unchecked'}
-          onPress={() => handleCheck(option)}
+          handleCheck={handleCheck}
+          value={Array.isArray(propValue) ? propValue : []} // Ensure value is an array
+          isFirst={index === 0}
+          isLast={index === options.length - 1}
+          isDisabled={propValue.some(val => val.includes('None of the above')) && !option.includes('None of the above')} // disable all other checkboxes when an option that includes "None of the above" is selected
         />
       ))}
     </View>
   );
 };
 
+
+
 export const Text_Q = ({ onChange, value }) => (
-  <TextInput value={value} onChangeText={onChange} />
+  <TextInput
+    value={Array.isArray(value) ? value.join(', ') : value}
+    onChangeText={(text) => onChange(text.split(', '))}
+  />
 );
 
 // export const Audio_Q = () => {
@@ -132,29 +253,58 @@ export const Text_Q = ({ onChange, value }) => (
 
 export const DateQuestionType = () => {
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+  const [tempDate, setTempDate] = useState(date);
+  const [visible, setVisible] = useState(false);
   const styles = useMyStyles();
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios"); // hide the picker on Android after selection
-    setDate(currentDate);
+  const showDatePicker = () => {
+    setTempDate(date); // set tempDate to the current date when the date picker is shown
+    setVisible(true);
+  };
+  const hideDatePicker = () => setVisible(false);
+
+  const handleConfirm = (event, selectedDate) => {
+    const currentDate = selectedDate || tempDate;
+    setTempDate(currentDate);
   };
 
-  const showDatepicker = () => {
-    setShow(true);
+  const handleSetDate = () => {
+    setDate(tempDate);
+    hideDatePicker();
   };
+
+  const formattedDate = date.toLocaleDateString(); // format the date as a string
 
   return (
     <View style={styles.datePicker}>
-      <Button onPress={showDatepicker} title="Show date picker!" />
-      {show && <DateTimePicker value={date} onChange={onChange} />}
-      <Text>{date.toString()}</Text>
+      <TouchableOpacity onPress={showDatePicker}>
+        <Text>{formattedDate}</Text>
+      </TouchableOpacity>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDatePicker}>
+          <Dialog.Title>Select date</Dialog.Title>
+          <Dialog.Content>
+            {visible && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={tempDate}
+                mode={'date'}
+                display="spinner"
+                onChange={handleConfirm}
+              />
+            )}
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDatePicker}>Cancel</Button>
+            <Button onPress={handleSetDate} >Confirm</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
 
-// Define other question types here...
+
 export const ageGroup_Q = ({ value, onChange }) => (
   <QuestionType
     value={value}
@@ -223,44 +373,7 @@ export const YesNo_Q = ({ onChange, value }) => {
 
 
 
-export const select_510_Q = ({ value, onChange }) => {
-  const handleCheck = (choiceValue) => {
-    const newValue = [...(value || [])];
-    if (newValue.includes(choiceValue)) {
-      const index = newValue.indexOf(choiceValue);
-      newValue.splice(index, 1);
-    } else {
-      newValue.push(choiceValue);
-    }
-    onChange(newValue);
-  };
 
-  const styles = useMyStyles();
-  const choices = [
-    "Chronic kidney disease",
-    "Dialysis",
-    "Fever",
-    "Heart attack",
-    "Heart problem",
-    "Jaundice",
-    "Liver failure",
-    "Malaria",
-    "Pneumonia",
-    "Renal (kidney) failure",
-    "Suicide",
-    "None of the above words were mentioned",
-  ];
-
-  return (
-    <CheckboxQuestionType
-      value={value}
-      onChange={onChange}
-      options={choices}
-      handleCheck={handleCheck} // Add handleCheck prop
-      styles={styles.checkBoxes}
-    />
-  );
-};
 
 
 
@@ -567,7 +680,7 @@ export const select_80_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Contious", "On and off", "Doesn't know", "Refused to answer"]}
+      options={["Continuous", "On and off", "Doesn't know", "Refused to answer"]}
     />
   );
 };
@@ -689,16 +802,6 @@ export const select_500_Q = ({ value, onChange }) => (
 );
 
 export const select_501_Q = ({ value, onChange }) => {
-  const handleCheck = (choiceValue) => {
-    const newValue = [...(value || [])];
-    if (newValue.includes(choiceValue)) {
-      const index = newValue.indexOf(choiceValue);
-      newValue.splice(index, 1);
-    } else {
-      newValue.push(choiceValue);
-    }
-    onChange(newValue);
-  };
 
   const styles = useMyStyles();
   const choices = [
@@ -715,23 +818,12 @@ export const select_501_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={choices}
-      handleCheck={handleCheck} // Add handleCheck prop
       styles={styles.checkBoxes}
     />
   );
 };
 
 export const select_502_Q = ({ value, onChange }) => {
-  const handleCheck = (choiceValue) => {
-    const newValue = [...(value || [])];
-    if (newValue.includes(choiceValue)) {
-      const index = newValue.indexOf(choiceValue);
-      newValue.splice(index, 1);
-    } else {
-      newValue.push(choiceValue);
-    }
-    onChange(newValue);
-  };
 
   const styles = useMyStyles();
   const choices = ["Wheezing", "No", "Doesn't know", "Refused to answer"];
@@ -741,25 +833,39 @@ export const select_502_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={choices}
-      handleCheck={handleCheck} // Add handleCheck prop
       styles={styles.checkBoxes}
     />
   );
 };
 
+export const select_510_Q = ({ value, onChange }) => {
+  const styles = useMyStyles();
+  const choices = [
+    "Chronic kidney disease",
+    "Dialysis",
+    "Fever",
+    "Heart attack",
+    "Heart problem",
+    "Jaundice",
+    "Liver failure",
+    "Malaria",
+    "Pneumonia",
+    "Renal (kidney) failure",
+    "Suicide",
+    "None of the above words were mentioned",
+  ];
 
+  return (
+    <CheckboxQuestionType
+      value={value}
+      onChange={onChange}
+      options={choices}
+      styles={styles.checkBoxes}
+    />
+  );
+};
 
 export const select_512_Q = ({ value, onChange }) => {
-  const handleCheck = (choiceValue) => {
-    const newValue = [...(value || [])];
-    if (newValue.includes(choiceValue)) {
-      const index = newValue.indexOf(choiceValue);
-      newValue.splice(index, 1);
-    } else {
-      newValue.push(choiceValue);
-    }
-    onChange(newValue);
-  };
 
   const styles = useMyStyles();
   const choices = [
@@ -777,23 +883,12 @@ export const select_512_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={choices}
-      handleCheck={handleCheck} // Add handleCheck prop
       styles={styles.checkBoxes}
     />
   );
 };
 
 export const select_511_Q = ({ value, onChange }) => {
-  const handleCheck = (choiceValue) => {
-    const newValue = [...(value || [])];
-    if (newValue.includes(choiceValue)) {
-      const index = newValue.indexOf(choiceValue);
-      newValue.splice(index, 1);
-    } else {
-      newValue.push(choiceValue);
-    }
-    onChange(newValue);
-  };
 
   const styles = useMyStyles();
   const choices = [
@@ -815,7 +910,6 @@ export const select_511_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={choices}
-      handleCheck={handleCheck} // Add handleCheck prop
       styles={styles.checkBoxes}
     />
   );

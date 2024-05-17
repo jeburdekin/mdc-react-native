@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useCallback } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from "react-native";
 
 const windowWidth = Dimensions.get('window').width;
@@ -19,10 +20,14 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "center", // Align children to the start of the screen
     alignItems: "center",
+    backgroundColor: "#fffcf7",
   },
   container: {
+    flex: 1, // Take up all available space
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#fffcf7",
   },
   input: {
@@ -39,7 +44,7 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.1,
     padding: 15,
     borderRadius: 10,
-    margin: 8,
+    margin: 10,
     bottom: -200,
   },
   buttonText: {
@@ -49,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   map: {
-    width: windowWidth,
+    width: windowWidth * 1.0,
     height: windowHeight * 0.45,
     top: windowHeight * -0.335,
     //resizeMode: "stretch",
@@ -97,20 +102,31 @@ const styles = StyleSheet.create({
 });
 
 export default function SignInScreen({ navigation }) {
-  const [user, onChangeUser] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onChangeUser = useCallback((newUser) => {
+    setUser(newUser);
+  }, []);
+
+  const onChangePassword = useCallback((newPassword) => {
+    setPassword(newPassword);
+  }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.screen}>
-    <KeyboardAvoidingView style={styles.container} behavior="position">
-      <SafeAreaView style={{width: '100%'}}>
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <SafeAreaView style={{ width: "100%" }}>
         <Image
           source={require("../assets/mdc-map.png")}
           style={styles.map}
-          />
-        <View style={{alignItems: "center"}}>
+        />
+        <View style={{ alignItems: "center" }}>
           <Text style={styles.title}>Sign In</Text>
-          <View style={styles.orangeBlock}/>
+          <View style={styles.orangeBlock} />
           <View style={styles.whiteBlock1}>
             <TextInput
               style={styles.input}
@@ -130,18 +146,21 @@ export default function SignInScreen({ navigation }) {
             />
           </View>
           <View style={styles.buttonBox}>
-            <TouchableOpacity onPress={() => navigation.navigate("Make Deaths Count")}
-              style={styles.button}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Make Deaths Count")}
+              style={styles.button}
+            >
               <Text style={styles.buttonText}>Back</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("User Home")}
-              style={styles.button}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("User Home")}
+              style={styles.button}
+            >
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
-    </ScrollView>
   );
 }
