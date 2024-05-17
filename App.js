@@ -14,8 +14,10 @@ import DraftScreen from "./screens/DraftScreen";
 import PreparedSurvScreen from "./screens/PreparedSurvScreen";
 import SentSurvScreen from "./screens/SentSurvScreen";
 import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
-import SurveyManagerScreen from "./screens/SurveyManagerScreen";
+import SurveyCreatorScreen from "./screens/SurveyCreatorScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
+import store from './Redux/Store';
+import { Provider } from 'react-redux';
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 // const styles = StyleSheet.create({});
@@ -45,25 +47,27 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Make Deaths Count">
-          <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
-          <Stack.Screen name="Sign In" component={SignInScreen} />
-          <Stack.Screen name="Create Account" component={CreateAccountScreen} />
-          <Stack.Screen name="User Home" component={HomeScreen} />
-          <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
-          <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
-          <Stack.Screen name="Profile Screen" component={ProfileScreen} />
-          <Stack.Screen name="Notes Screen" component={NoteScreen} />
-          <Stack.Screen name="Drafts Screen" component={DraftScreen} />
-          <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
-          <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
-          <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
-          <Stack.Screen name="Survey Screen" component={SurveyScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Make Deaths Count">
+            <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
+            <Stack.Screen name="Sign In" component={SignInScreen} />
+            <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+            <Stack.Screen name="User Home" component={HomeScreen} />
+            <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
+            <Stack.Screen name="Survey Manager" component={SurveyCreatorScreen} />
+            <Stack.Screen name="Profile Screen" component={ProfileScreen} />
+            <Stack.Screen name="Notes Screen" component={NoteScreen} />
+            <Stack.Screen name="Draft Screen" component={DraftScreen} />
+            <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
+            <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
+            <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
+            <Stack.Screen name="Survey Screen" component={SurveyScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
 
