@@ -142,14 +142,26 @@ export default function HomeScreen({ navigation }) {
 
   return (
     //This one view is the problem
-    <View style={{flex: 1, backgroundColor: '#fffcf7'}}> 
+    <Animated.ScrollView
+    style={{backgroundColor: "#fffcf7"}}
+    onScroll={Animated.event(
+      [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+      { useNativeDriver: true }
+    )}
+    scrollEventThrottle={16}
+    >
       <Animated.View
         style={{
+          opacity: scrollY.interpolate({
+            inputRange: [0, 60],
+            outputRange: [1, 0],
+            extrapolate: 'clamp',
+          }),
           transform: [
             {
               translateY: scrollY.interpolate({
-                inputRange: [0, 100],
-                outputRange: [0, -100],
+                inputRange: [0, 120],
+                outputRange: [0, -60],
                 extrapolate: 'clamp',
               }),
             },
@@ -168,14 +180,7 @@ export default function HomeScreen({ navigation }) {
           style={styles.logo}
         />
       </Animated.View>
-      <Animated.ScrollView
-        style={{flexGrow: 0}}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
-        scrollEventThrottle={16}
-      >
+
         <View style={styles.background}>
           <SafeAreaView>
             <Button
@@ -263,6 +268,5 @@ export default function HomeScreen({ navigation }) {
           </SafeAreaView>
         </View>      
       </Animated.ScrollView>
-    </View>
   );
 }
