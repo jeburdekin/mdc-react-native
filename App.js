@@ -66,6 +66,7 @@ function App() {
             <Stack.Screen name="Survey Screen" component={SurveyScreen} />
           </Stack.Navigator>
         </NavigationContainer>
+        
       </PaperProvider>
     </Provider>
   );

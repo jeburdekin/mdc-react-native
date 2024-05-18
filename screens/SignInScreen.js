@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,6 +14,7 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { Snackbar } from 'react-native-paper';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -42,9 +44,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#E57C63',
     width: windowWidth * 0.45,
     height: windowHeight * 0.1,
-    padding: 15,
+    padding: 20,
     borderRadius: 10,
-    margin: 10,
+    margin: 8,
     bottom: -200,
   },
   buttonText: {
@@ -52,6 +54,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fffcf7",
     fontSize: 40,
+    fontWeight: "bold",
   },
   map: {
     width: windowWidth * 1.0,
@@ -101,9 +104,13 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export default function SignInScreen({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const auth = getAuth();
+  const [visible, setVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onChangeUser = useCallback((newUser) => {
     setUser(newUser);
@@ -113,13 +120,33 @@ export default function SignInScreen({ navigation }) {
     setPassword(newPassword);
   }, []);
 
+  const handleSignIn = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, user, password);
+      navigation.navigate("User Home");
+    } catch (error) {
+      setErrorMessage("Invalid email or password");
+      setVisible(true);    
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    try {
+      await sendPasswordResetEmail(auth, user);
+      alert('Password reset link sent to your email');
+    } catch (error) {
+      setErrorMessage(error.message);
+      setVisible(true);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.screen}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
-      <SafeAreaView style={{ width: "100%" }}>
+      <SafeAreaView style={{ width: "100%", flex: 0 }}>
         <Image
           source={require("../assets/mdc-map.png")}
           style={styles.map}
@@ -153,12 +180,26 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.buttonText}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("User Home")}
+              onPress={handleSignIn}
               style={styles.button}
             >
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={{ position: 'absolute', top: 0, width: '100%' }}>
+          <Snackbar
+            visible={visible}
+            onDismiss={() => setVisible(false)}
+            action={{
+              label: 'Close',
+              onPress: () => {
+                setVisible(false);
+              },
+            }}
+          >
+            {errorMessage}
+          </Snackbar>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
