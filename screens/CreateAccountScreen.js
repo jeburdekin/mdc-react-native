@@ -57,7 +57,7 @@ export default function CreateAccountScreen({ navigation }) {
         // Sign up with email
         const userCredential = await createUserWithEmailAndPassword(auth, user, password);
         // Signed in 
-        const user = userCredential.user;
+        const userName = userCredential.user;
         // ...
         navigation.navigate("Make Deaths Count")
       } else {
@@ -80,7 +80,7 @@ export default function CreateAccountScreen({ navigation }) {
                   // User signed in 
                   const user = result.user;
                   // ...
-                  navigation.navigate("Make Deaths Count")
+                  navigation.navigate("Home Screen")
                 } catch (error) {
                   Alert.alert('Invalid code. Please try again.');
                 }
