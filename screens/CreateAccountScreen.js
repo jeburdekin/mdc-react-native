@@ -18,7 +18,7 @@ import { Dialog, Portal, Button, TextInput as DialogInput } from 'react-native-p
 import RNPickerSelect from "react-native-picker-select";
 // import DatePicker from "react-native-date-picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getAuth, createUserWithEmailAndPassword, signInWithPhoneNumber } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -50,46 +50,20 @@ export default function CreateAccountScreen({ navigation }) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
-
+  
+    // Check if the user input is an email
+    if (!user.includes('@')) {
+      Alert.alert('Error', 'Please enter a valid email address.');
+      return;
+    }
+  
     try {
-      // Check if the user input is an email or a phone number
-      if (user.includes('@')) {
-        // Sign up with email
-        const userCredential = await createUserWithEmailAndPassword(auth, user, password);
-        // Signed in 
-        const userName = userCredential.user;
-        // ...
-        navigation.navigate("Make Deaths Count")
-      } else {
-        // Sign up with phone number
-        const confirmation = await signInWithPhoneNumber(auth, user);
-        // SMS sent. Prompt user to type the code from the message, then sign the user in
-        Alert.prompt(
-          'Enter your code',
-          'A verification code has been sent to your phone number.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: async (verificationCode) => {
-                try {
-                  const result = await confirmation.confirm(verificationCode);
-                  // User signed in 
-                  const user = result.user;
-                  // ...
-                  navigation.navigate("Home Screen")
-                } catch (error) {
-                  Alert.alert('Invalid code. Please try again.');
-                }
-              },
-            },
-          ],
-          'plain-text'
-        );
-      }
+      // Sign up with email
+      const userCredential = await createUserWithEmailAndPassword(auth, user, password);
+      // Signed in 
+      const userName = userCredential.user;
+      // ...
+      navigation.navigate("Make Deaths Count")
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
