@@ -160,8 +160,8 @@ export default function HomeScreen({ navigation }) {
           transform: [
             {
               translateY: scrollY.interpolate({
-                inputRange: [0, 120],
-                outputRange: [0, -60],
+                inputRange: [10, 130],
+                outputRange: [0, -50],
                 extrapolate: 'clamp',
               }),
             },
