@@ -94,8 +94,8 @@ const QuestionType = ({ value, onChange, options }) => {
       {options.map((option, index) => (
         <CustomRadioButton
           key={index} // Use the index as a key
-          label={option}
-          value={option}
+          label={option.label} // Use option.label instead of option
+          value={option.value} // Use option.value instead of option
           selectedValue={selectedValue}
           setSelectedValue={(newValue) => onChange([newValue])}
         />
@@ -366,7 +366,10 @@ export const YesNo_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Yes", "No"]} // Pass an array of strings instead of an array of objects
+      options={[
+        { label: "Yes", value: "Yes" },
+        { label: "No", value: "No" },
+      ]} // Pass an array of strings instead of an array of objects
     />
   );
 };
@@ -383,7 +386,11 @@ export const HighLowVery_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["High", "Low", "Very low"]}
+      options={[
+        { label: "High", value: "High" },
+        { label: "Low", value: "Low" },
+        { label: "Very Low", value: "VeryL" },
+      ]}
     />
   );
 };
@@ -393,7 +400,12 @@ export const YesNoDKRef_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Yes", "No", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Yes", value: "Yes" },
+        { label: "No", value: "No" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -404,10 +416,10 @@ export const YesNODKRef2_Q = ({ onChange, value }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Yes (SHE WAS NOT PREGNANT; AND SHE DID NOT RECENTLY DELIVER, HAVE ABORTION, OR MISCARRY)",
-        "No (SHE WAS PREGNANT OR SHE RECENTLY DELIVERED, HAD AN ABORTION OR MISCARRIED)",
-        "Doesn't know",
-        "Refused to answer"
+        { label: "Yes (SHE WAS NOT PREGNANT; AND SHE DID NOT RECENTLY DELIVER, HAVE ABORTION, OR MISCARRY)", value: "Yes" },
+        { label: "No (SHE WAS PREGNANT OR SHE RECENTLY DELIVERED, HAD AN ABORTION OR MISCARRIED)", value: "No" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -418,7 +430,13 @@ export const Units_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Months", "Years", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Months", value: "Months" },
+        { label: "Years", value: "Years" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -428,7 +446,11 @@ export const UnitsSC_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Months", "Years"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Months", value: "Months" },
+        { label: "Years", value: "Years" },
+      ]}
     />
   );
 };
@@ -438,7 +460,13 @@ export const Units1_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Months", "Years", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Months", value: "Months" },
+        { label: "Years", value: "Years" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -448,7 +476,12 @@ export const Units2_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Months", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Months", value: "Months" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -458,7 +491,12 @@ export const Units3_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Hours", "Days", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Hours", value: "Hours" },
+        { label: "Days", value: "Days" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -468,7 +506,12 @@ export const Units4_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Months", "Years", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Months", value: "Months" },
+        { label: "Years", value: "Years" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -478,7 +521,13 @@ export const Units5_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Weeks", "Months", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Weeks", value: "Weeks" },
+        { label: "Months", value: "Months" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -488,7 +537,12 @@ export const D_M_DK_Ref_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Days", "Months", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Days", value: "Days" },
+        { label: "Months", value: "Months" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -498,7 +552,13 @@ export const M_H_D_DK_Ref_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Minutes", "Hours", "Days", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Minutes", value: "Minutes" },
+        { label: "Hours", value: "Hours" },
+        { label: "Days", value: "Days" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -508,7 +568,12 @@ export const H_D_DK_Ref_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Hours", "Days", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Hours", value: "Hours" },
+        { label: "Days", value: "Days" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -518,7 +583,13 @@ export const H_D_M_DK_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Hours", "Days", "Minutes", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Hours", value: "Hours" },
+        { label: "Days", value: "Days" },
+        { label: "Minutes", value: "Minutes" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -528,7 +599,12 @@ export const M_H_M_DK_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Minutes", "Hours", "Months", "Doesn't know"]}
+      options={[
+        { label: "Minutes", value: "Minutes" },
+        { label: "Hours", value: "Hours" },
+        { label: "Months", value: "Months" },
+        { label: "Doesn't know", value: "DK" },
+      ]}
     />
   );
 };
@@ -538,7 +614,12 @@ export const M_H_D_DK_Q = ({ onChange, value }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Minutes", "Hours", "Days", "Doesn't know"]}
+      options={[
+        { label: "Minutes", value: "Minutes" },
+        { label: "Hours", value: "Hours" },
+        { label: "Days", value: "Days" },
+        { label: "Doesn't know", value: "DK" },
+      ]}
     />
   );
 };
@@ -548,7 +629,11 @@ export const select_2_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Female", "Male", "Ambiguous/Intersex"]}
+      options={[
+        { label: "Female", value: "Female" },
+        { label: "Male", value: "Male" },
+        { label: "Ambiguous/Intersex", value: "Ambiguous/Intersex" },
+      ]}
     />
   );
 };
@@ -559,13 +644,13 @@ export const select_18_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Hospital",
-        "Other health facility",
-        "Home",
-        "On route to hospital or facility",
-        "Other",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "Hospital", value: "Hospital" },
+        { label: "Other health facility", value: "Other health facility" },
+        { label: "Home", value: "Home" },
+        { label: "On route to hospital or facility", value: "On route to hospital or facility" },
+        { label: "Other", value: "Other" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -577,14 +662,14 @@ export const select_19_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Single",
-        "Married",
-        "Life partner",
-        "Divorced",
-        "Widowed",
-        "Too young to be married",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "Single", value: "Single" },
+        { label: "Married", value: "Married" },
+        { label: "Life partner", value: "Life partner" },
+        { label: "Divorced", value: "Divorced" },
+        { label: "Widowed", value: "Widowed" },
+        { label: "Too young to be married", value: "Too young to be married" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -596,12 +681,12 @@ export const select_23_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "No formal education",
-        "Primary school",
-        "Secondary school",
-        "Higher than secondary school",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "No formal education", value: "No formal education" },
+        { label: "Primary school", value: "Primary school" },
+        { label: "Secondary school", value: "Secondary school" },
+        { label: "Higher than secondary school", value: "Higher than secondary school" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -613,13 +698,13 @@ export const select_25_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Mainly unemployed",
-        "Mainly employed",
-        "Home-maker",
-        "Pensioner",
-        "Student",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "Mainly unemployed", value: "Mainly unemployed" },
+        { label: "Mainly employed", value: "Mainly employed" },
+        { label: "Home-maker", value: "Home-maker" },
+        { label: "Pensioner", value: "Pensioner" },
+        { label: "Student", value: "Student" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -631,15 +716,15 @@ export const select_32_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Parent",
-        "Child",
-        "Other family member",
-        "Friend",
-        "Spouse",
-        "Health worker",
-        "Public official",
-        "Another relationship",
-        "Refused to answer",
+        { label: "Parent", value: "Parent" },
+        { label: "Child", value: "Child" },
+        { label: "Other family member", value: "Other family member" },
+        { label: "Friend", value: "Friend" },
+        { label: "Spouse", value: "Spouse" },
+        { label: "Health worker", value: "Health worker" },
+        { label: "Public official", value: "Public official" },
+        { label: "Another relationship", value: "Another relationship" },
+        { label: "Refused to answer", value: "Ref" },
       ]}
     />
   );
@@ -650,7 +735,11 @@ export const select_58_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Wet", "Dry", "Doesn't know"]}
+      options={[
+        { label: "Wet", value: "Wet" },
+        { label: "Dry", value: "Dry" },
+        { label: "Doesn't know", value: "DK" },
+      ]}
     />
   );
 };
@@ -660,7 +749,12 @@ export const select_63_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Mild", "Severe", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Mild", value: "Mild" },
+        { label: "Severe", value: "Severe" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -670,7 +764,12 @@ export const select_64_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Mild", "Severe", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Mild", value: "Mild" },
+        { label: "Severe", value: "Severe" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -680,7 +779,12 @@ export const select_80_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Continuous", "On and off", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Continuous", value: "Continuous" },
+        { label: "On and off", value: "On and off" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -691,13 +795,13 @@ export const select_100_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Upper right abdomen",
-        "Upper left abdomen",
-        "Lower right abdomen",
-        "Lower left abdomen",
-        "All over the abdomen",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "Upper right abdomen", value: "Upper right abdomen" },
+        { label: "Upper left abdomen", value: "Upper left abdomen" },
+        { label: "Lower right abdomen", value: "Lower right abdomen" },
+        { label: "Lower left abdomen", value: "Lower left abdomen" },
+        { label: "All over the abdomen", value: "All over the abdomen" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
       ]}
     />
   );
@@ -708,7 +812,12 @@ export const select_103_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Rapidly", "Slowly", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Rapidly", value: "Rapidly" },
+        { label: "Slowly", value: "Slowly" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -718,7 +827,14 @@ export const select_135_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Face", "Trunk or abdomen", "Extremities", "Everywhere", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Face", value: "Face" },
+        { label: "Trunk or abdomen", value: "Trunk or abdomen" },
+        { label: "Extremities", value: "Extremities" },
+        { label: "Everywhere", value: "Everywhere" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -728,7 +844,15 @@ export const select_208_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Hospital", "Other health facility", "Home", "On route to hospital or facility", "Other", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Hospital", value: "Hospital" },
+        { label: "Other health facility", value: "Other health facility" },
+        { label: "Home", value: "Home" },
+        { label: "On route to hospital or facility", value: "On route to hospital or facility" },
+        { label: "Other", value: "Other" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -738,7 +862,13 @@ export const select_221_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Before delivery", "During delivery", "After delivery", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Before delivery", value: "Before delivery" },
+        { label: "During delivery", value: "During delivery" },
+        { label: "After delivery", value: "After delivery" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -748,7 +878,14 @@ export const select_299_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Dog", "Snake", "Insect or scorpion", "Other", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Dog", value: "Dog" },
+        { label: "Snake", value: "Snake" },
+        { label: "Insect or scorpion", value: "Insect or scorpion" },
+        { label: "Other", value: "Other" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -758,7 +895,15 @@ export const select_306_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Cigarettes", "Pipe", "Chewing tobacco", "Local form of tobacco", "Other", "Doesn't know", "Refused to answer"]}
+      options={[
+        { label: "Cigarettes", value: "Cigarettes" },
+        { label: "Pipe", value: "Pipe" },
+        { label: "Chewing tobacco", value: "Chewing tobacco" },
+        { label: "Local form of tobacco", value: "Local form of tobacco" },
+        { label: "Other", value: "Other" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
+      ]}
     />
   );
 };
@@ -769,19 +914,19 @@ export const select_322_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        "Traditional healer",
-        "Homeopath",
-        "Religious leader",
-        "Government hospital",
-        "Government health center or clinic",
-        "Private hospital",
-        "Community-based practioner associated with health system",
-        "Trained birth attendant",
-        "Private physician",
-        "Relative, friend(outside household)",
-        "Pharmacy",
-        "Doesn't know",
-        "Refused to answer",
+        { label: "Traditional healer", value: "Traditional healer" },
+        { label: "Homeopath", value: "Homeopath" },
+        { label: "Religious leader", value: "Religious leader" },
+        { label: "Government hospital", value: "Government hospital" },
+        { label: "Government health center or clinic", value: "Government health center or clinic" },
+        { label: "Private hospital", value: "Private hospital" },
+        { label: "Community-based practioner associated with health system", value: "Community-based practioner associated with health system" },
+        { label: "Trained birth attendant", value: "Trained birth attendant" },
+        { label: "Private physician", value: "Private physician" },
+        { label: "Relative, friend(outside household)", value: "Relative, friend(outside household)" },
+        { label: "Pharmacy", value: "Pharmacy" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" }
       ]}
     />
   );
@@ -792,11 +937,11 @@ export const select_500_Q = ({ value, onChange }) => (
     value={value}
     onChange={onChange}
     options={[
-      "Citizen at birth",
-      "Naturalized citizen",
-      "Foreign national",
-      "Doesn't know",
-      "Refused to answer",
+      { label: "Citizen at birth", value: "Citizen at birth" },
+      { label: "Naturalized citizen", value: "Naturalized citizen" },
+      { label: "Foreign national", value: "Foreign national" },
+      { label: "Doesn't know", value: "DK" },
+      { label: "Refused to answer", value: "Ref" }
     ]}
   />
 );
@@ -805,12 +950,12 @@ export const select_501_Q = ({ value, onChange }) => {
 
   const styles = useMyStyles();
   const choices = [
-    "Stridor",
-    "Grunting",
-    "Wheezing",
-    "None of the above",
-    "Doesn't know",
-    "Refused to answer",
+    { label: "Stridor", value: "Stridor" },
+    { label: "Grunting", value: "Grunting" },
+    { label: "Wheezing", value: "Wheezing" },
+    { label: "None of the above", value: "None of the above" },
+    { label: "Doesn't know", value: "DK" },
+    { label: "Refused to answer", value: "Ref" },
   ];
 
   return (
@@ -826,7 +971,12 @@ export const select_501_Q = ({ value, onChange }) => {
 export const select_502_Q = ({ value, onChange }) => {
 
   const styles = useMyStyles();
-  const choices = ["Wheezing", "No", "Doesn't know", "Refused to answer"];
+  const choices = [
+    { label: "Wheezing", value: "Wheezing" },
+    { label: "No", value: "No" },
+    { label: "Doesn't know", value: "DK" },
+    { label: "Refused to answer", value: "Ref" },
+  ];
 
   return (
     <CheckboxQuestionType
@@ -841,18 +991,18 @@ export const select_502_Q = ({ value, onChange }) => {
 export const select_510_Q = ({ value, onChange }) => {
   const styles = useMyStyles();
   const choices = [
-    "Chronic kidney disease",
-    "Dialysis",
-    "Fever",
-    "Heart attack",
-    "Heart problem",
-    "Jaundice",
-    "Liver failure",
-    "Malaria",
-    "Pneumonia",
-    "Renal (kidney) failure",
-    "Suicide",
-    "None of the above words were mentioned",
+    { label: "Chronic kidney disease", value: "Chronic kidney disease" },
+    { label: "Dialysis", value: "Dialysis" },
+    { label: "Fever", value: "Fever" },
+    { label: "Heart attack", value: "Heart attack" },
+    { label: "Heart problem", value: "Heart problem" },
+    { label: "Jaundice", value: "Jaundice" },
+    { label: "Liver failure", value: "Liver failure" },
+    { label: "Malaria", value: "Malaria" },
+    { label: "Pneumonia", value: "Pneumonia" },
+    { label: "Renal (kidney) failure", value: "Renal failure" },
+    { label: "Suicide", value: "Suicide" },
+    { label: "None of the above words were mentioned", value: "None of the above" },
   ];
 
   return (
@@ -869,13 +1019,13 @@ export const select_512_Q = ({ value, onChange }) => {
 
   const styles = useMyStyles();
   const choices = [
-    "Asphyxia",
-    "Incubtor",
-    "Lung problem",
-    "Pneumonia",
-    "Preterm delivery",
-    "Respitory distress",
-    "None of the above words were mentioned",
+    { label: "Asphyxia", value: "Asphyxia" },
+    { label: "Incubtor", value: "Incubtor" },
+    { label: "Lung problem", value: "Lung problem" },
+    { label: "Pneumonia", value: "Pneumonia" },
+    { label: "Preterm delivery", value: "Preterm delivery" },
+    { label: "Respitory distress", value: "Respitory distress" },
+    { label: "None of the above words were mentioned", value: "None of the above" },
   ];
 
   return (
@@ -892,17 +1042,17 @@ export const select_511_Q = ({ value, onChange }) => {
 
   const styles = useMyStyles();
   const choices = [
-    "Abdomen",
-    "Cancer",
-    "Dehydration",
-    "Dengue fever",
-    "Diarrhoea",
-    "Fever",
-    "Heart problems",
-    "Jaundice (yellow skin or eyes)",
-    "Pneumonia",
-    "Rash",
-    "None of the above words were mentioned",
+    { label: "Abdomen", value: "Abdomen" },
+    { label: "Cancer", value: "Cancer" },
+    { label: "Dehydration", value: "Dehydration" },
+    { label: "Dengue fever", value: "Dengue fever" },
+    { label: "Diarrhoea", value: "Diarrhoea" },
+    { label: "Fever", value: "Fever" },
+    { label: "Heart problems", value: "Heart problems" },
+    { label: "Jaundice (yellow skin or eyes)", value: "Jaundice" },
+    { label: "Pneumonia", value: "Pneumonia" },
+    { label: "Rash", value: "Rash" },
+    { label: "None of the above words were mentioned", value: "None of the above" },
   ];
 
   return (
@@ -920,11 +1070,11 @@ export const select_520_Q = ({ value, onChange }) => (
     value={value}
     onChange={onChange}
     options={[
-      "Green or brown",
-      "Clear (normal)",
-      "Other",
-      "Doesn't know",
-      "Refused to answer",
+      { label: "Green or brown", value: "Green or brown" },
+      { label: "Clear (normal)", value: "Clear (normal)" },
+      { label: "Other", value: "Other" },
+      { label: "Doesn't know", value: "DK" },
+      { label: "Refused to answer", value: "Ref" },
     ]}
   />
 );
@@ -934,15 +1084,15 @@ export const select_530_Q = ({ value, onChange }) => (
     value={value}
     onChange={onChange}
     options={[
-      "Doctor",
-      "Midwife",
-      "Nurse",
-      "Relative",
-      "Self (the mother)",
-      "Traditional birth attendant",
-      "Other",
-      "Doesn't know",
-      "Refused to answer",
+      { label: "Doctor", value: "Doctor" },
+      { label: "Midwife", value: "Midwife" },
+      { label: "Nurse", value: "Nurse" },
+      { label: "Relative", value: "Relative" },
+      { label: "Self (the mother)", value: "Self (the mother)" },
+      { label: "Traditional birth attendant", value: "Traditional birth attendant" },
+      { label: "Other", value: "Other" },
+      { label: "Doesn't know", value: "DK" },
+      { label: "Refused to answer", value: "Ref" },
     ]}
   />
 );
@@ -952,11 +1102,11 @@ export const select_531_Q = ({ value, onChange }) => (
     value={value}
     onChange={onChange}
     options={[
-      "Positive",
-      "Negative",
-      "Unclear",
-      "Doesn't know",
-      "Refused to answer",
+      { label: "Positive", value: "Positive" },
+      { label: "Negative", value: "Negative" },
+      { label: "Unclear", value: "Unclear" },
+      { label: "Doesn't know", value: "DK" },
+      { label: "Refused to answer", value: "Ref" },
     ]}
   />
 );
@@ -966,7 +1116,12 @@ export const select_532_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Before", "After", "Don't know", "Refused to answer"]}
+      options={[
+        { label: "Before", value: "Before" },
+        { label: "After", value: "After" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -976,7 +1131,13 @@ export const select_533_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Singleton", "Twins", "Triplets or more", "Don't know", "Refused to answer"]}
+      options={[
+        { label: "Singleton", value: "Singleton" },
+        { label: "Twins", value: "Twins" },
+        { label: "Triplets or more", value: "Triplets or more" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -986,7 +1147,12 @@ export const select_534_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Less or equal to 7 days", "More than 7 days", "Don't know", "Refused to answer"]}
+      options={[
+        { label: "Less or equal to 7 days", value: "Less or equal to 7 days" },
+        { label: "More than 7 days", value: "More than 7 days" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -996,7 +1162,12 @@ export const select_535_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Months", "Years", "Don't know", "Refused to answer"]}
+      options={[
+        { label: "Months", value: "Months" },
+        { label: "Years", value: "Years" },
+        { label: "Doesn't know", value: "DK" },
+        { label: "Refused to answer", value: "Ref" },
+      ]}
     />
   );
 };
@@ -1006,7 +1177,7 @@ export const confirm_Q = ({ value, onChange }) => {
     <QuestionType
       value={value}
       onChange={onChange}
-      options={["Confirm"]}
+      options={[{ label: "Confirm", value: "Confirm" }]}
     />
   );
 };
