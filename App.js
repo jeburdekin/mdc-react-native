@@ -50,7 +50,7 @@ function App() {
     <Provider store={store}>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Make Deaths Count">
+          <Stack.Navigator initialRouteName="User Home">
             <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
             <Stack.Screen name="Sign In" component={SignInScreen} />
             <Stack.Screen name="Create Account" component={CreateAccountScreen} />
@@ -66,7 +66,7 @@ function App() {
             <Stack.Screen name="Survey Screen" component={SurveyScreen} />
           </Stack.Navigator>
         </NavigationContainer>
-        
+
       </PaperProvider>
     </Provider>
   );

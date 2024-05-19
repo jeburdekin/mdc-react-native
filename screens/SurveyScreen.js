@@ -158,6 +158,33 @@ export default function SurveyScreen({ navigation }) {
   const [shownTip, setShownTip] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const evaluateShowCondition = (showCondition) => {
+    // Split the showCondition string into individual conditions
+    const conditions = showCondition.split(',');
+
+    // Evaluate each condition
+    for (const condition of conditions) {
+      // Split the condition into the question ID and the expected response
+      const [questionID, expectedResponses] = condition.split('=');
+
+      // Trim any leading or trailing whitespace
+      const trimmedQuestionID = questionID.trim();
+
+      // Split the expected responses by 'or' and trim any leading or trailing whitespace
+      const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
+
+      // Check if the actual response is included in the array of expected responses
+      const actualResponse = responses[trimmedQuestionID] ? responses[trimmedQuestionID][0] : null;
+      if (!trimmedExpectedResponses.includes(actualResponse)) {
+        return false;
+      }
+    }
+
+    // If all conditions are met, return true
+    return true;
+  };
+
+
   useEffect(() => {
     if (!startTime) {
       setStartTime(new Date());
@@ -193,11 +220,20 @@ export default function SurveyScreen({ navigation }) {
             }));
             setQuestions(questions);
 
-            const pageSizes = Array(
-              Math.ceil(questions.length / pageSize)
-            ).fill(pageSize);
-            pageSizes[pageSizes.length - 1] =
-              questions.length % pageSize || pageSize;
+            // Replace the existing logic for setting the questionsPerPage state variable with the new logic
+            // Create a new array of questions that should be rendered based on their showCondition
+            const renderedQuestions = questions.filter((question) => {
+              // If the question has a showCondition, evaluate it
+              if (question.showCondition) {
+                return evaluateShowCondition(question.showCondition);
+              }
+              // If the question does not have a showCondition, render it
+              return true;
+            });
+
+            // Adjust the questionsPerPage state variable based on the new array of questions
+            const pageSizes = Array(Math.ceil(renderedQuestions.length / pageSize)).fill(pageSize);
+            pageSizes[pageSizes.length - 1] = renderedQuestions.length % pageSize || pageSize;
             setQuestionsPerPage(pageSizes);
           },
         });
@@ -259,7 +295,17 @@ export default function SurveyScreen({ navigation }) {
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        {questions.slice(startQuestion, endQuestion).map((question, index) => {
+        {questions
+          .filter((question) => {
+            // If the question has a showCondition, evaluate it
+            if (question.showCondition) {
+              return evaluateShowCondition(question.showCondition);
+            }
+            // If the question does not have a showCondition, render it
+            return true;
+          })
+          .slice(startQuestion, endQuestion)
+          .map((question, index) => {
           const QuestionComponent = questionTypeComponents[question.questionType];
           return (
             <View style={{ marginTop: 10, alignContent: "center" }} key={index}>
