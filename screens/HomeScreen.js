@@ -90,8 +90,8 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.rectangle1}></View>
       <TouchableOpacity
         onPress={() => navigation.navigate("Profile Screen")}
-        style={styles.imageTouch}
-      ></TouchableOpacity>
+        style={styles.imageTouch}>
+      </TouchableOpacity>
       <Image source={require("../assets/Layer 1.png")} style={styles.image} />
       <Image
         source={require("../assets/mdc logo short.png")}

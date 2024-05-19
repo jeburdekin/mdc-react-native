@@ -9,6 +9,8 @@ import HomeScreen from "./screens/HomeScreen";
 import FeedbackScreen from './screens/FeedbackScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import NoteFolderScreen from "./screens/NoteFolderScreen";
+import DeletedNoteFolderScreen from "./screens/DeletedNoteFolderScreen";
 import NoteScreen from "./screens/NoteScreen";
 import DraftScreen from "./screens/DraftScreen";
 import PreparedSurvScreen from "./screens/PreparedSurvScreen";
@@ -55,6 +57,8 @@ function App() {
           <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
           <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
           <Stack.Screen name="Profile Screen" component={ProfileScreen} />
+          <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
+          <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
           <Stack.Screen name="Notes Screen" component={NoteScreen} />
           <Stack.Screen name="Drafts Screen" component={DraftScreen} />
           <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
