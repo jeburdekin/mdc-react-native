@@ -159,29 +159,35 @@ export default function SurveyScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const evaluateShowCondition = (showCondition) => {
-    // Split the showCondition string into individual conditions
-    const conditions = showCondition.split(',');
+      // Split the showCondition string into individual conditions
+      const conditions = showCondition.split(',');
 
-    // Evaluate each condition
-    for (const condition of conditions) {
-      // Split the condition into the question ID and the expected response
-      const [questionID, expectedResponses] = condition.split('=');
+      // Evaluate each condition
+      for (const condition of conditions) {
+          // Check if the condition contains 'not'
+          const isNotCondition = condition.includes('not');
 
-      // Trim any leading or trailing whitespace
-      const trimmedQuestionID = questionID.trim();
+          // Split the condition into the question ID and the expected response
+          const [questionID, expectedResponses] = condition.split(isNotCondition ? 'not' : '=');
 
-      // Split the expected responses by 'or' and trim any leading or trailing whitespace
-      const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
+          // Trim any leading or trailing whitespace
+          const trimmedQuestionID = questionID.trim();
 
-      // Check if the actual response is included in the array of expected responses
-      const actualResponse = responses[trimmedQuestionID] ? responses[trimmedQuestionID][0] : null;
-      if (!trimmedExpectedResponses.includes(actualResponse)) {
-        return false;
+          // Split the expected responses by 'or' and trim any leading or trailing whitespace
+          const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
+
+          // Check if the actual response is included in the array of expected responses
+          const actualResponse = responses[trimmedQuestionID] ? responses[trimmedQuestionID][0] : null;
+          const responseIncluded = trimmedExpectedResponses.includes(actualResponse);
+
+          // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
+          if ((isNotCondition && responseIncluded) || (!isNotCondition && !responseIncluded)) {
+              return false;
+          }
       }
-    }
 
-    // If all conditions are met, return true
-    return true;
+      // If all conditions are met, return true
+      return true;
   };
 
 
