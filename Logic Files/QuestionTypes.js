@@ -119,9 +119,9 @@ const QuestionType = ({ value, onChange, options }) => {
 //   );
 // };
 
-const CustomCheckbox = ({ label, handleCheck, value, isFirst, isLast, isDisabled }) => {
+const CustomCheckbox = ({ label, value, handleCheck, isFirst, isLast, isDisabled }) => {
   const { colors } = useTheme();
-  const isSelected = value.includes(label);
+  const isSelected = value.some(item => item.value === label.value);
   return (
     <TouchableOpacity
       style={[
@@ -144,7 +144,7 @@ const CustomCheckbox = ({ label, handleCheck, value, isFirst, isLast, isDisabled
       }}
       disabled={isDisabled}
     >
-      <Text style={{color: isSelected ? 'white' : colors.text}}>{label}</Text>
+      <Text style={{color: isSelected ? 'white' : colors.text}}>{label.label}</Text>
       <Checkbox
         status={isSelected ? 'checked' : 'unchecked'}
         onPress={() => {
@@ -173,22 +173,20 @@ const CheckboxQuestionType = ({ value, onChange, options, styles }) => {
       return;
     }
 
-    const isNoneSelected = propValue.some(val => val.includes('None of the above'));
+    const isNoneSelected = propValue.some(val => val.value.includes('None of the above'));
 
-    if (label.includes('None of the above')) {
+    if (label.value.includes('None of the above')) {
       if (isNoneSelected) {
-        // If "None of the above" is already selected, unselect it
         setValue([]);
         onChange([]);
       } else {
-        // If "None of the above" is not selected, select it and unselect all others
         setValue([label]);
         onChange([label]);
       }
     } else if (isNoneSelected) {
       return;
     } else {
-      const newValue = propValue.includes(label) ? propValue.filter(item => item !== label) : [...propValue, label];
+      const newValue = propValue.some(item => item.value === label.value) ? propValue.filter(item => item.value !== label.value) : [...propValue, label];
       setValue(newValue);
       onChange(newValue);
     }
@@ -198,13 +196,13 @@ const CheckboxQuestionType = ({ value, onChange, options, styles }) => {
     <View style={styles}>
       {options.map((option, index) => (
         <CustomCheckbox
-          key={option} // or key={index} if labels are not unique
+          key={option.value}
           label={option}
           handleCheck={handleCheck}
-          value={Array.isArray(propValue) ? propValue : []} // Ensure value is an array
+          value={Array.isArray(propValue) ? propValue : []}
           isFirst={index === 0}
           isLast={index === options.length - 1}
-          isDisabled={propValue.some(val => val.includes('None of the above')) && !option.includes('None of the above')} // disable all other checkboxes when an option that includes "None of the above" is selected
+          isDisabled={propValue.some(val => val.value.includes('None of the above')) && !option.value.includes('None of the above')}
         />
       ))}
     </View>
