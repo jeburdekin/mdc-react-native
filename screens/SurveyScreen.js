@@ -16,6 +16,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text_Q,
   ageGroup_Q,
@@ -260,27 +261,62 @@ export default function SurveyScreen({ navigation }) {
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
   // onSubmit
-  const onSubmit = () => {
+  // Save survey data when the user navigates away
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', async () => {
+      const surveyData = {
+        currentPage,
+        responses,
+        startTime,
+      };
+      await AsyncStorage.setItem('surveyData', JSON.stringify(surveyData));
+    });
+  }, [navigation, currentPage, responses, startTime]);
+
+  // Load survey data when the screen is focused
+  useEffect(() => {
+    const loadSurveyData = async () => {
+      if (questions.length > 0) {
+        const surveyData = await AsyncStorage.getItem('surveyData');
+        if (surveyData !== null) {
+          const { currentPage, responses, startTime } = JSON.parse(surveyData);
+          setCurrentPage(currentPage);
+          setResponses(responses);
+          setStartTime(new Date(startTime));
+        }
+      }
+    };
+    loadSurveyData();
+    const unsubscribe = navigation.addListener('focus', loadSurveyData);
+    return unsubscribe;
+  }, [navigation, questions]);
+
+  // Remove survey data when the survey is completed
+  const onSubmit = async () => {
     // Check if all questions on the current page have been answered
     const allAnswered = questions
       .slice(startQuestion, endQuestion)
       .every((question) => responses[question.questionID] !== null && responses[question.questionID] !== undefined);
-
     if (allAnswered) {
       let nextPage = currentPage + 1;
       if (nextPage <= questionsPerPage.length) {
         setCurrentPage(nextPage);
       } else {
         console.log(responses); // or any other final submission logic
+        await AsyncStorage.removeItem('surveyData'); // Remove survey data
       }
     } else {
       alert("Please answer all questions before proceeding.");
     }
   };
 
+  // Initialize the responses
   useEffect(() => {
     const initialResponses = questions.reduce((acc, question) => {
-      acc[question.questionID] = []; // Initialize as an empty array
+      // Check if there's already a saved response for this question
+      const savedResponse = responses[question.questionID];
+      // If there is, use that response. If there isn't, initialize it as an empty array
+      acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
     setResponses(initialResponses);
@@ -364,6 +400,7 @@ export default function SurveyScreen({ navigation }) {
                       [question.questionID]: Array.isArray(newValue) ? newValue : [newValue],
                     }));
                   }}
+                  // Ensure that the value is always an array
                   value={Array.isArray(responses[question.questionID]) ? responses[question.questionID] : [responses[question.questionID]]}
                 />
                 </>
