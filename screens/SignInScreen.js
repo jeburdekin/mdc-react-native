@@ -126,7 +126,7 @@ export default function SignInScreen({ navigation }) {
       navigation.navigate("User Home");
     } catch (error) {
       setErrorMessage("Invalid email or password");
-      setVisible(true);    
+      setVisible(true);
     }
   };
 
@@ -180,7 +180,8 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.buttonText}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleSignIn}
+              // Disabling sign in until rest of app is developed onPress={handleSignIn}
+              onPress={navigation.navigate("User Home")}
               style={styles.button}
             >
               <Text style={styles.buttonText}>Next</Text>

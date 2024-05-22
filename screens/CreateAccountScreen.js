@@ -35,7 +35,7 @@ export default function CreateAccountScreen({ navigation }) {
   const [age, setAge] = React.useState(null);
   const [birthDate, setBirthDate] = useState(''); // Make sure this line is uncommented
   const [location, setLocation] = React.useState("");
-  
+
   const [visible, setVisible] = React.useState(false);
   const [verificationCode, setVerificationCode] = React.useState('');
 
@@ -50,17 +50,17 @@ export default function CreateAccountScreen({ navigation }) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
-  
+
     // Check if the user input is an email
     if (!user.includes('@')) {
       Alert.alert('Error', 'Please enter a valid email address.');
       return;
     }
-  
+
     try {
       // Sign up with email
       const userCredential = await createUserWithEmailAndPassword(auth, user, password);
-      // Signed in 
+      // Signed in
       const userName = userCredential.user;
       // ...
       navigation.navigate("Make Deaths Count")
@@ -83,7 +83,7 @@ export default function CreateAccountScreen({ navigation }) {
       setBirthDate(formatDate(currentDate)); // Update birthDate
     }
   };
-  
+
   return (
       <SafeAreaView style={{width: '100%', alignItems: "center", flex: 1, backgroundColor:"#fffcf7"}}>
         <Image source={require ("../assets/MDC-logo long.png")} style={styles.logo}/>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: "center",
     color: "#fffcf7",
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
   },
   whiteBlock1: {
