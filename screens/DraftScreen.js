@@ -8,14 +8,23 @@ import { createDraft, deleteDraft } from '../Redux/Actions'; // replace with the
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
   },
+  header: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#f5f5f5', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 6,
+    borderBottomColor: '#ddd', 
+  }
 });
 
 const DraftScreen = ({ drafts, navigation }) => {
@@ -62,7 +71,9 @@ const DraftScreen = ({ drafts, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Title style={[styles.title, { color: colors.primary }]}>Draft Screen</Title>
+      <View style={styles.header}>
+        <Title style={[styles.title, { color: colors.primary }]}>Select a Draft</Title>
+      </View>
       {drafts.map((draft, index) => (
         <Button
           key={index}

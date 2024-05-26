@@ -6,12 +6,22 @@ import { createDraft } from '../Redux/Actions'; // replace with the actual path 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fffcf7',
   },
   title:{
-    fontSize: 24, fontWeight: 'bold'
+    fontSize: 30, 
+    fontWeight: 'bold',
+  },
+  header: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#f5f5f5', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 6,
+    borderBottomColor: '#ddd', 
   }
 });
 
@@ -20,7 +30,9 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
 
   return (
     <View style={styles.container}>
-      <Title style={[styles.title, {color: colors.primary}]}>Survey Creator</Title>
+      <View style={styles.header}>
+        <Title style={[styles.title, {color: colors.primary}]}>Choose a Survey</Title>
+      </View>
       <Button
         mode="contained"
         style={{ backgroundColor: colors.primary, marginTop: 20 }}

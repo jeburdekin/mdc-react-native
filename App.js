@@ -57,7 +57,7 @@ function App() {
             <Stack.Screen name="User Home" component={HomeScreen} />
             <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
             <Stack.Screen name="Survey Manager" component={SurveyCreatorScreen} />
-            <Stack.Screen name="Profile Screen" component={ProfileScreen} />
+            {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
             <Stack.Screen name="Notes Screen" component={NoteScreen} />
             <Stack.Screen name="Draft Screen" component={DraftScreen} />
             <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />

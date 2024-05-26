@@ -253,31 +253,45 @@ export default function SurveyScreen({ navigation }) {
     fetchAndParseCSV();
   }, []);
 
-
-
   // Calculate the range of questions on the current page
   const startQuestion = questionsPerPage
     .slice(0, currentPage - 1)
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
-  // onSubmit
+  
+    // Generate a unique key for the survey
+  const [surveyKey, setSurveyKey] = useState(null);
+  useEffect(() => {
+    const generateSurveyKey = async () => {
+      let key = await AsyncStorage.getItem('surveyKey');
+      if (key === null) {
+        key = `surveyData-${Date.now()}`;
+        await AsyncStorage.setItem('surveyKey', key);
+      }
+      setSurveyKey(key);
+    };
+    generateSurveyKey();
+  }, []);
+
   // Save survey data when the user navigates away
   useEffect(() => {
     return navigation.addListener('beforeRemove', async () => {
-      const surveyData = {
-        currentPage,
-        responses,
-        startTime,
-      };
-      await AsyncStorage.setItem('surveyData', JSON.stringify(surveyData));
+      if (surveyKey !== null) {
+        const surveyData = {
+          currentPage,
+          responses,
+          startTime,
+        };
+        await AsyncStorage.setItem(surveyKey, JSON.stringify(surveyData));
+      }
     });
-  }, [navigation, currentPage, responses, startTime]);
+  }, [navigation, currentPage, responses, startTime, surveyKey]);
 
   // Load survey data when the screen is focused
   useEffect(() => {
     const loadSurveyData = async () => {
-      if (questions.length > 0) {
-        const surveyData = await AsyncStorage.getItem('surveyData');
+      if (surveyKey !== null) {
+        const surveyData = await AsyncStorage.getItem(surveyKey);
         if (surveyData !== null) {
           const { currentPage, responses, startTime } = JSON.parse(surveyData);
           setCurrentPage(currentPage);
@@ -286,10 +300,12 @@ export default function SurveyScreen({ navigation }) {
         }
       }
     };
-    loadSurveyData();
+    if (surveyKey !== null) {
+      loadSurveyData();
+    }
     const unsubscribe = navigation.addListener('focus', loadSurveyData);
     return unsubscribe;
-  }, [navigation, questions]);
+  }, [navigation, surveyKey]);
 
   // Remove survey data when the survey is completed
   const onSubmit = async () => {
@@ -303,7 +319,7 @@ export default function SurveyScreen({ navigation }) {
         setCurrentPage(nextPage);
       } else {
         console.log(responses); // or any other final submission logic
-        await AsyncStorage.removeItem('surveyData'); // Remove survey data
+        await AsyncStorage.removeItem(surveyKey); // Remove survey data
       }
     } else {
       alert("Please answer all questions before proceeding.");
