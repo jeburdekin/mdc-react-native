@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Text, useTheme, Title } from 'react-native-paper';
-import { View, StyleSheet } from 'react-native';
+import { Button,  useTheme, Title } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { createDraft } from '../Redux/Actions'; // replace with the actual path to your actions
 const styles = StyleSheet.create({
@@ -35,7 +35,12 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
       </View>
       <Button
         mode="contained"
-        style={{ backgroundColor: colors.primary, marginTop: 20 }}
+        style={{
+          backgroundColor: colors.primary,
+          marginTop: 20,
+          borderWidth: 12,
+          width: '90%',
+        }}
         onPress={() => {
           // Create a draft for the "Internet Variant - W.H.O. Survey"
           createDraft({
@@ -46,19 +51,26 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
           navigation.navigate('Draft Screen');
         }}
       >
-        INTERNET Variant - W.H.O. Survey
+        <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
       </Button>
       {downloadedSurveys.map((survey, index) => (
         <Button
           key={index}
           mode="contained"
-          style={{ backgroundColor: colors.primary, marginTop: 20 }}
+          style={{
+            backgroundColor: colors.primary,
+            marginTop: 20,
+            borderWidth: 12,
+            width: '90%',
+          }}          
           onPress={() => {
             createDraft(survey);
             navigation.navigate('Draft Screen');
           }}
         >
-          {survey.name}
+          <Text style={{ fontSize: 20, color: 'white' }}>
+            {survey.name}
+          </Text>
         </Button>
       ))}
     </View>

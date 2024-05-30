@@ -78,12 +78,19 @@ const DraftScreen = ({ drafts, navigation }) => {
         <Button
           key={index}
           mode="contained"
-          style={{ backgroundColor: colors.primary, marginTop: 20 }}
+          style={{
+            backgroundColor: colors.primary,
+            marginTop: 20,
+            borderWidth: 12,
+            width: '90%',
+          }}
           onPress={() => {
             navigation.navigate('Survey Screen', { draftData: draft });
           }}
         >
-          {typeof draft.name === 'string' ? draft.name : 'No name'}
+          <Text style={{ fontSize: 20 }}>
+            {typeof draft.name === 'string' ? draft.name : 'No name'}
+          </Text>
         </Button>
       ))}
     </View>
