@@ -1,17 +1,27 @@
 import React from 'react';
-import { Button, Text, useTheme, Title } from 'react-native-paper';
-import { View, StyleSheet } from 'react-native';
+import { Button,  useTheme, Title } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { createDraft } from '../Redux/Actions'; // replace with the actual path to your actions
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fffcf7',
   },
   title:{
-    fontSize: 24, fontWeight: 'bold'
+    fontSize: 30, 
+    fontWeight: 'bold',
+  },
+  header: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#f5f5f5', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 6,
+    borderBottomColor: '#ddd', 
   }
 });
 
@@ -20,10 +30,17 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
 
   return (
     <View style={styles.container}>
-      <Title style={[styles.title, {color: colors.primary}]}>Survey Creator</Title>
+      <View style={styles.header}>
+        <Title style={[styles.title, {color: colors.primary}]}>Choose a Survey</Title>
+      </View>
       <Button
         mode="contained"
-        style={{ backgroundColor: colors.primary, marginTop: 20 }}
+        style={{
+          backgroundColor: colors.primary,
+          marginTop: 20,
+          borderWidth: 12,
+          width: '90%',
+        }}
         onPress={() => {
           // Create a draft for the "Internet Variant - W.H.O. Survey"
           createDraft({
@@ -34,19 +51,26 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
           navigation.navigate('Draft Screen');
         }}
       >
-        INTERNET Variant - W.H.O. Survey
+        <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
       </Button>
       {downloadedSurveys.map((survey, index) => (
         <Button
           key={index}
           mode="contained"
-          style={{ backgroundColor: colors.primary, marginTop: 20 }}
+          style={{
+            backgroundColor: colors.primary,
+            marginTop: 20,
+            borderWidth: 12,
+            width: '90%',
+          }}          
           onPress={() => {
             createDraft(survey);
             navigation.navigate('Draft Screen');
           }}
         >
-          {survey.name}
+          <Text style={{ fontSize: 20, color: 'white' }}>
+            {survey.name}
+          </Text>
         </Button>
       ))}
     </View>
