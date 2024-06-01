@@ -16,8 +16,10 @@ import DraftScreen from "./screens/DraftScreen";
 import PreparedSurvScreen from "./screens/PreparedSurvScreen";
 import SentSurvScreen from "./screens/SentSurvScreen";
 import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
-import SurveyManagerScreen from "./screens/SurveyManagerScreen";
+import SurveyCreatorScreen from "./screens/SurveyCreatorScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
+import store from './Redux/Store';
+import { Provider } from 'react-redux';
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
 // const styles = StyleSheet.create({});
@@ -47,6 +49,7 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
+    <Provider store={store}>
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Make Deaths Count">
@@ -56,7 +59,7 @@ function App() {
           <Stack.Screen name="User Home" component={HomeScreen} />
           <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
           <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
-          <Stack.Screen name="Profile Screen" component={ProfileScreen} />
+          {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
           <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
           <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
           <Stack.Screen name="Notes Screen" component={NoteScreen} />
@@ -68,6 +71,7 @@ function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
+  </Provider>
   );
 }
 
