@@ -158,6 +158,8 @@ export default function SurveyScreen({ navigation }) {
   const [startTime, setStartTime] = useState(new Date());
   const [shownTip, setShownTip] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [groupShowConditions, setGroupShowConditions] = useState({});
+
 
   const evaluateShowCondition = (showCondition) => {
       // Split the showCondition string into individual conditions
@@ -178,12 +180,12 @@ export default function SurveyScreen({ navigation }) {
           const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
 
           // Check if the actual response is included in the array of expected responses
-          const actualResponse = responses[trimmedQuestionID] ? responses[trimmedQuestionID][0] : null;
-          const responseIncluded = trimmedExpectedResponses.includes(actualResponse);
+          const actualResponse = responses[trimmedQuestionID];
+          const responseIncluded = actualResponse !== undefined && actualResponse !== null && trimmedExpectedResponses.includes(actualResponse);
 
           // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
           if ((isNotCondition && responseIncluded) || (!isNotCondition && !responseIncluded)) {
-              return false;
+            return false;
           }
       }
 
@@ -191,6 +193,28 @@ export default function SurveyScreen({ navigation }) {
       return true;
   };
 
+  const evaluateGroupShowCondition = (groupNames) => {
+    // Split the groupNames string into individual group names
+    const groups = groupNames.split(',');
+    // Evaluate each group
+    for (const group of groups) {
+      // Get the show condition for this group
+      const showCondition = groupShowConditions[group.trim()];
+      // If there is a show condition for this group, evaluate it
+      if (showCondition) {
+        const show = evaluateShowCondition(showCondition);
+        // If the show condition is not met, return false
+        if (!show) {
+          return false;
+        }
+      } else {
+        // If there is no show condition for this group, return false
+        return false;
+      }
+    }
+    // If all group show conditions are met, return true
+    return true;
+  };
 
   useEffect(() => {
     if (!startTime) {
@@ -216,25 +240,41 @@ export default function SurveyScreen({ navigation }) {
               return;
             }
 
-            const questions = results.data.map((row) => ({
-              order: row["Order"],
-              questionID: row["Question ID"],
-              questionType: row["Question Type"],
-              details: row["Details"],
-              showCondition: row["Show Condition"],
-              tip: row["Tip"],
-              response: "",
-            }));
+            const groupShowConditions = {};
+            const questions = results.data.map((row) => {
+              // Parse the group show conditions
+              const groupShowCondition = row["Group Show Condition"];
+              if (groupShowCondition) {
+                const [groupName, showCondition] = groupShowCondition.split(":");
+                groupShowConditions[groupName.trim()] = showCondition.trim();
+              }
+
+              return {
+                order: row["Order"],
+                questionID: row["Question ID"],
+                questionType: row["Question Type"],
+                details: row["Details"],
+                showCondition: row["Individual Show Condition"],
+                questionGroups: row["Question Group(s)"],
+                tip: row["Tip"],
+                response: "",
+              };
+            });
             setQuestions(questions);
+            setGroupShowConditions(groupShowConditions);
 
             // Replace the existing logic for setting the questionsPerPage state variable with the new logic
             // Create a new array of questions that should be rendered based on their showCondition
             const renderedQuestions = questions.filter((question) => {
               // If the question has a showCondition, evaluate it
-              if (question.showCondition) {
-                return evaluateShowCondition(question.showCondition);
+              if (question.showCondition && !evaluateShowCondition(question.showCondition)) {
+                return false;
               }
-              // If the question does not have a showCondition, render it
+              // If the question has a group or groups, evaluate the group show conditions
+              if (question.questionGroups && !evaluateGroupShowCondition(question.questionGroups)) {
+                return false;
+              }
+              // If the question does not have a showCondition or group(s), render it
               return true;
             });
 
@@ -258,7 +298,7 @@ export default function SurveyScreen({ navigation }) {
     .slice(0, currentPage - 1)
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
-  
+
     // Generate a unique key for the survey
   const [surveyKey, setSurveyKey] = useState(null);
   useEffect(() => {

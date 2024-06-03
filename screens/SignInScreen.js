@@ -181,7 +181,7 @@ export default function SignInScreen({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
               // Disabling sign in until rest of app is developed onPress={handleSignIn}
-              onPress={() => navigation.navigate("User Home")}
+              onPress={() =>  navigation.navigate("User Home")}
               style={styles.button}
             >
               <Text style={styles.buttonText}>Next</Text>
