@@ -630,7 +630,7 @@ export const select_2_Q = ({ value, onChange }) => {
       options={[
         { label: "Female", value: "Female" },
         { label: "Male", value: "Male" },
-        { label: "Ambiguous/Intersex", value: "Ambiguous/Intersex" },
+        { label: "Ambiguous/Intersex", value: "Ambiguous" },
       ]}
     />
   );
@@ -1146,8 +1146,8 @@ export const select_534_Q = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       options={[
-        { label: "Less or equal to 7 days", value: "Less or equal to 7 days" },
-        { label: "More than 7 days", value: "More than 7 days" },
+        { label: "Less or equal to 7 days", value: "Less" },
+        { label: "More than 7 days", value: "More" },
         { label: "Doesn't know", value: "DK" },
         { label: "Refused to answer", value: "Ref" },
       ]}

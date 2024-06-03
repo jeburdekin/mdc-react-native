@@ -1,7 +1,13 @@
 {
   "expo": {
     "name": "mdc-react-native",
-    "slug": "mdc-react-native",
+    "slug": "mdc-project",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "description": "A prototype application for Make Deaths Count",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,8 +36,13 @@
     },
     "extra": {
       "eas": {
-        "projectId": "76e4056a-644e-4cd9-a158-1d4157c57802"
+        "projectId": "a5fa4372-fe93-48bb-83ec-6bd3471573bc"
       }
+    },
+    "owner": "yassin537",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/a5fa4372-fe93-48bb-83ec-6bd3471573bc"
     }
   }
 }

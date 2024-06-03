@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     padding: 20,
-    backgroundColor: '#f5f5f5', 
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 6,
-    borderBottomColor: '#ddd', 
+    borderBottomColor: '#ddd',
   },
   button: {
     width: windowWidth * 0.85,
@@ -88,9 +88,9 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
     const localUri = FileSystem.documentDirectory + surveyName + '.csv';
 
     const downloadResumable = FileSystem.createDownloadResumable(
-      url, 
-      localUri, 
-      {}, 
+      url,
+      localUri,
+      {},
       (progress) => {
         setDownloadProgress(progress.totalBytesWritten / progress.totalBytesExpectedToWrite);
       }
@@ -111,7 +111,7 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{color: colors.primary, fontWeight: 'bold', fontSize: 25}}>Download Surveys Screen</Text>
+        <Text style={{color: colors.primary, fontWeight: 'bold', fontSize: 25}}>Download Surveys</Text>
       </View>
       <Button mode="contained" onPress={() => downloadFile('Interviewer Questions')} style={styles.button}>
         <Text style={styles.buttonText}>Interviewer Questions</Text>
