@@ -180,7 +180,7 @@ export default function SurveyScreen({ navigation }) {
           const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
 
           // Check if the actual response is included in the array of expected responses
-          const actualResponse = responses[trimmedQuestionID];
+          const actualResponse = String(responses[trimmedQuestionID]);
           const responseIncluded = actualResponse !== undefined && actualResponse !== null && trimmedExpectedResponses.includes(actualResponse);
 
           // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
@@ -375,6 +375,7 @@ export default function SurveyScreen({ navigation }) {
       acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
+    console.log(responses)
     setResponses(initialResponses);
   }, [questions]);
 
@@ -397,6 +398,12 @@ export default function SurveyScreen({ navigation }) {
           .filter((question) => {
             // If the question has a showCondition, evaluate it
             if (question.showCondition) {
+              if(question.groupShowCondition) {
+                console.log('groupShowCondition', question.order, question.groupShowCondition, evaluateGroupShowCondition(question.groupShowCondition));
+                return evaluateShowCondition(question.showCondition) && evaluateGroupShowCondition(question.groupShowCondition);
+
+              }
+              console.log('showCondition', question.order, question.showCondition, evaluateShowCondition(question.showCondition));
               return evaluateShowCondition(question.showCondition);
             }
             // If the question does not have a showCondition, render it
