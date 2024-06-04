@@ -36,46 +36,40 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 20
   },
-  rectangle1: {
-    zIndex: 1,
-    backgroundColor: "#DFDFDF",
-    opacity: 0.6,
-    width: windowWidth,
-    height: windowHeight / 9.5,
-  },
-  rectangle2: {
-    backgroundColor: "#FFFFF0",
+  titleBox: {
+    backgroundColor: "#ecece5",
     width: windowWidth,
     height: windowHeight / 9.5,
     borderBlockColor: "#1D1D1D",
     borderBottomWidth: 4,
-    position: "absolute",
+    flex: 1,
+    flexDirection: "row",
+    alignContent: "center",
   },
   imageTouch: {
     zIndex: 3,
     width: windowWidth / 6,
     height: windowWidth / 6,
-    borderRadius: 30,
+    borderRadius: 40,
     top: windowHeight * 0.013,
-    left: windowWidth * 0.75,
-    position: "absolute",
+    left: windowWidth / 10,
+    flex: 1,
   },
   image: {
     zIndex: 2,
     width: windowWidth / 6,
     height: windowWidth / 6,
     borderRadius: 30,
-    top: windowHeight * 0.013,
-    left: windowWidth * 0.775,
-    position: "absolute",
+    right: windowWidth / 15,
+    top: windowHeight * 0.013,    
   },
   logo: {
     zIndex: 1,
     width: windowWidth / 2,
     height: windowWidth / 5,
-    top: windowHeight * 0,
-    left: windowWidth * 0.2,
-    position: "absolute",
+    left: windowWidth / 10,
+    flex: 4,
+    alignSelf: "center",
   },
   buttonIcon: {
     color: "#FFFFFF",
@@ -141,10 +135,10 @@ export default function HomeScreen({ navigation }) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-    //This one view is the problem
+    
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
     <Animated.ScrollView
-    style={{backgroundColor: "#fffcf7", flex: 0.7, width: windowWidth, overflow: 'hidden'}}
+    style={{backgroundColor: "#fffcf7", width: windowWidth, overflow: 'scroll'}}
     onScroll={Animated.event(
       [{ nativeEvent: { contentOffset: { y: scrollY } } }],
       { useNativeDriver: true }
@@ -169,17 +163,19 @@ export default function HomeScreen({ navigation }) {
           ],
         }}
       >
-        <View style={styles.rectangle2} />
-        <View style={styles.rectangle1}></View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Profile Screen")}
-          style={styles.imageTouch}
-        ></TouchableOpacity>
-        <Image source={require("../assets/Layer 1.png")} style={styles.image} />
-        <Image
-          source={require("../assets/mdc logo short.png")}
-          style={styles.logo}
-        />
+        <View style={styles.titleBox}>
+          <Image
+            source={require("../assets/mdc logo short.png")}
+            style={styles.logo}
+          />
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Profile Screen")}
+            style={styles.imageTouch}
+          >
+          </TouchableOpacity>
+          <Image source={require("../assets/Layer 1.png")} style={styles.image} />
+        </View>
       </Animated.View>
 
         <View style={styles.background}>
