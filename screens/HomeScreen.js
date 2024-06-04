@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: windowWidth / 2,
     height: windowWidth / 5,
-    top: windowHeight * 0.005,
+    top: windowHeight * 0,
     left: windowWidth * 0.2,
     position: "absolute",
   },
@@ -142,8 +142,9 @@ export default function HomeScreen({ navigation }) {
 
   return (
     //This one view is the problem
+    <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
     <Animated.ScrollView
-    style={{backgroundColor: "#fffcf7"}}
+    style={{backgroundColor: "#fffcf7", flex: 0.7, width: windowWidth, overflow: 'hidden'}}
     onScroll={Animated.event(
       [{ nativeEvent: { contentOffset: { y: scrollY } } }],
       { useNativeDriver: true }
@@ -268,5 +269,6 @@ export default function HomeScreen({ navigation }) {
           </SafeAreaView>
         </View>      
       </Animated.ScrollView>
+    </View>
   );
 }
