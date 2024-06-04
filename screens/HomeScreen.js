@@ -22,60 +22,52 @@ const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   background: {
     backgroundColor: "#fffcf7",
-    height: windowHeight,
     alignItems: "center",
+    flex: 1,
   },
   button: {
     backgroundColor: "#E57C63",
     width: windowWidth * 0.85,
-    padding: 12,
+    padding: windowWidth * 0.04,
     borderRadius: 20,
-    marginTop: 20,
+    margin: windowHeight * 0.015,
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 20
   },
-  rectangle1: {
-    zIndex: 1,
-    backgroundColor: "#DFDFDF",
-    opacity: 0.6,
-    width: windowWidth,
-    height: windowHeight / 9.5,
-  },
-  rectangle2: {
-    backgroundColor: "#FFFFF0",
-    width: windowWidth,
-    height: windowHeight / 9.5,
-    borderBlockColor: "#1D1D1D",
-    borderBottomWidth: 4,
-    position: "absolute",
+  titleBox: {
+    backgroundColor: "#ecece5",
+    borderBlockColor: "#8c8c8c",
+    borderBottomWidth: 5,
+    flex: 1,
+    flexDirection: "row",
+    alignContent: "center",
   },
   imageTouch: {
     zIndex: 3,
     width: windowWidth / 6,
     height: windowWidth / 6,
-    borderRadius: 30,
+    borderRadius: 40,
     top: windowHeight * 0.013,
-    left: windowWidth * 0.75,
-    position: "absolute",
+    left: windowWidth / 10,
+    flex: 1,
   },
   image: {
     zIndex: 2,
     width: windowWidth / 6,
     height: windowWidth / 6,
     borderRadius: 30,
-    top: windowHeight * 0.013,
-    left: windowWidth * 0.775,
-    position: "absolute",
+    right: windowWidth / 15,
+    top: windowHeight * 0.013,    
   },
   logo: {
     zIndex: 1,
     width: windowWidth / 2,
     height: windowWidth / 5,
-    top: windowHeight * 0,
-    left: windowWidth * 0.2,
-    position: "absolute",
+    left: windowWidth / 10,
+    flex: 4,
+    alignSelf: "center",
   },
   buttonIcon: {
     color: "#FFFFFF",
@@ -141,52 +133,55 @@ export default function HomeScreen({ navigation }) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-    //This one view is the problem
+    
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
-    <Animated.ScrollView
-    style={{backgroundColor: "#fffcf7", flex: 0.7, width: windowWidth, overflow: 'hidden'}}
-    onScroll={Animated.event(
-      [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-      { useNativeDriver: true }
-    )}
-    scrollEventThrottle={16}
-    >
-      <Animated.View
-        style={{
-          opacity: scrollY.interpolate({
-            inputRange: [0, 60],
-            outputRange: [1, 0],
-            extrapolate: 'clamp',
-          }),
-          transform: [
-            {
-              translateY: scrollY.interpolate({
-                inputRange: [10, 130],
-                outputRange: [0, -50],
-                extrapolate: 'clamp',
-              }),
-            },
-          ],
-        }}
+      <Animated.ScrollView
+      style={{backgroundColor: "#fffcf7", width: windowWidth, overflow: 'scroll', flex: 1}}
+      onScroll={Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        { useNativeDriver: true }
+      )}
+      scrollEventThrottle={16}
       >
-        <View style={styles.rectangle2} />
-        <View style={styles.rectangle1}></View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Profile Screen")}
-          style={styles.imageTouch}
-        ></TouchableOpacity>
-        <Image source={require("../assets/Layer 1.png")} style={styles.image} />
-        <Image
-          source={require("../assets/mdc logo short.png")}
-          style={styles.logo}
-        />
-      </Animated.View>
+        <Animated.View
+          style={{
+            flex: 1,
+            opacity: scrollY.interpolate({
+              inputRange: [0, 60],
+              outputRange: [1, 0],
+              extrapolate: 'clamp',
+            }),
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [10, 130],
+                  outputRange: [0, -50],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+            
+          }}
+        >
+          <View style={styles.titleBox}>
+            <Image
+              source={require("../assets/mdc logo short.png")}
+              style={styles.logo}
+            />
 
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Profile Screen")}
+              style={styles.imageTouch}
+            >
+            </TouchableOpacity>
+            <Image source={require("../assets/Layer 1.png")} style={styles.image} />
+          </View>
+        </Animated.View>
         <View style={styles.background}>
           <SafeAreaView>
             <Button
               mode="elevated"
-              style={styles.button}
+              style={[styles.button, {marginTop: windowHeight * 0.03}]}
               contentStyle={{ flexDirection: "row"}}
               icon="circle-edit-outline"
               labelStyle={styles.buttonIcon}
@@ -259,7 +254,7 @@ export default function HomeScreen({ navigation }) {
             </Button>
             <Button
               mode="elevated"
-              style={styles.button}
+              style={[styles.button, {marginBottom: windowHeight * 0.03}]}
               icon="logout"
               labelStyle={styles.buttonIcon}
               onPress={() => navigation.navigate("Make Deaths Count")}
