@@ -102,15 +102,15 @@ const questionTypeComponents = {
   units_4: Units4_Q,
   units_5: Units5_Q,
   integer: IntegerInput,
-  ageGroup: ageGroup_Q,
+  age_group: ageGroup_Q,
   YES_NO: YesNo_Q,
   HIGH_LOW_VERY: HighLowVery_Q,
   YES_NO_REF: YesNoDKRef_Q,
   YES_NO_DK_REF: YesNoDKRef_Q,
   YesNODKRef2: YesNODKRef2_Q,
-  D_M_DK_Ref: D_M_DK_Ref_Q,
-  M_H_D_DK_Ref: M_H_D_DK_Ref_Q,
-  H_D_DK_Ref: H_D_DK_Ref_Q,
+  D_M_DK_REF: D_M_DK_Ref_Q,
+  M_H_D_DK_REF: M_H_D_DK_Ref_Q,
+  H_D_DK_REF: H_D_DK_Ref_Q,
   H_D_M_DK: H_D_M_DK_Q,
   M_H_M_DK: M_H_M_DK_Q,
   M_H_D_DK: M_H_D_DK_Q,
@@ -399,11 +399,8 @@ export default function SurveyScreen({ navigation }) {
             // If the question has a showCondition, evaluate it
             if (question.showCondition) {
               if(question.groupShowCondition) {
-                console.log('groupShowCondition', question.order, question.groupShowCondition, evaluateGroupShowCondition(question.groupShowCondition));
                 return evaluateShowCondition(question.showCondition) && evaluateGroupShowCondition(question.groupShowCondition);
-
               }
-              console.log('showCondition', question.order, question.showCondition, evaluateShowCondition(question.showCondition));
               return evaluateShowCondition(question.showCondition);
             }
             // If the question does not have a showCondition, render it
