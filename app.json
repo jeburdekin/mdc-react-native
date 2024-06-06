@@ -8,14 +8,14 @@
       "android"
     ],
     "description": "A prototype application for Make Deaths Count",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/mdc logo short.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/mdc logo short.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fffcf7"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -27,7 +27,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#fffcf7"
       },
       "package": "com.anonymous.mdcreactnative"
     },
@@ -40,7 +40,7 @@
       }
     },
     "owner": "yassin537",
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": "1.0.1",
     "updates": {
       "url": "https://u.expo.dev/a5fa4372-fe93-48bb-83ec-6bd3471573bc"
     }
