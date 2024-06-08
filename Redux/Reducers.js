@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { ADD_SURVEY, CREATE_DRAFT } from './Actions'; // replace with the actual path to your actions
+import { DELETE_DRAFT } from './Actions';
 
 
 const surveysReducer = (state = [], action) => {
@@ -21,6 +22,8 @@ const draftsReducer = (state = initialState, action) => {
       } else {
         return [...state, action.payload];
       }
+      case DELETE_DRAFT:
+        return state.filter(draft => draft.id !== action.payload);
     default:
       return state;
   }

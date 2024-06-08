@@ -16,6 +16,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text_Q,
   ageGroup_Q,
@@ -76,7 +77,7 @@ import {
 } from "../Logic Files/QuestionTypes";
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
-const pageSize = 5;
+const pageSize = 2;
 
 const styles = StyleSheet.create({
   container: {
@@ -101,15 +102,15 @@ const questionTypeComponents = {
   units_4: Units4_Q,
   units_5: Units5_Q,
   integer: IntegerInput,
-  ageGroup: ageGroup_Q,
+  age_group: ageGroup_Q,
   YES_NO: YesNo_Q,
   HIGH_LOW_VERY: HighLowVery_Q,
   YES_NO_REF: YesNoDKRef_Q,
   YES_NO_DK_REF: YesNoDKRef_Q,
   YesNODKRef2: YesNODKRef2_Q,
-  D_M_DK_Ref: D_M_DK_Ref_Q,
-  M_H_D_DK_Ref: M_H_D_DK_Ref_Q,
-  H_D_DK_Ref: H_D_DK_Ref_Q,
+  D_M_DK_REF: D_M_DK_Ref_Q,
+  M_H_D_DK_REF: M_H_D_DK_Ref_Q,
+  H_D_DK_REF: H_D_DK_Ref_Q,
   H_D_M_DK: H_D_M_DK_Q,
   M_H_M_DK: M_H_M_DK_Q,
   M_H_D_DK: M_H_D_DK_Q,
@@ -157,6 +158,85 @@ export default function SurveyScreen({ navigation }) {
   const [startTime, setStartTime] = useState(new Date());
   const [shownTip, setShownTip] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [groupShowConditions, setGroupShowConditions] = useState({});
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+
+  useEffect(() => {
+    const newFilteredQuestions = questions
+      .filter((question) => {
+        // If the question has a showCondition, evaluate it
+        if (question.showCondition && !evaluateShowCondition(question.showCondition)) {
+          return false;
+        }
+        // If the question has a group or groups, evaluate the group show conditions
+        if (question.questionGroups && !evaluateGroupShowCondition(question.questionGroups)) {
+          return false;
+        }
+        // If the question does not have a showCondition or group(s), render it
+        return true;
+      });
+    setFilteredQuestions(newFilteredQuestions);
+
+    // Calculate the number of pages based on the number of visible questions
+    const numberOfPages = Math.ceil(newFilteredQuestions.length / pageSize);
+
+    // Update the state
+    setQuestionsPerPage(Array(numberOfPages).fill(pageSize));
+
+  }, [questions, responses]);
+
+  const evaluateShowCondition = (showCondition) => {
+      // Split the showCondition string into individual conditions
+      const conditions = showCondition.split(',');
+
+      // Evaluate each condition
+      for (const condition of conditions) {
+          // Check if the condition contains 'not'
+          const isNotCondition = condition.includes('not');
+
+          // Split the condition into the question ID and the expected response
+          const [questionID, expectedResponses] = condition.split(isNotCondition ? 'not' : '=');
+
+          // Trim any leading or trailing whitespace
+          const trimmedQuestionID = questionID.trim();
+
+          // Split the expected responses by 'or' and trim any leading or trailing whitespace
+          const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
+
+          // Check if the actual response is included in the array of expected responses
+          const actualResponse = String(responses[trimmedQuestionID]);
+          const responseIncluded = actualResponse !== undefined && actualResponse !== null && trimmedExpectedResponses.includes(actualResponse);
+
+          // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
+          if ((isNotCondition && responseIncluded) || (!isNotCondition && !responseIncluded)) {
+            return false;
+          }
+      }
+
+      // If all conditions are met, return true
+      return true;
+  };
+
+  const evaluateGroupShowCondition = (groupNames) => {
+    // Split the groupNames string into individual group names
+    const groups = groupNames.split(',');
+    // Evaluate each group
+    for (const group of groups) {
+      // Get the show condition for this group
+      const showCondition = groupShowConditions[group.trim()];
+      // If there is a show condition for this group, evaluate it
+      if (showCondition) {
+        const show = evaluateShowCondition(showCondition);
+
+        // If the show condition is not met, return false
+        if (!show) {
+          return false;
+        }
+      }
+    }
+    // If all group show conditions are met, return true
+    return true;
+  };
 
   useEffect(() => {
     if (!startTime) {
@@ -182,23 +262,28 @@ export default function SurveyScreen({ navigation }) {
               return;
             }
 
-            const questions = results.data.map((row) => ({
-              order: row["Order"],
-              questionID: row["Question ID"],
-              questionType: row["Question Type"],
-              details: row["Details"],
-              showCondition: row["Show Condition"],
-              tip: row["Tip"],
-              response: "",
-            }));
-            setQuestions(questions);
+            const groupShowConditions = {};
+            const questions = results.data.map((row) => {
+              // Parse the group show conditions
+              const groupShowCondition = row["Group Show Condition"];
+              if (groupShowCondition) {
+                const [groupName, showCondition] = groupShowCondition.split(":");
+                groupShowConditions[groupName.trim()] = showCondition.trim();
+              }
 
-            const pageSizes = Array(
-              Math.ceil(questions.length / pageSize)
-            ).fill(pageSize);
-            pageSizes[pageSizes.length - 1] =
-              questions.length % pageSize || pageSize;
-            setQuestionsPerPage(pageSizes);
+              return {
+                order: row["Order"],
+                questionID: row["Question ID"],
+                questionType: row["Question Type"],
+                details: row["Details"],
+                showCondition: row["Individual Show Condition"],
+                questionGroups: row["Question Group(s)"],
+                tip: row["Tip"],
+                response: "",
+              };
+            });
+            setQuestions(questions);
+            setGroupShowConditions(groupShowConditions);
           },
         });
         setIsLoading(false); // Set loading to false after the fetch operation is complete
@@ -210,35 +295,86 @@ export default function SurveyScreen({ navigation }) {
     fetchAndParseCSV();
   }, []);
 
-
-
   // Calculate the range of questions on the current page
   const startQuestion = questionsPerPage
     .slice(0, currentPage - 1)
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
-  // onSubmit
-  const onSubmit = () => {
+
+    // Generate a unique key for the survey
+  const [surveyKey, setSurveyKey] = useState(null);
+  useEffect(() => {
+    const generateSurveyKey = async () => {
+      let key = await AsyncStorage.getItem('surveyKey');
+      if (key === null) {
+        key = `surveyData-${Date.now()}`;
+        await AsyncStorage.setItem('surveyKey', key);
+      }
+      setSurveyKey(key);
+    };
+    generateSurveyKey();
+  }, []);
+
+  // Save survey data when the user navigates away
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', async () => {
+      if (surveyKey !== null) {
+        const surveyData = {
+          currentPage,
+          responses,
+          startTime,
+        };
+        await AsyncStorage.setItem(surveyKey, JSON.stringify(surveyData));
+      }
+    });
+  }, [navigation, currentPage, responses, startTime, surveyKey]);
+
+  // Load survey data when the screen is focused
+  useEffect(() => {
+    const loadSurveyData = async () => {
+      if (surveyKey !== null) {
+        const surveyData = await AsyncStorage.getItem(surveyKey);
+        if (surveyData !== null) {
+          const { currentPage, responses, startTime } = JSON.parse(surveyData);
+          setCurrentPage(currentPage);
+          setResponses(responses);
+          setStartTime(new Date(startTime));
+        }
+      }
+    };
+    if (surveyKey !== null) {
+      loadSurveyData();
+    }
+    const unsubscribe = navigation.addListener('focus', loadSurveyData);
+    return unsubscribe;
+  }, [navigation, surveyKey]);
+
+  // Remove survey data when the survey is completed
+  const onSubmit = async () => {
     // Check if all questions on the current page have been answered
     const allAnswered = questions
       .slice(startQuestion, endQuestion)
       .every((question) => responses[question.questionID] !== null && responses[question.questionID] !== undefined);
-
     if (allAnswered) {
       let nextPage = currentPage + 1;
       if (nextPage <= questionsPerPage.length) {
         setCurrentPage(nextPage);
       } else {
         console.log(responses); // or any other final submission logic
+        await AsyncStorage.removeItem(surveyKey); // Remove survey data
       }
     } else {
       alert("Please answer all questions before proceeding.");
     }
   };
 
+  // Initialize the responses
   useEffect(() => {
     const initialResponses = questions.reduce((acc, question) => {
-      acc[question.questionID] = []; // Initialize as an empty array
+      // Check if there's already a saved response for this question
+      const savedResponse = responses[question.questionID];
+      // If there is, use that response. If there isn't, initialize it as an empty array
+      acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
     setResponses(initialResponses);
@@ -259,7 +395,9 @@ export default function SurveyScreen({ navigation }) {
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        {questions.slice(startQuestion, endQuestion).map((question, index) => {
+        {filteredQuestions
+          .slice(startQuestion, endQuestion)
+          .map((question, index) => {
           const QuestionComponent = questionTypeComponents[question.questionType];
           return (
             <View style={{ marginTop: 10, alignContent: "center" }} key={index}>
@@ -312,6 +450,7 @@ export default function SurveyScreen({ navigation }) {
                       [question.questionID]: Array.isArray(newValue) ? newValue : [newValue],
                     }));
                   }}
+                  // Ensure that the value is always an array
                   value={Array.isArray(responses[question.questionID]) ? responses[question.questionID] : [responses[question.questionID]]}
                 />
                 </>

@@ -17,10 +17,11 @@ import PreparedSurvScreen from "./screens/PreparedSurvScreen";
 import SentSurvScreen from "./screens/SentSurvScreen";
 import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
 import SurveyCreatorScreen from "./screens/SurveyCreatorScreen";
+import SurveyHubScreen from "./screens/SurveyHubScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
 import store from './Redux/Store';
 import { Provider } from 'react-redux';
-// import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+
 
 // const styles = StyleSheet.create({});
 
