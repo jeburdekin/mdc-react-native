@@ -9,6 +9,8 @@ import HomeScreen from "./screens/HomeScreen";
 import FeedbackScreen from './screens/FeedbackScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import NoteFolderScreen from "./screens/NoteFolderScreen";
+import DeletedNoteFolderScreen from "./screens/DeletedNoteFolderScreen";
 import NoteScreen from "./screens/NoteScreen";
 import DraftScreen from "./screens/DraftScreen";
 import PreparedSurvScreen from "./screens/PreparedSurvScreen";
@@ -49,27 +51,28 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <Provider store={store}>
-      <PaperProvider>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Make Deaths Count">
-              <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
-              <Stack.Screen name="Sign In" component={SignInScreen} />
-              <Stack.Screen name="Survey Hub" component={SurveyHubScreen} />
-              <Stack.Screen name="Create Account" component={CreateAccountScreen} />
-              <Stack.Screen name="User Home" component={HomeScreen} />
-              <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
-              <Stack.Screen name="Survey Manager" component={SurveyCreatorScreen} />
-              {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
-              <Stack.Screen name="Notes Screen" component={NoteScreen} />
-              <Stack.Screen name="Draft Screen" component={DraftScreen} />
-              <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
-              <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
-              <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
-              <Stack.Screen name="Survey Screen" component={SurveyScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-      </PaperProvider>
-    </Provider>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Make Deaths Count">
+          <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
+          <Stack.Screen name="Sign In" component={SignInScreen} />
+          <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+          <Stack.Screen name="User Home" component={HomeScreen} />
+          <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
+          <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
+          {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
+          <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
+          <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
+          <Stack.Screen name="Notes Screen" component={NoteScreen} />
+          <Stack.Screen name="Drafts Screen" component={DraftScreen} />
+          <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
+          <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
+          <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
+          <Stack.Screen name="Survey Screen" component={SurveyScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  </Provider>
   );
 }
 

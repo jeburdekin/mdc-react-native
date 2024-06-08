@@ -262,8 +262,8 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
           </SafeAreaView>
-        </View>
-      </Animated.ScrollView>
+        </View> 
+      </ScrollView>     
     </View>
   );
 }
