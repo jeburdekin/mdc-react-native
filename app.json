@@ -8,7 +8,7 @@
       "android"
     ],
     "description": "A prototype application for Make Deaths Count",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/mdc logo short.png",
     "userInterfaceStyle": "light",
@@ -40,7 +40,7 @@
       }
     },
     "owner": "yassin537",
-    "runtimeVersion": "1.0.1",
+    "runtimeVersion": "1.0.2",
     "updates": {
       "url": "https://u.expo.dev/a5fa4372-fe93-48bb-83ec-6bd3471573bc"
     }

@@ -11,21 +11,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title:{
-    fontSize: 30, 
+    fontSize: 30,
     fontWeight: 'bold',
   },
   header: {
     width: '100%',
     padding: 20,
-    backgroundColor: '#f5f5f5', 
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 6,
-    borderBottomColor: '#ddd', 
+    borderBottomColor: '#ddd',
   }
 });
 
-const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => {
+const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToDraftScreen }) => {
   const { colors } = useTheme();
 
   return (
@@ -48,7 +48,7 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
             // Add any other data you need for the survey...
           });
           // Navigate to the DraftScreen
-          navigation.navigate('Draft Screen');
+          goToDraftScreen();
         }}
       >
         <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
@@ -62,10 +62,10 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft }) => 
             marginTop: 20,
             borderWidth: 12,
             width: '90%',
-          }}          
+          }}
           onPress={() => {
             createDraft(survey);
-            navigation.navigate('Draft Screen');
+            goToDraftScreen();
           }}
         >
           <Text style={{ fontSize: 20, color: 'white' }}>
