@@ -77,7 +77,7 @@ import {
 } from "../Logic Files/QuestionTypes";
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
-const pageSize = 5;
+const pageSize = 2;
 
 const styles = StyleSheet.create({
   container: {
@@ -159,7 +159,31 @@ export default function SurveyScreen({ navigation }) {
   const [shownTip, setShownTip] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [groupShowConditions, setGroupShowConditions] = useState({});
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
 
+  useEffect(() => {
+    const newFilteredQuestions = questions
+      .filter((question) => {
+        // If the question has a showCondition, evaluate it
+        if (question.showCondition && !evaluateShowCondition(question.showCondition)) {
+          return false;
+        }
+        // If the question has a group or groups, evaluate the group show conditions
+        if (question.questionGroups && !evaluateGroupShowCondition(question.questionGroups)) {
+          return false;
+        }
+        // If the question does not have a showCondition or group(s), render it
+        return true;
+      });
+    setFilteredQuestions(newFilteredQuestions);
+
+    // Calculate the number of pages based on the number of visible questions
+    const numberOfPages = Math.ceil(newFilteredQuestions.length / pageSize);
+
+    // Update the state
+    setQuestionsPerPage(Array(numberOfPages).fill(pageSize));
+
+  }, [questions, responses]);
 
   const evaluateShowCondition = (showCondition) => {
       // Split the showCondition string into individual conditions
@@ -203,13 +227,11 @@ export default function SurveyScreen({ navigation }) {
       // If there is a show condition for this group, evaluate it
       if (showCondition) {
         const show = evaluateShowCondition(showCondition);
+
         // If the show condition is not met, return false
         if (!show) {
           return false;
         }
-      } else {
-        // If there is no show condition for this group, return false
-        return false;
       }
     }
     // If all group show conditions are met, return true
@@ -262,26 +284,6 @@ export default function SurveyScreen({ navigation }) {
             });
             setQuestions(questions);
             setGroupShowConditions(groupShowConditions);
-
-            // Replace the existing logic for setting the questionsPerPage state variable with the new logic
-            // Create a new array of questions that should be rendered based on their showCondition
-            const renderedQuestions = questions.filter((question) => {
-              // If the question has a showCondition, evaluate it
-              if (question.showCondition && !evaluateShowCondition(question.showCondition)) {
-                return false;
-              }
-              // If the question has a group or groups, evaluate the group show conditions
-              if (question.questionGroups && !evaluateGroupShowCondition(question.questionGroups)) {
-                return false;
-              }
-              // If the question does not have a showCondition or group(s), render it
-              return true;
-            });
-
-            // Adjust the questionsPerPage state variable based on the new array of questions
-            const pageSizes = Array(Math.ceil(renderedQuestions.length / pageSize)).fill(pageSize);
-            pageSizes[pageSizes.length - 1] = renderedQuestions.length % pageSize || pageSize;
-            setQuestionsPerPage(pageSizes);
           },
         });
         setIsLoading(false); // Set loading to false after the fetch operation is complete
@@ -375,7 +377,6 @@ export default function SurveyScreen({ navigation }) {
       acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
-    console.log(responses)
     setResponses(initialResponses);
   }, [questions]);
 
@@ -394,18 +395,7 @@ export default function SurveyScreen({ navigation }) {
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        {questions
-          .filter((question) => {
-            // If the question has a showCondition, evaluate it
-            if (question.showCondition) {
-              if(question.groupShowCondition) {
-                return evaluateShowCondition(question.showCondition) && evaluateGroupShowCondition(question.groupShowCondition);
-              }
-              return evaluateShowCondition(question.showCondition);
-            }
-            // If the question does not have a showCondition, render it
-            return true;
-          })
+        {filteredQuestions
           .slice(startQuestion, endQuestion)
           .map((question, index) => {
           const QuestionComponent = questionTypeComponents[question.questionType];

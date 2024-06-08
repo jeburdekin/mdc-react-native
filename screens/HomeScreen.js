@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     height: windowWidth / 6,
     borderRadius: 30,
     right: windowWidth / 15,
-    top: windowHeight * 0.013,    
+    top: windowHeight * 0.013,
   },
   logo: {
     zIndex: 1,
@@ -133,7 +133,7 @@ export default function HomeScreen({ navigation }) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-    
+
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
       <Animated.ScrollView
       style={{backgroundColor: "#fffcf7", width: windowWidth, overflow: 'scroll', flex: 1}}
@@ -160,7 +160,7 @@ export default function HomeScreen({ navigation }) {
                 }),
               },
             ],
-            
+
           }}
         >
           <View style={styles.titleBox}>
@@ -183,13 +183,13 @@ export default function HomeScreen({ navigation }) {
               mode="elevated"
               style={[styles.button, {marginTop: windowHeight * 0.03}]}
               contentStyle={{ flexDirection: "row"}}
-              icon="circle-edit-outline"
+              icon="view-carousel-outline"
               labelStyle={styles.buttonIcon}
-              onPress={() => navigation.navigate("Survey Manager")}
+              onPress={() => navigation.navigate("Survey Hub")}
             >
-              <Text style={styles.buttonText}>Create Survey</Text>
+              <Text style={styles.buttonText}>Survey Hub</Text>
             </Button>
-            <Button
+            {/* <Button
               mode="elevated"
               style={styles.button}
               icon="clipboard-pulse-outline"
@@ -197,7 +197,7 @@ export default function HomeScreen({ navigation }) {
               onPress={() => navigation.navigate("Draft Screen")}
             >
               <Text style={styles.buttonText}>Drafts</Text>
-            </Button>
+            </Button> */}
             <Button
               mode="elevated"
               style={styles.button}
@@ -262,7 +262,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
           </SafeAreaView>
-        </View>      
+        </View>
       </Animated.ScrollView>
     </View>
   );
