@@ -136,12 +136,15 @@ export default function HomeScreen({ navigation }) {
 
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
       <Animated.ScrollView
-      style={{backgroundColor: "#fffcf7", width: windowWidth, overflow: 'scroll', flex: 1}}
+      style={{backgroundColor: "#fffcf7"}}
+
       onScroll={Animated.event(
         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
         { useNativeDriver: true }
       )}
-      scrollEventThrottle={16}
+      scrollEventThrottle={1}
+      bounces={false}
+      contentContainerStyle={{paddingBottom: windowHeight * 0.15}}
       >
         <Animated.View
           style={{
@@ -149,14 +152,14 @@ export default function HomeScreen({ navigation }) {
             opacity: scrollY.interpolate({
               inputRange: [0, 60],
               outputRange: [1, 0],
-              extrapolate: 'clamp',
+              extrapolate: "clamp",
             }),
             transform: [
               {
                 translateY: scrollY.interpolate({
-                  inputRange: [10, 130],
+                  inputRange: [0, 130],
                   outputRange: [0, -50],
-                  extrapolate: 'clamp',
+                  extrapolate: "clamp",
                 }),
               },
             ],
@@ -198,7 +201,7 @@ export default function HomeScreen({ navigation }) {
             >
               <Text style={styles.buttonText}>Drafts</Text>
             </Button> */}
-            <Button
+            {/* <Button
               mode="elevated"
               style={styles.button}
               icon="clipboard-arrow-up-outline"
@@ -215,7 +218,7 @@ export default function HomeScreen({ navigation }) {
               onPress={() => navigation.navigate("Sent Surveys")}
             >
               <Text style={styles.buttonText}>Sent Surveys</Text>
-            </Button>
+            </Button> */}
             <Button
               mode="elevated"
               style={styles.button}

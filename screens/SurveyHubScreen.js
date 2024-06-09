@@ -4,6 +4,7 @@ import Swiper from 'react-native-swiper';
 import SurveyCreatorScreen from './SurveyCreatorScreen';
 import DraftScreen from './DraftScreen';
 import SentSurvScreen from './SentSurvScreen';
+import PreparedSurvScreen from './PreparedSurvScreen';
 
 const SurveyHubScreen = ({navigation}) => {
   const swiperRef = useRef(null);
@@ -19,6 +20,12 @@ const SurveyHubScreen = ({navigation}) => {
       </View>
       <View style={styles.slide}>
         <DraftScreen navigation={navigation} />
+      </View>
+      <View style={styles.slide}>
+        <PreparedSurvScreen />
+      </View>
+      <View style={styles.slide}>
+        <SentSurvScreen />
       </View>
     </Swiper>
   );
