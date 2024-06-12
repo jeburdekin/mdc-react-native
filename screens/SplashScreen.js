@@ -1,6 +1,7 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Button, TouchableOpacity, Dimensions} from "react-native";
+import { SafeAreaView, StyleSheet, View, Image, Text, Button, TouchableOpacity, Dimensions} from "react-native";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+import { Video } from "expo-av";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -47,6 +48,29 @@ export default function SplashScreen({ navigation }) {
 
   return (
     <View style={styles.splashArt}>
+      {/* <Image source={require("../assets/MapMover2.gif")} style={
+        {
+          width: windowWidth,
+          height: windowHeight,
+          position: "absolute",
+        }
+      } /> */}
+      <Video
+        source={require('../assets/CompMDC.mp4')}
+        rate={1.0}
+        volume={1.0}
+        isMuted={false}
+        resizeMode="cover"
+        shouldPlay
+        isLooping
+        style={{
+          width: windowWidth * 2.5,
+          height: windowHeight,
+          position: "absolute",
+          left: -windowWidth / 8, // Adjust this value to shift the video horizontally
+        }}
+      />
+
       <View style={{ flexDirection: "row", marginBottom: -20 }}>
         <Text
           style={styles.letters}

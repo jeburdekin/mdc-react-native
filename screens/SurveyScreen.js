@@ -77,7 +77,7 @@ import {
 } from "../Logic Files/QuestionTypes";
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
-const pageSize = 2;
+const pageSize = 5;
 
 const styles = StyleSheet.create({
   container: {

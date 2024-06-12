@@ -1,44 +1,40 @@
-import * as React from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  TextInput,
-  TouchableOpacity,
-  Image
-} from "react-native";
+import * as React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { useTheme, Title, Button } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fffcf7",
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: '#fffcf7',
   },
-  input: {
-    height: 40,
-    width: 250,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: "white",
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
   },
-  button: {
-    backgroundColor: '#D9695F',
-    height: 40,
-    width: 250,
-    margin: 12,
+  header: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 6,
+    borderBottomColor: '#ddd',
   }
 });
 
-export default class SentSurvScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Sent Surveys Screen</Text>
+export default SentSurvScreen = ({ sentSurveys }) => {
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Title style={[styles.title, { color: colors.primary }]}>Sent Surveys</Title>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
