@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import {
   SafeAreaView,
@@ -110,6 +110,9 @@ export default function SignInScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const userRef = useRef();
+  const passwordRef = useRef();
+
   const onChangeUser = useCallback((newUser) => {
     setUser(newUser);
   }, []);
@@ -119,6 +122,8 @@ export default function SignInScreen({ navigation }) {
   }, []);
 
   const handleSignIn = async () => {
+    const user = userRef.current.value;
+    const password = passwordRef.current.value;
     try {
       await signInWithEmailAndPassword(auth, user, password);
       navigation.navigate("User Home");
@@ -139,12 +144,12 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.screen}>
+      <KeyboardAvoidingView
+        style={{flex: 5, justifyContent: "center", alignItems: "center"}}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? windowHeight/4 : 0}
+      >
         <Image
           source={require("../assets/mdc-map.png")}
           style={{
@@ -158,58 +163,56 @@ export default function SignInScreen({ navigation }) {
             <Text style={styles.title}>Sign In</Text>
             <View style={styles.whiteBlock1}>
               <TextInput
+                ref = {userRef}
                 style={styles.input1}
-                onChangeText={onChangeUser}
                 secureTextEntry={false}
-                value={user}
                 placeholder="Email Address or Phone Number"
               />
             </View>
             <View style={styles.whiteBlock2}>
               <TextInput
+                ref = {passwordRef}
                 style={styles.input2}
                 secureTextEntry={true}
                 placeholder="Password"
-                onChangeText={onChangePassword}
-                value={password}
               />
           </View>
           </View>
         </View>
-        <View style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: "center"
-        }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Make Deaths Count")}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            // Disabling sign in until rest of app is developed onPress={handleSignIn}
-            onPress={() =>  navigation.navigate("User Home")}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ position: 'absolute', top: 0, width: '100%' }}>
-          <Snackbar
-            visible={visible}
-            onDismiss={() => setVisible(false)}
-            action={{
-              label: 'Close',
-              onPress: () => {
-                setVisible(false);
-              },
-            }}
-          >
-            {errorMessage}
-          </Snackbar>
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+      <View style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: "center"
+      }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Make Deaths Count")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          // Disabling sign in until rest of app is developed onPress={handleSignIn}
+          onPress={() =>  navigation.navigate("User Home")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <Snackbar
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          action={{
+            label: 'Close',
+            onPress: () => {
+              setVisible(false);
+            },
+          }}
+        >
+          {errorMessage}
+        </Snackbar>
+      </View>
+    </SafeAreaView>
   );
 }
