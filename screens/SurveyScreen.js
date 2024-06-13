@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
@@ -77,10 +78,13 @@ import {
   Units5_Q,
   Audio_Q,
 } from "../Logic Files/QuestionTypes";
-import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-
+import BottomSheet from "@gorhom/bottom-sheet";
+import { FlashList } from "@shopify/flash-list";
 // const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
 const pageSize = 5;
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   container: {
@@ -644,20 +648,32 @@ export default function SurveyScreen({ navigation }) {
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         enablePanDownToClose={true}
+        backgroundStyle={{
+          backgroundColor: colors.primary,
+        }}
       >
-        <BottomSheetFlatList
+        <FlashList
           data={filteredQuestions}
+          estimatedItemSize={400}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item: question, index }) => (
             <Button
               onPress={() => {
                 const page = Math.ceil((index + 1) / pageSize);
                 dispatch({ type: "SET_CURRENT_PAGE", payload: page });
+                handleClosePress();
+              }}
+              style={{
+                borderRadius: 10,
+                borderWidth: windowHeight * 0.005,
+                margin: windowHeight * 0.01,
+                borderColor: 'white',
               }}
             >
-              {`Question ${question.order}: ${question.details}`}
+              <Text style={{color: 'white'}}>{`Question ${question.order}: ${question.details}`}</Text>
             </Button>
           )}
+
         />
       </BottomSheet>
     </KeyboardAvoidingView>
