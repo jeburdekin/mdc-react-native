@@ -17,28 +17,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fffcf7",
   },
-  input: {
-    height: 40,
-    width: 250,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: "white",
-  },
   button: {
     backgroundColor: '#D9695F',
     height: 40,
     width: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
     margin: 12,
-  }
+    borderRadius: 4, // Optional: for rounded corners
+  },
+  buttonText: {
+    color: 'white', // Ensures text is visible on the button
+    fontSize: 16,
+  },
 });
 
-export default class NoteScreen extends React.Component {
-  render() {
+export default function NoteScreen({ navigation }) {
     return (
       <View style={styles.container}>
-        <Text>Notes Screen</Text>
+        <Text>Notes (Folders) </Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Notes Folder")}
+        >
+          <Text style={styles.buttonText}>Notes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Recently Deleted Folder")}
+        >
+          <Text style={styles.buttonText}>Recently Deleted</Text>
+        </TouchableOpacity>
       </View>
     );
   }
-}
+
+
