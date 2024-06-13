@@ -12,6 +12,7 @@
     "@expo-google-fonts/open-sans": "^0.2.3",
     "@expo-google-fonts/pacifico": "^0.2.3",
     "@expo/metro-runtime": "~3.2.1",
+    "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-firebase/app": "^19.2.2",

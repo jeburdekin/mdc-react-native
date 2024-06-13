@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -75,6 +75,7 @@ import {
   Units5_Q,
   Audio_Q,
 } from "../Logic Files/QuestionTypes";
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
 const pageSize = 5;
@@ -160,6 +161,21 @@ export default function SurveyScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [groupShowConditions, setGroupShowConditions] = useState({});
   const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const bottomSheetRef = useRef(null);
+
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+
+  // callbacks
+  const handleSheetChange = useCallback((index) => {
+    console.log("handleSheetChange", index);
+  }, []);
+  const handleSnapPress = useCallback((index) => {
+    bottomSheetRef.current?.snapToIndex(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
 
   useEffect(() => {
     const newFilteredQuestions = questions
@@ -492,6 +508,9 @@ export default function SurveyScreen({ navigation }) {
             Back
           </Button>
         )}
+        <Button title="Jump Questions" onPress={() => handleSnapPress(2)}>
+          Jump Questions
+        </Button>
         <Button
           mode="elevated"
           style={{ margin: 10 }}
@@ -500,6 +519,27 @@ export default function SurveyScreen({ navigation }) {
           {currentPage < questionsPerPage.length ? "Next" : "Submit"}
         </Button>
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+        enablePanDownToClose={true}
+      >
+        <BottomSheetFlatList
+          data={filteredQuestions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item: question, index }) => (
+            <Button
+              onPress={() => {
+                const page = Math.ceil((index + 1) / pageSize);
+                setCurrentPage(page);
+              }}
+            >
+              {`Question ${question.order}`}
+            </Button>
+          )}
+        />
+      </BottomSheet>
     </KeyboardAvoidingView>
   );
 }

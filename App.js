@@ -19,6 +19,7 @@ import SurveyHubScreen from "./screens/SurveyHubScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
 import store from './Redux/Store';
 import { Provider } from 'react-redux';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 // const styles = StyleSheet.create({});
@@ -49,6 +50,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <Provider store={store}>
+      <GestureHandlerRootView>
       <PaperProvider>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Make Deaths Count">
@@ -69,6 +71,7 @@ function App() {
             </Stack.Navigator>
           </NavigationContainer>
       </PaperProvider>
+      </GestureHandlerRootView>
     </Provider>
   );
 }
