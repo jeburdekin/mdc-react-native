@@ -52,7 +52,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <Provider store={store}>
-      <GestureHandlerRootView>            
+      <GestureHandlerRootView>
         <PaperProvider>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Make Deaths Count">
@@ -62,7 +62,6 @@ function App() {
               <Stack.Screen name="Create Account" component={CreateAccountScreen} />
               <Stack.Screen name="User Home" component={HomeScreen} />
               <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
-              <Stack.Screen name="Survey Manager" component={SurveyManagerScreen} />
               {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
               <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
               <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
