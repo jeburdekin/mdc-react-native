@@ -1,4 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useReducer,
+} from "react";
 import {
   View,
   StyleSheet,
@@ -6,13 +13,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
-import {
-  Button,
-  IconButton,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Button, IconButton, Text, useTheme } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
@@ -75,9 +78,13 @@ import {
   Units5_Q,
   Audio_Q,
 } from "../Logic Files/QuestionTypes";
-
-const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
+import BottomSheet from "@gorhom/bottom-sheet";
+import { FlashList } from "@shopify/flash-list";
+// const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
 const pageSize = 5;
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +97,7 @@ const questionTypeComponents = {
   text: Text_Q,
   Text: Text_Q,
   note: Text_Q,
-//  audio: Audio_Q,
+  //  audio: Audio_Q,
   date: DateQuestionType,
   today: Today_Q,
   start: Start_Q,
@@ -148,78 +155,158 @@ const questionTypeComponents = {
   confirm: confirm_Q,
 };
 
+const initialState = {
+  currentPage: 1,
+  questions: [],
+  questionsPerPage: [],
+  startTime: new Date(),
+  shownTip: null,
+  isLoading: true,
+  groupShowConditions: {},
+  surveyKey: null,
+  filteredQuestions: [],
+  responses: {},
+  // Add other state variables here...
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_CURRENT_PAGE":
+      return { ...state, currentPage: action.payload };
+    case "SET_QUESTIONS":
+      return { ...state, questions: action.payload };
+    case "SET_QUESTIONS_PER_PAGE":
+      return { ...state, questionsPerPage: action.payload };
+    case "SET_START_TIME":
+      return { ...state, startTime: action.payload };
+    case "SET_SHOWN_TIP":
+      return { ...state, shownTip: action.payload };
+    case "SET_IS_LOADING":
+      return { ...state, isLoading: action.payload };
+    case "SET_GROUP_SHOW_CONDITIONS":
+      return { ...state, groupShowConditions: action.payload };
+    case "SET_SURVEY_KEY":
+      return { ...state, surveyKey: action.payload };
+    case "SET_FILTERED_QUESTIONS":
+      return { ...state, filteredQuestions: action.payload };
+    case "SET_RESPONSES":
+      return { ...state, responses: action.payload };
+    // Add other action handlers here...
+    default:
+      throw new Error(
+        `Tried to reduce with unsupported action type: ${action.type}`
+      );
+  }
+}
+
 export default function SurveyScreen({ navigation }) {
+  //Redux stuff for mainting question and response state
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const bottomSheetRef = useRef(null);
   const { control, handleSubmit } = useForm();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [questions, setQuestions] = useState([]);
-  const [questionsPerPage, setQuestionsPerPage] = useState([]);
   const { colors } = useTheme();
-  const [responses, setResponses] = useState({});
-  const [startTime, setStartTime] = useState(new Date());
-  const [shownTip, setShownTip] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [groupShowConditions, setGroupShowConditions] = useState({});
-  const [filteredQuestions, setFilteredQuestions] = useState([]);
+
+  const {
+    currentPage,
+    questions,
+    questionsPerPage,
+    startTime,
+    shownTip,
+    isLoading,
+    groupShowConditions,
+    surveyKey,
+    filteredQuestions,
+    responses,
+  } = state;
+
+  // Bottom sheet stuff
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+  // const handleSheetChange = useCallback((index) => {
+  //   console.log("handleSheetChange", index);
+  // }, []);
+  const handleSnapPress = useCallback((index) => {
+    bottomSheetRef.current?.snapToIndex(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
 
   useEffect(() => {
-    const newFilteredQuestions = questions
-      .filter((question) => {
-        // If the question has a showCondition, evaluate it
-        if (question.showCondition && !evaluateShowCondition(question.showCondition)) {
-          return false;
-        }
-        // If the question has a group or groups, evaluate the group show conditions
-        if (question.questionGroups && !evaluateGroupShowCondition(question.questionGroups)) {
-          return false;
-        }
-        // If the question does not have a showCondition or group(s), render it
-        return true;
-      });
-    setFilteredQuestions(newFilteredQuestions);
+    const newFilteredQuestions = questions.filter((question) => {
+      // If the question has a showCondition, evaluate it
+      if (
+        question.showCondition &&
+        !evaluateShowCondition(question.showCondition)
+      ) {
+        return false;
+      }
+      // If the question has a group or groups, evaluate the group show conditions
+      if (
+        question.questionGroups &&
+        !evaluateGroupShowCondition(question.questionGroups)
+      ) {
+        return false;
+      }
+      // If the question does not have a showCondition or group(s), render it
+      return true;
+    });
+    dispatch({ type: "SET_FILTERED_QUESTIONS", payload: newFilteredQuestions });
 
     // Calculate the number of pages based on the number of visible questions
     const numberOfPages = Math.ceil(newFilteredQuestions.length / pageSize);
 
     // Update the state
-    setQuestionsPerPage(Array(numberOfPages).fill(pageSize));
-
+    dispatch({
+      type: "SET_QUESTIONS_PER_PAGE",
+      payload: Array(numberOfPages).fill(pageSize),
+    });
   }, [questions, responses]);
 
   const evaluateShowCondition = (showCondition) => {
-      // Split the showCondition string into individual conditions
-      const conditions = showCondition.split(',');
+    // Split the showCondition string into individual conditions
+    const conditions = showCondition.split(",");
 
-      // Evaluate each condition
-      for (const condition of conditions) {
-          // Check if the condition contains 'not'
-          const isNotCondition = condition.includes('not');
+    // Evaluate each condition
+    for (const condition of conditions) {
+      // Check if the condition contains 'not'
+      const isNotCondition = condition.includes("not");
 
-          // Split the condition into the question ID and the expected response
-          const [questionID, expectedResponses] = condition.split(isNotCondition ? 'not' : '=');
+      // Split the condition into the question ID and the expected response
+      const [questionID, expectedResponses] = condition.split(
+        isNotCondition ? "not" : "="
+      );
 
-          // Trim any leading or trailing whitespace
-          const trimmedQuestionID = questionID.trim();
+      // Trim any leading or trailing whitespace
+      const trimmedQuestionID = questionID.trim();
 
-          // Split the expected responses by 'or' and trim any leading or trailing whitespace
-          const trimmedExpectedResponses = expectedResponses.split('or').map(response => response.trim());
+      // Split the expected responses by 'or' and trim any leading or trailing whitespace
+      const trimmedExpectedResponses = expectedResponses
+        .split("or")
+        .map((response) => response.trim());
 
-          // Check if the actual response is included in the array of expected responses
-          const actualResponse = String(responses[trimmedQuestionID]);
-          const responseIncluded = actualResponse !== undefined && actualResponse !== null && trimmedExpectedResponses.includes(actualResponse);
+      // Check if the actual response is included in the array of expected responses
+      const actualResponse = String(responses[trimmedQuestionID]);
+      const responseIncluded =
+        actualResponse !== undefined &&
+        actualResponse !== null &&
+        trimmedExpectedResponses.includes(actualResponse);
 
-          // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
-          if ((isNotCondition && responseIncluded) || (!isNotCondition && !responseIncluded)) {
-            return false;
-          }
+      // If it's a 'not' condition and the response is included, or if it's a normal condition and the response is not included, return false
+      if (
+        (isNotCondition && responseIncluded) ||
+        (!isNotCondition && !responseIncluded)
+      ) {
+        return false;
       }
+    }
 
-      // If all conditions are met, return true
-      return true;
+    // If all conditions are met, return true
+    return true;
   };
 
   const evaluateGroupShowCondition = (groupNames) => {
     // Split the groupNames string into individual group names
-    const groups = groupNames.split(',');
+    const groups = groupNames.split(",");
     // Evaluate each group
     for (const group of groups) {
       // Get the show condition for this group
@@ -240,11 +327,12 @@ export default function SurveyScreen({ navigation }) {
 
   useEffect(() => {
     if (!startTime) {
-      setStartTime(new Date());
+      dispatch({ type: "SET_START_TIME", payload: new Date() });
     }
     const fetchAndParseCSV = async () => {
       try {
-        setIsLoading(true); // Set loading to true before starting the fetch operation
+        // Set loading to true before starting the fetch operation
+        dispatch({ type: "SET_IS_LOADING", payload: true });
         const storage = getStorage();
         const storageRef = ref(
           storage,
@@ -262,13 +350,14 @@ export default function SurveyScreen({ navigation }) {
               return;
             }
 
-            const groupShowConditions = {};
-            const questions = results.data.map((row) => {
+            const tempGroupShowConditions = {};
+            const tempQuestions = results.data.map((row) => {
               // Parse the group show conditions
               const groupShowCondition = row["Group Show Condition"];
               if (groupShowCondition) {
-                const [groupName, showCondition] = groupShowCondition.split(":");
-                groupShowConditions[groupName.trim()] = showCondition.trim();
+                const [groupName, showCondition] =
+                  groupShowCondition.split(":");
+                tempGroupShowConditions[groupName.trim()] = showCondition.trim();
               }
 
               return {
@@ -282,14 +371,19 @@ export default function SurveyScreen({ navigation }) {
                 response: "",
               };
             });
-            setQuestions(questions);
-            setGroupShowConditions(groupShowConditions);
+            dispatch({ type: "SET_QUESTIONS", payload: tempQuestions });
+            dispatch({
+              type: "SET_GROUP_SHOW_CONDITIONS",
+              payload: tempGroupShowConditions,
+            });
           },
         });
-        setIsLoading(false); // Set loading to false after the fetch operation is complete
+        // Set loading to false after the fetch operation is complete
+        dispatch({ type: "SET_IS_LOADING", payload: false });
       } catch (error) {
         console.error("Error fetching and parsing CSV data:", error);
-        setIsLoading(false); // Set loading to false even if there was an error
+        // Set loading to false even if there was an error
+        dispatch({ type: "SET_IS_LOADING", payload: false });
       }
     };
     fetchAndParseCSV();
@@ -301,23 +395,21 @@ export default function SurveyScreen({ navigation }) {
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
 
-    // Generate a unique key for the survey
-  const [surveyKey, setSurveyKey] = useState(null);
   useEffect(() => {
     const generateSurveyKey = async () => {
-      let key = await AsyncStorage.getItem('surveyKey');
+      let key = await AsyncStorage.getItem("surveyKey");
       if (key === null) {
         key = `surveyData-${Date.now()}`;
-        await AsyncStorage.setItem('surveyKey', key);
+        await AsyncStorage.setItem("surveyKey", key);
       }
-      setSurveyKey(key);
+      dispatch({ type: "SET_SURVEY_KEY", payload: key });
     };
     generateSurveyKey();
   }, []);
 
   // Save survey data when the user navigates away
   useEffect(() => {
-    return navigation.addListener('beforeRemove', async () => {
+    return navigation.addListener("beforeRemove", async () => {
       if (surveyKey !== null) {
         const surveyData = {
           currentPage,
@@ -336,16 +428,16 @@ export default function SurveyScreen({ navigation }) {
         const surveyData = await AsyncStorage.getItem(surveyKey);
         if (surveyData !== null) {
           const { currentPage, responses, startTime } = JSON.parse(surveyData);
-          setCurrentPage(currentPage);
-          setResponses(responses);
-          setStartTime(new Date(startTime));
+          dispatch({ type: "SET_CURRENT_PAGE", payload: currentPage });
+          dispatch({ type: "SET_RESPONSES", payload: responses });
+          dispatch({ type: "SET_START_TIME", payload: new Date(startTime) });
         }
       }
     };
     if (surveyKey !== null) {
       loadSurveyData();
     }
-    const unsubscribe = navigation.addListener('focus', loadSurveyData);
+    const unsubscribe = navigation.addListener("focus", loadSurveyData);
     return unsubscribe;
   }, [navigation, surveyKey]);
 
@@ -354,13 +446,17 @@ export default function SurveyScreen({ navigation }) {
     // Check if all questions on the current page have been answered
     const allAnswered = questions
       .slice(startQuestion, endQuestion)
-      .every((question) => responses[question.questionID] !== null && responses[question.questionID] !== undefined);
+      .every(
+        (question) =>
+          responses[question.questionID] !== null &&
+          responses[question.questionID] !== undefined
+      );
     if (allAnswered) {
       let nextPage = currentPage + 1;
       if (nextPage <= questionsPerPage.length) {
-        setCurrentPage(nextPage);
+        dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
       } else {
-        console.log(responses); // or any other final submission logic
+        // or any other final submission logic
         await AsyncStorage.removeItem(surveyKey); // Remove survey data
       }
     } else {
@@ -374,15 +470,23 @@ export default function SurveyScreen({ navigation }) {
       // Check if there's already a saved response for this question
       const savedResponse = responses[question.questionID];
       // If there is, use that response. If there isn't, initialize it as an empty array
-      acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
+      acc[question.questionID] =
+        savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
-    setResponses(initialResponses);
+    dispatch({ type: "SET_RESPONSES", payload: initialResponses });
   }, [questions]);
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", backgroundColor: "#fffcf7", alignItems: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          backgroundColor: "#fffcf7",
+          alignItems: "center",
+        }}
+      >
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -398,68 +502,105 @@ export default function SurveyScreen({ navigation }) {
         {filteredQuestions
           .slice(startQuestion, endQuestion)
           .map((question, index) => {
-          const QuestionComponent = questionTypeComponents[question.questionType];
-          return (
-            <View style={{ marginTop: 10, alignContent: "center" }} key={index}>
+            const QuestionComponent =
+              questionTypeComponents[question.questionType];
+            return (
               <View
-                style={{
-                  borderBottomColor: colors.primary,
-                  borderBottomWidth: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                }}
+                style={{ marginTop: 10, alignContent: "center" }}
+                key={index}
               >
-                <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1 }}>
-                <Text
+                <View
                   style={{
-                    marginBottom: 10,
-                    paddingLeft: 10,
-                    textAlign: "auto",
-                    marginRight: 3,
-                    fontWeight: "bold",
-                    flexShrink: 1,
-                    flex: 1,
+                    borderBottomColor: colors.primary,
+                    borderBottomWidth: 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
                   }}
                 >
-                  {`Question ${question.order}: ${question.details}`}
-                </Text>
-                {question.tip && (
-                  <IconButton
-                    icon="information"
-                    color={colors.primary}
-                    size={20}
-                    onPress={() => setShownTip(shownTip === question.tip ? null : question.tip)}
-                  />
-                )}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      flexShrink: 1,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        paddingLeft: 10,
+                        textAlign: "auto",
+                        marginRight: 3,
+                        fontWeight: "bold",
+                        flexShrink: 1,
+                        flex: 1,
+                      }}
+                    >
+                      {`Question ${question.order}: ${question.details}`}
+                    </Text>
+                    {question.tip && (
+                      <IconButton
+                        icon="information"
+                        color={colors.primary}
+                        size={20}
+                        onPress={() =>
+                          dispatch({
+                            type: "SET_SHOWN_TIP",
+                            payload: question.tip,
+                          })
+                        }
+                      />
+                    )}
+                  </View>
                 </View>
+                {shownTip === question.tip && (
+                  <Text
+                    style={{
+                      fontStyle: "italic",
+                      color: colors.secondary,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      paddingTop: 5,
+                      paddingBottom: 5,
+                    }}
+                  >
+                    {question.tip}
+                  </Text>
+                )}
+                {QuestionComponent ? (
+                  <>
+                    {question.questionType === "start" && (
+                      <Start_Q startTime={startTime} />
+                    )}
+                    <QuestionComponent
+                      onChange={(newValue) => {
+                        dispatch({
+                          type: "SET_RESPONSES",
+                          payload: {
+                            ...responses,
+                            [question.questionID]: Array.isArray(newValue)
+                              ? newValue
+                              : [newValue],
+                          },
+                        });
+                      }}
+                      // Ensure that the value is always an array
+                      value={
+                        Array.isArray(responses[question.questionID])
+                          ? responses[question.questionID]
+                          : [responses[question.questionID]]
+                      }
+                    />
+                  </>
+                ) : (
+                  <Text>
+                    Unsupported question type: {question.questionType}
+                  </Text>
+                )}
               </View>
-              {shownTip === question.tip && (
-                <Text style={{ fontStyle: 'italic', color: colors.secondary, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5 }}>
-                  {question.tip}
-                </Text>
-              )}
-              {QuestionComponent ? (
-                <>
-                {question.questionType === 'start' && <Start_Q startTime={startTime} />}
-                <QuestionComponent
-                  onChange={(newValue) => {
-                    setResponses((prevResponses) => ({
-                      ...prevResponses,
-                      [question.questionID]: Array.isArray(newValue) ? newValue : [newValue],
-                    }));
-                  }}
-                  // Ensure that the value is always an array
-                  value={Array.isArray(responses[question.questionID]) ? responses[question.questionID] : [responses[question.questionID]]}
-                />
-                </>
-              ) : (
-                <Text>Unsupported question type: {question.questionType}</Text>
-              )}
-            </View>
-          );
-        })}
+            );
+          })}
       </ScrollView>
       <View
         style={{
@@ -475,7 +616,7 @@ export default function SurveyScreen({ navigation }) {
             mode="elevated"
             style={{ margin: 10 }}
             onPress={() => {
-              navigation.navigate("Draft Screen")
+              navigation.navigate("Draft Screen");
             }}
           >
             Home
@@ -486,12 +627,15 @@ export default function SurveyScreen({ navigation }) {
             mode="elevated"
             style={{ margin: 10 }}
             onPress={() => {
-              setCurrentPage(currentPage - 1);
+              dispatch({ type: "SET_CURRENT_PAGE", payload: currentPage - 1 });
             }}
           >
             Back
           </Button>
         )}
+        <Button title="Jump Questions" onPress={() => handleSnapPress(2)}>
+          Jump Questions
+        </Button>
         <Button
           mode="elevated"
           style={{ margin: 10 }}
@@ -500,6 +644,38 @@ export default function SurveyScreen({ navigation }) {
           {currentPage < questionsPerPage.length ? "Next" : "Submit"}
         </Button>
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        backgroundStyle={{
+          backgroundColor: colors.primary,
+        }}
+      >
+        <FlashList
+          data={filteredQuestions}
+          estimatedItemSize={400}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item: question, index }) => (
+            <Button
+              onPress={() => {
+                const page = Math.ceil((index + 1) / pageSize);
+                dispatch({ type: "SET_CURRENT_PAGE", payload: page });
+                handleClosePress();
+              }}
+              style={{
+                borderRadius: 10,
+                borderWidth: windowHeight * 0.005,
+                margin: windowHeight * 0.01,
+                borderColor: responses[question.questionID].length > 0 ? '#a8ffb4' : '#ff9c9c',
+              }}
+            >
+              <Text style={{color: 'white', fontWeight: "bold"}}>{`Question ${question.order}: ${question.details}`}</Text>
+            </Button>
+          )}
+
+        />
+      </BottomSheet>
     </KeyboardAvoidingView>
   );
 }
