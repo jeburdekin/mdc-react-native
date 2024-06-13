@@ -655,7 +655,7 @@ export default function SurveyScreen({ navigation }) {
                 dispatch({ type: "SET_CURRENT_PAGE", payload: page });
               }}
             >
-              {`Question ${question.order}`}
+              {`Question ${question.order}: ${question.details}`}
             </Button>
           )}
         />
