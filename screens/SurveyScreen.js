@@ -13,6 +13,10 @@ import {
   Text,
   useTheme,
 } from "react-native-paper";
+
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { setQuestions, setResponses } from "../Redux/Actions";
+
 import { useForm, Controller } from "react-hook-form";
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
@@ -155,17 +159,16 @@ export default function SurveyScreen({ navigation }) {
   const [questions, setQuestions] = useState([]);
   const [questionsPerPage, setQuestionsPerPage] = useState([]);
   const { colors } = useTheme();
-  const [responses, setResponses] = useState({});
   const [startTime, setStartTime] = useState(new Date());
   const [shownTip, setShownTip] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [groupShowConditions, setGroupShowConditions] = useState({});
-  const [filteredQuestions, setFilteredQuestions] = useState([]);
   const bottomSheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+  
 
-  // callbacks
+  // Bottom sheet stuff
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
   const handleSheetChange = useCallback((index) => {
     console.log("handleSheetChange", index);
   }, []);
@@ -176,6 +179,10 @@ export default function SurveyScreen({ navigation }) {
     bottomSheetRef.current?.close();
   }, []);
 
+  //Redux stuff
+  const dispatch = useDispatch();
+  const filteredQuestions = useSelector((state) => state.filteredQuestions, shallowEqual);
+  const responses = useSelector((state) => state.responses, shallowEqual);
 
   useEffect(() => {
     const newFilteredQuestions = questions
@@ -191,7 +198,7 @@ export default function SurveyScreen({ navigation }) {
         // If the question does not have a showCondition or group(s), render it
         return true;
       });
-    setFilteredQuestions(newFilteredQuestions);
+      dispatch({ type: 'SET_FILTERED_QUESTIONS', payload: newFilteredQuestions });
 
     // Calculate the number of pages based on the number of visible questions
     const numberOfPages = Math.ceil(newFilteredQuestions.length / pageSize);
@@ -393,7 +400,7 @@ export default function SurveyScreen({ navigation }) {
       acc[question.questionID] = savedResponse !== undefined ? savedResponse : [];
       return acc;
     }, {});
-    setResponses(initialResponses);
+    dispatch({ type: 'SET_RESPONSES', payload: initialResponses })
   }, [questions]);
 
   if (isLoading) {
@@ -526,7 +533,6 @@ export default function SurveyScreen({ navigation }) {
         enablePanDownToClose={true}
       >
         <BottomSheetFlatList
-          data={filteredQuestions}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item: question, index }) => (
             <Button
