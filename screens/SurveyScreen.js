@@ -667,10 +667,10 @@ export default function SurveyScreen({ navigation }) {
                 borderRadius: 10,
                 borderWidth: windowHeight * 0.005,
                 margin: windowHeight * 0.01,
-                borderColor: 'white',
+                borderColor: responses[question.questionID].length > 0 ? '#a8ffb4' : '#ff9c9c',
               }}
             >
-              <Text style={{color: 'white'}}>{`Question ${question.order}: ${question.details}`}</Text>
+              <Text style={{color: 'white', fontWeight: "bold"}}>{`Question ${question.order}: ${question.details}`}</Text>
             </Button>
           )}
 
