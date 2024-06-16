@@ -605,16 +605,14 @@ export default function SurveyScreen({ navigation }) {
       <View
         style={{
           flexDirection: "row",
-          padding: 5,
-          paddingLeft: 10,
-          paddingRight: 10,
           justifyContent: "space-between",
+          margin: windowHeight * 0.025,
         }}
       >
         {currentPage === 1 && (
           <Button
             mode="elevated"
-            style={{ margin: 10 }}
+            style={{}}
             onPress={() => {
               navigation.navigate("Draft Screen");
             }}
@@ -625,7 +623,7 @@ export default function SurveyScreen({ navigation }) {
         {currentPage > 1 && (
           <Button
             mode="elevated"
-            style={{ margin: 10 }}
+            style={{}}
             onPress={() => {
               dispatch({ type: "SET_CURRENT_PAGE", payload: currentPage - 1 });
             }}
@@ -633,12 +631,16 @@ export default function SurveyScreen({ navigation }) {
             Back
           </Button>
         )}
-        <Button title="Jump Questions" onPress={() => handleSnapPress(2)}>
-          Jump Questions
+        <Button
+         onPress={() => handleSnapPress(2)}
+         mode="contained-tonal"
+          style={{}}
+         >
+          Progress
         </Button>
         <Button
           mode="elevated"
-          style={{ margin: 10 }}
+          style={{}}
           onPress={handleSubmit(onSubmit)}
         >
           {currentPage < questionsPerPage.length ? "Next" : "Submit"}
@@ -647,6 +649,7 @@ export default function SurveyScreen({ navigation }) {
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
+        index={-1}
         enablePanDownToClose={true}
         backgroundStyle={{
           backgroundColor: colors.primary,
@@ -673,7 +676,6 @@ export default function SurveyScreen({ navigation }) {
               <Text style={{color: 'white', fontWeight: "bold"}}>{`Question ${question.order}: ${question.details}`}</Text>
             </Button>
           )}
-
         />
       </BottomSheet>
     </KeyboardAvoidingView>
