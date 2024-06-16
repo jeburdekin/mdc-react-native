@@ -264,17 +264,23 @@ export default function SurveyScreen({ navigation }) {
   }, [questions, responses]);
 
   const evaluateShowCondition = (showCondition) => {
+    // Check if the show condition is complex
+    if (showCondition.includes('(') && showCondition.includes(')')) {
+      return evaluateComplexCondition(showCondition, responses);
+    }
+    
     // Split the showCondition string into individual conditions
-    const conditions = showCondition.split(",");
-
+    let conditions;
+    if (showCondition.includes('(')) {
+      conditions = [showCondition];
+    } else {
+      conditions = showCondition.split(",");
+    }
+    
     // Evaluate each condition
     for (const condition of conditions) {
       // Check if the condition contains 'not'
       const isNotCondition = condition.includes("not");
-      // Check if the show condition is complex
-      if (showCondition.includes('(') && showCondition.includes(')')) {
-        return evaluateComplexCondition(showCondition, responses);
-      }
 
       // Split the condition into the question ID and the expected response
       const [questionID, expectedResponses] = condition.split(
@@ -283,7 +289,6 @@ export default function SurveyScreen({ navigation }) {
 
       // Trim any leading or trailing whitespace
       const trimmedQuestionID = questionID.trim();
-
       // Split the expected responses by 'or' and trim any leading or trailing whitespace
       const trimmedExpectedResponses = expectedResponses
         .split("or")
@@ -316,46 +321,24 @@ export default function SurveyScreen({ navigation }) {
     let conditionResults = [];
 
     while ((match = regex.exec(complexCondition)) !== null) {
-      const conditions = match[1].split(/( and | or )/);
-      let isAndCondition = false;
-      let isOrCondition = false;
+      const conditions = match[1].split(', ');
       let subConditionResults = [];
 
       for (let i = 0; i < conditions.length; i++) {
         const condition = conditions[i].trim();
-        if (condition === 'and') {
-          isAndCondition = true;
-          continue;
-        } else if (condition === 'or') {
-          isOrCondition = true;
-          continue;
-        }
 
         // Evaluate each condition using the existing function
         const result = evaluateShowCondition(condition, responses);
-        console.log(`Condition: ${condition}, Result: ${result}`); // Debugging line
         subConditionResults.push(result);
       }
 
-      // If it's an 'and' condition, all conditions must be true
-      if (isAndCondition) {
-        const andResult = subConditionResults.every(result => result);
-        console.log(`And condition result: ${andResult}`); // Debugging line
-        conditionResults.push(andResult);
-      }
-
-      // If it's an 'or' condition, at least one condition must be true
-      if (isOrCondition) {
-        const orResult = subConditionResults.some(result => result);
-        console.log(`Or condition result: ${orResult}`); // Debugging line
-        conditionResults.push(orResult);
-      }
+      // All conditions must be true
+      const andResult = subConditionResults.every(result => result);
+      conditionResults.push(andResult);
     }
 
-    // If it's neither 'and' nor 'or', return false
-    const finalResult = conditionResults.some(result => result);
-    console.log(`Final result: ${finalResult}`); // Debugging line
-    console.log('---------------------------------------')
+    // If all conditions are met, return true
+    const finalResult = conditionResults.every(result => result);
     return finalResult;
   };
 
