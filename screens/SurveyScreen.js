@@ -155,6 +155,7 @@ const questionTypeComponents = {
   confirm: confirm_Q,
 };
 
+// State variables n stuff
 const initialState = {
   currentPage: 1,
   questions: [],
@@ -166,7 +167,7 @@ const initialState = {
   surveyKey: null,
   filteredQuestions: [],
   responses: {},
-  // Add other state variables here...
+  
 };
 
 function reducer(state, action) {
@@ -191,7 +192,7 @@ function reducer(state, action) {
       return { ...state, filteredQuestions: action.payload };
     case "SET_RESPONSES":
       return { ...state, responses: action.payload };
-    // Add other action handlers here...
+    // Extra handlers go here for whoever reads this in the future
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -270,6 +271,10 @@ export default function SurveyScreen({ navigation }) {
     for (const condition of conditions) {
       // Check if the condition contains 'not'
       const isNotCondition = condition.includes("not");
+      // Check if the show condition is complex
+      if (showCondition.includes('(') && showCondition.includes(')')) {
+        return evaluateComplexCondition(showCondition, responses);
+      }
 
       // Split the condition into the question ID and the expected response
       const [questionID, expectedResponses] = condition.split(
@@ -302,6 +307,56 @@ export default function SurveyScreen({ navigation }) {
 
     // If all conditions are met, return true
     return true;
+  };
+
+  const evaluateComplexCondition = (complexCondition, responses) => {
+    // Use a regular expression to find all conditions within parentheses
+    const regex = /\(([^)]+)\)/g;
+    let match;
+    let conditionResults = [];
+
+    while ((match = regex.exec(complexCondition)) !== null) {
+      const conditions = match[1].split(/( and | or )/);
+      let isAndCondition = false;
+      let isOrCondition = false;
+      let subConditionResults = [];
+
+      for (let i = 0; i < conditions.length; i++) {
+        const condition = conditions[i].trim();
+        if (condition === 'and') {
+          isAndCondition = true;
+          continue;
+        } else if (condition === 'or') {
+          isOrCondition = true;
+          continue;
+        }
+
+        // Evaluate each condition using the existing function
+        const result = evaluateShowCondition(condition, responses);
+        console.log(`Condition: ${condition}, Result: ${result}`); // Debugging line
+        subConditionResults.push(result);
+      }
+
+      // If it's an 'and' condition, all conditions must be true
+      if (isAndCondition) {
+        const andResult = subConditionResults.every(result => result);
+        console.log(`And condition result: ${andResult}`); // Debugging line
+        conditionResults.push(andResult);
+      }
+
+      // If it's an 'or' condition, at least one condition must be true
+      if (isOrCondition) {
+        const orResult = subConditionResults.some(result => result);
+        console.log(`Or condition result: ${orResult}`); // Debugging line
+        conditionResults.push(orResult);
+      }
+    }
+
+    // If it's neither 'and' nor 'or', return false
+    const finalResult = conditionResults.some(result => result);
+    console.log(`Final result: ${finalResult}`); // Debugging line
+    console.log('---------------------------------------')
+    return finalResult;
   };
 
   const evaluateGroupShowCondition = (groupNames) => {
