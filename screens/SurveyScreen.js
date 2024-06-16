@@ -692,7 +692,17 @@ export default function SurveyScreen({ navigation }) {
         <Button
           mode="elevated"
           style={{}}
-          onPress={handleSubmit(onSubmit)}
+          onPress={() => {
+            handleSubmit(onSubmit);
+            if (currentPage < questionsPerPage.length) {
+              const nextPage = currentPage + 1;
+              dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
+              flashListRef.current?.scrollToOffset({
+                offset: 0,
+                animated: true,
+              });
+            }
+          }}
         >
           {currentPage < questionsPerPage.length ? "Next" : "Submit"}
         </Button>
