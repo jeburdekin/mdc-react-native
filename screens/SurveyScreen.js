@@ -206,6 +206,7 @@ export default function SurveyScreen({ navigation }) {
   const bottomSheetRef = useRef(null);
   const { control, handleSubmit } = useForm();
   const { colors } = useTheme();
+  const scrollViewRef = useRef(null);
 
   const {
     currentPage,
@@ -432,6 +433,12 @@ export default function SurveyScreen({ navigation }) {
     .slice(0, currentPage - 1)
     .reduce((a, b) => a + b, 0);
   const endQuestion = startQuestion + questionsPerPage[currentPage - 1];
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+    }
+  }, [startQuestion, endQuestion]);
 
   useEffect(() => {
     const generateSurveyKey = async () => {
