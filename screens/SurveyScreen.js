@@ -207,6 +207,8 @@ export default function SurveyScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const { colors } = useTheme();
   const scrollViewRef = useRef(null);
+  const flashListRef = useRef(null);
+  const questionRefs = useRef([]);
 
   const {
     currentPage,
@@ -543,110 +545,114 @@ export default function SurveyScreen({ navigation }) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
       style={{ flex: 1 }}
     >
-      <ScrollView style={styles.container}>
-        {filteredQuestions
-          .slice(startQuestion, endQuestion)
-          .map((question, index) => {
-            const QuestionComponent =
-              questionTypeComponents[question.questionType];
-            return (
+      <FlashList
+        ref={flashListRef}
+        estimatedItemSize={200}
+        data={filteredQuestions.slice(startQuestion, endQuestion)}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item: question, index }) => {
+          questionRefs.current[index] = React.createRef(); // Create a ref for the question
+          const QuestionComponent =
+            questionTypeComponents[question.questionType];
+          return (
+            <View
+              ref={questionRefs.current[index]} // Assign the ref to the question
+              style={{ marginTop: 10, alignContent: "center" }}
+              key={index}
+            >
               <View
-                style={{ marginTop: 10, alignContent: "center" }}
-                key={index}
+                style={{
+                  borderBottomColor: colors.primary,
+                  borderBottomWidth: 1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                }}
               >
                 <View
                   style={{
-                    borderBottomColor: colors.primary,
-                    borderBottomWidth: 1,
                     flexDirection: "row",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
+                    flexShrink: 1,
                   }}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      flexShrink: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        marginBottom: 10,
-                        paddingLeft: 10,
-                        textAlign: "auto",
-                        marginRight: 3,
-                        fontWeight: "bold",
-                        flexShrink: 1,
-                        flex: 1,
-                      }}
-                    >
-                      {`Question ${question.order}: ${question.details}`}
-                    </Text>
-                    {question.tip && (
-                      <IconButton
-                        icon="information"
-                        color={colors.primary}
-                        size={20}
-                        onPress={() =>
-                          dispatch({
-                            type: "SET_SHOWN_TIP",
-                            payload: question.tip,
-                          })
-                        }
-                      />
-                    )}
-                  </View>
-                </View>
-                {shownTip === question.tip && (
                   <Text
                     style={{
-                      fontStyle: "italic",
-                      color: colors.secondary,
+                      marginBottom: 10,
                       paddingLeft: 10,
-                      paddingRight: 10,
-                      paddingTop: 5,
-                      paddingBottom: 5,
+                      textAlign: "auto",
+                      marginRight: 3,
+                      fontWeight: "bold",
+                      flexShrink: 1,
+                      flex: 1,
                     }}
                   >
-                    {question.tip}
+                    {`Question ${question.order}: ${question.details}`}
                   </Text>
-                )}
-                {QuestionComponent ? (
-                  <>
-                    {question.questionType === "start" && (
-                      <Start_Q startTime={startTime} />
-                    )}
-                    <QuestionComponent
-                      onChange={(newValue) => {
+                  {question.tip && (
+                    <IconButton
+                      icon="information"
+                      color={colors.primary}
+                      size={20}
+                      onPress={() =>
                         dispatch({
-                          type: "SET_RESPONSES",
-                          payload: {
-                            ...responses,
-                            [question.questionID]: Array.isArray(newValue)
-                              ? newValue
-                              : [newValue],
-                          },
-                        });
-                      }}
-                      // Ensure that the value is always an array
-                      value={
-                        Array.isArray(responses[question.questionID])
-                          ? responses[question.questionID]
-                          : [responses[question.questionID]]
+                          type: "SET_SHOWN_TIP",
+                          payload: question.tip,
+                        })
                       }
                     />
-                  </>
-                ) : (
-                  <Text>
-                    Unsupported question type: {question.questionType}
-                  </Text>
-                )}
+                  )}
+                </View>
               </View>
-            );
-          })}
-      </ScrollView>
+              {shownTip === question.tip && (
+                <Text
+                  style={{
+                    fontStyle: "italic",
+                    color: colors.secondary,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                  }}
+                >
+                  {question.tip}
+                </Text>
+              )}
+              {QuestionComponent ? (
+                <>
+                  {question.questionType === "start" && (
+                    <Start_Q startTime={startTime} />
+                  )}
+                  <QuestionComponent
+                    onChange={(newValue) => {
+                      dispatch({
+                        type: "SET_RESPONSES",
+                        payload: {
+                          ...responses,
+                          [question.questionID]: Array.isArray(newValue)
+                            ? newValue
+                            : [newValue],
+                        },
+                      });
+                    }}
+                    // Ensure that the value is always an array
+                    value={
+                      Array.isArray(responses[question.questionID])
+                        ? responses[question.questionID]
+                        : [responses[question.questionID]]
+                    }
+                  />
+                </>
+              ) : (
+                <Text>
+                  Unsupported question type: {question.questionType}
+                </Text>
+              )}
+            </View>
+          );
+        }}
+      />
       <View
         style={{
           flexDirection: "row",
@@ -709,6 +715,11 @@ export default function SurveyScreen({ navigation }) {
               onPress={() => {
                 const page = Math.ceil((index + 1) / pageSize);
                 dispatch({ type: "SET_CURRENT_PAGE", payload: page });
+                flashListRef.current.scrollToIndex({
+                  index: index,
+                  animated: true,
+                  viewPosition: 0,
+                });
                 handleClosePress();
               }}
               style={{
