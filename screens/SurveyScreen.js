@@ -612,7 +612,7 @@ export default function SurveyScreen({ navigation }) {
         {currentPage === 1 && (
           <Button
             mode="elevated"
-            style={{ margin: windowWidth * 0.05}}
+            style={{}}
             onPress={() => {
               navigation.navigate("Draft Screen");
             }}

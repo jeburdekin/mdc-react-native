@@ -315,21 +315,13 @@ export const ageGroup_Q = ({ value, onChange }) => (
   />
 );
 
-export const IntegerInput = () => {
-  const [value, setValue] = useState("");
-
-  const handleTextChange = (text) => {
-    // Check if the input is an integer
-    if (/^\d+$/.test(text) || text === "") {
-      setValue(text);
-    }
-  };
+export const IntegerInput = ({onChange, value}) => {
 
   return (
     <TextInput
       label="Integer Input"
-      value={value}
-      onChangeText={handleTextChange}
+      value={Array.isArray(value) ? value.join(', ') : value}
+      onChangeText={(text) => onChange(text.split(', '))}
       keyboardType="numeric"
     />
   );
