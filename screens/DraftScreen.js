@@ -17,20 +17,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: windowWidth * 0.07,
+    fontSize: windowWidth * 0.1,
     fontWeight: 'bold',
   },
   header: {
-    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
+    justifyContent: 'center',
+    flex: 2.2,
   },
   body: {
-    flex: 10,
+    flex: 12,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -45,10 +44,10 @@ const DraftScreen = ({ drafts, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 0.4, alignItems: 'center'}}>
-          <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowWidth * 0.17} />
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'space-around'}}>
+          <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <Title style={[styles.title, { color: colors.primary, flex: 1, alignSelf: 'center' }]}>Survey Drafts</Title>
+        <Text style={[styles.title, { color: colors.primary, flex: 2.2, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
 

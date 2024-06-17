@@ -17,17 +17,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   header: {
-    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    flex: 1,
+    flex: 2.2,
   },
   title:{
-    fontSize: windowWidth * 0.08,
+    fontSize: windowWidth * 0.09,
     fontWeight: 'bold',
   },
   button: {
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   body: {
-    flex: 10,
+    flex: 12,
     width: '100%',
     alignItems: 'center',
   },
@@ -121,10 +119,10 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 2.5, alignItems: 'center'}}>
-          <MaterialCommunityIcons name="cloud-download-outline" color={colors.primary} size={windowWidth * 0.19} />
+        <View style={{flex: 0.35, alignItems: 'flex-end', justifyContent: 'space-around'}}>
+          <MaterialCommunityIcons name="cloud-download-outline" color={colors.primary} size={windowHeight * 0.13} />
         </View>
-        <View style={{flex: 6}}>
+        <View style={{flex: 0.6}}>
           <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>Download</Text>
           <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>Surveys</Text>
         </View>
