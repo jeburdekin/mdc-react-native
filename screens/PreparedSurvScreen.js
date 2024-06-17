@@ -46,7 +46,7 @@ const PreparedSurvScreen = ({ completedDrafts }) => {
         <View style={{alignItems: 'flex-end', flex: 0.275}}>
           <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <View style={{flex: 0.6}}>
+        <View style={{flex: 0.7}}>
           <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Completed</Text>
           <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Surveys</Text>
         </View>

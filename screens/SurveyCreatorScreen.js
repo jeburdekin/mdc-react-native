@@ -46,7 +46,7 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
           <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.11} />
         </View>
         <Text style={[styles.title, {color: colors.primary, flex: 5.5, alignSelf: 'center'}]}>
-          Choose a Survey
+          Pick a Survey
         </Text>
       </View>
       <View style={styles.body}>

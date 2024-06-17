@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: windowWidth * 0.1,
+    fontSize: windowWidth * 0.09,
     fontWeight: 'bold',
   },
   header: {
@@ -47,7 +47,7 @@ const DraftScreen = ({ drafts, navigation }) => {
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'space-around'}}>
           <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <Text style={[styles.title, { color: colors.primary, flex: 2.2, alignSelf: 'center' }]}>Survey Drafts</Text>
+        <Text style={[styles.title, { color: colors.primary, flex: 2.4, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
 
