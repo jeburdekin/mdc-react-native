@@ -17,11 +17,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title:{
-    fontSize: 30,
+    fontSize: windowWidth * 0.07,
     fontWeight: 'bold',
   },
   header: {
-    width: '100%',
     padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
@@ -29,7 +28,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-  }
+    flex: 1,
+  },
+  body: {
+    flex: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
 });
 
 const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToDraftScreen }) => {
@@ -38,34 +43,16 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.075} />
-        <Title style={[styles.title, {color: colors.primary}]}>
+        <View style={{flex: 2, alignItems: 'center'}} >
+
+          <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowWidth * 0.17} />
+        </View>
+        <Title style={[styles.title, {color: colors.primary, flex: 7, alignSelf: 'center'}]}>
           Choose a Survey
         </Title>
       </View>
-      <Button
-        mode="contained"
-        style={{
-          backgroundColor: colors.primary,
-          marginTop: 20,
-          borderWidth: 12,
-          width: '90%',
-        }}
-        onPress={() => {
-          // Create a draft for the "Internet Variant - W.H.O. Survey"
-          createDraft({
-            name: 'Internet Variant - W.H.O. Survey',
-            // Add any other data you need for the survey...
-          });
-          // Navigate to the DraftScreen
-          goToDraftScreen();
-        }}
-      >
-        <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
-      </Button>
-      {downloadedSurveys.map((survey, index) => (
+      <View style={styles.body}>
         <Button
-          key={index}
           mode="contained"
           style={{
             backgroundColor: colors.primary,
@@ -74,15 +61,38 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
             width: '90%',
           }}
           onPress={() => {
-            createDraft(survey);
+            // Create a draft for the "Internet Variant - W.H.O. Survey"
+            createDraft({
+              name: 'Internet Variant - W.H.O. Survey',
+              // Add any other data you need for the survey...
+            });
+            // Navigate to the DraftScreen
             goToDraftScreen();
           }}
         >
-          <Text style={{ fontSize: 20, color: 'white' }}>
-            {survey.name}
-          </Text>
+          <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
         </Button>
-      ))}
+        {downloadedSurveys.map((survey, index) => (
+          <Button
+            key={index}
+            mode="contained"
+            style={{
+              backgroundColor: colors.primary,
+              marginTop: 20,
+              borderWidth: 12,
+              width: '90%',
+            }}
+            onPress={() => {
+              createDraft(survey);
+              goToDraftScreen();
+            }}
+          >
+            <Text style={{ fontSize: 20, color: 'white' }}>
+              {survey.name}
+            </Text>
+          </Button>
+        ))}
+      </View>
     </View>
   );
 }
