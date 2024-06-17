@@ -28,7 +28,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-  }
+    flex: 1,
+  },
+  body: {
+    flex: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
 });
 
 const PreparedSurvScreen = ({ completedDrafts }) => {
@@ -38,8 +44,16 @@ const PreparedSurvScreen = ({ completedDrafts }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.075} />
-        <Title style={[styles.title, { color: colors.primary }]}>Completed Surveys</Title>
+        <View style={{alignItems: 'center'}}>
+          <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.075} />
+        </View>
+        <View>
+          <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Completed</Text>
+          <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Surveys</Text>
+        </View>
+      </View>
+      <View style={styles.body}>
+
       </View>
       {/* {completedDrafts.map((draft, index) => (
         <Button

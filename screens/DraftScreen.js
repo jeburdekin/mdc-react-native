@@ -17,19 +17,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: 30,
+    fontSize: windowWidth * 0.07,
     fontWeight: 'bold',
   },
   header: {
-    width: '100%',
     padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
-    alignItems: 'center',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
-  }
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  body: {
+    flex: 10,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 const DraftScreen = ({ drafts, navigation }) => {
@@ -40,28 +45,33 @@ const DraftScreen = ({ drafts, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowHeight * 0.075} />
-        <Title style={[styles.title, { color: colors.primary }]}>Unfinished Surveys</Title>
+        <View style={{flex: 0.4, alignItems: 'center'}}>
+          <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowWidth * 0.17} />
+        </View>
+        <Title style={[styles.title, { color: colors.primary, flex: 1, alignSelf: 'center' }]}>Survey Drafts</Title>
       </View>
-      {drafts.map((draft, index) => (
-        <Button
-          key={index}
-          mode="contained"
-          style={{
-            backgroundColor: colors.primary,
-            marginTop: 20,
-            borderWidth: 12,
-            width: '90%',
-          }}
-          onPress={() => {
-            navigation.navigate('Survey Screen', { draftData: draft });
-          }}
-        >
-          <Text style={{ fontSize: 20 }}>
-            {typeof draft.name === 'string' ? draft.name : 'No name'}
-          </Text>
-        </Button>
-      ))}
+      <View style={styles.body}>
+
+        {drafts.map((draft, index) => (
+          <Button
+            key={index}
+            mode="contained"
+            style={{
+              backgroundColor: colors.primary,
+              marginTop: 20,
+              borderWidth: 12,
+              width: '90%',
+            }}
+            onPress={() => {
+              navigation.navigate('Survey Screen', { draftData: draft });
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>
+              {typeof draft.name === 'string' ? draft.name : 'No name'}
+            </Text>
+          </Button>
+        ))}
+      </View>
     </View>
   );
 };

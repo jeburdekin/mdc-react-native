@@ -13,12 +13,10 @@ const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fffcf7',
   },
   header: {
-    width: '100%',
     padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
@@ -26,6 +24,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
+    flex: 1,
+  },
+  title:{
+    fontSize: windowWidth * 0.08,
+    fontWeight: 'bold',
   },
   button: {
     width: windowWidth * 0.85,
@@ -60,6 +63,11 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 10,
     width: '90%',
+  },
+  body: {
+    flex: 10,
+    width: '100%',
+    alignItems: 'center',
   },
 });
 
@@ -113,28 +121,36 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="cloud-download-outline" color={colors.primary} size={windowHeight * 0.075} />
-        <Text style={{color: colors.primary, fontWeight: 'bold', fontSize: 30}}>Download Surveys</Text>
+        <View style={{flex: 2.5, alignItems: 'center'}}>
+          <MaterialCommunityIcons name="cloud-download-outline" color={colors.primary} size={windowWidth * 0.19} />
+        </View>
+        <View style={{flex: 6}}>
+          <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>Download</Text>
+          <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>Surveys</Text>
+        </View>
+
       </View>
-      <Button mode="contained" onPress={() => downloadFile('Interviewer Questions')} style={styles.button}>
-        <Text style={styles.buttonText}>Interviewer Questions</Text>
-      </Button>
-      <ProgressBar progress={downloadProgress} color={colors.primary} />
-      <View style={styles.downloadedSurveysContainer}>
+      <View style={styles.body}>
+        <Button mode="contained" onPress={() => downloadFile('Interviewer Questions')} style={styles.button}>
+          <Text style={styles.buttonText}>Interviewer Questions</Text>
+        </Button>
+        <ProgressBar progress={downloadProgress} color={colors.primary} />
+        <View style={styles.downloadedSurveysContainer}>
+          {downloadedSurveys.map((survey, index) => (
+            <View key={index} style={styles.downloadedSurvey}>
+              <Text style={styles.downloadedSurveyText}>Survey {index + 1}</Text>
+            </View>
+          ))}
+        </View>
         {downloadedSurveys.map((survey, index) => (
-          <View key={index} style={styles.downloadedSurvey}>
-            <Text style={styles.downloadedSurveyText}>Survey {index + 1}</Text>
-          </View>
+          <Card key={index} style={styles.card}>
+            <Card.Content>
+              <Text>Downloaded Survey {index + 1}</Text>
+              <Text>URI: {survey.uri}</Text>
+            </Card.Content>
+          </Card>
         ))}
       </View>
-      {downloadedSurveys.map((survey, index) => (
-        <Card key={index} style={styles.card}>
-          <Card.Content>
-            <Text>Downloaded Survey {index + 1}</Text>
-            <Text>URI: {survey.uri}</Text>
-          </Card.Content>
-        </Card>
-      ))}
     </View>
   );
 }

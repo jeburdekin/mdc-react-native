@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useTheme, Title, Button } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: 30,
+    fontSize: windowWidth * 0.08,
     fontWeight: 'bold',
   },
   header: {
@@ -27,8 +27,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
-  }
+    justifyContent: 'space-around',
+    flex: 1,
+  },
+  body: {
+    flex: 10,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default SentSurvScreen = ({ sentSurveys }) => {
@@ -38,8 +45,15 @@ export default SentSurvScreen = ({ sentSurveys }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowHeight * 0.075} />
-        <Title style={[styles.title, { color: colors.primary }]}>Uploaded Surveys</Title>
+        <View style={{flex: 2.5, alignItems: 'center'}}>
+          <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowWidth * 0.17} style={{justifyContent: 'center'}}/>
+        </View>
+        <Title style={[styles.title, {color: colors.primary, flex: 7, alignSelf: 'center'}]}>
+          Sent Surveys
+        </Title>
+      </View>
+      <View style={styles.body}>
+
       </View>
     </View>
   );
