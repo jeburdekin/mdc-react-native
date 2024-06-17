@@ -219,7 +219,7 @@ export default function HomeScreen({ navigation }) {
             >
               <Text style={styles.buttonText}>Sent Surveys</Text>
             </Button> */}
-            <Button
+            {/* <Button
               mode="elevated"
               style={styles.button}
               icon="cloud-download-outline"
@@ -227,7 +227,7 @@ export default function HomeScreen({ navigation }) {
               onPress={() => navigation.navigate("Download Surveys")}
             >
               <Text style={styles.buttonText}>Download Surveys</Text>
-            </Button>
+            </Button> */}
             <Button
               mode="elevated"
               style={styles.button}

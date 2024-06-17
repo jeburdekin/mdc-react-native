@@ -5,6 +5,7 @@ import SurveyCreatorScreen from './SurveyCreatorScreen';
 import DraftScreen from './DraftScreen';
 import SentSurvScreen from './SentSurvScreen';
 import PreparedSurvScreen from './PreparedSurvScreen';
+import DownloadSurvScreen from './DownloadSurvScreen';
 
 const SurveyHubScreen = ({navigation}) => {
   const swiperRef = useRef(null);
@@ -20,6 +21,9 @@ const SurveyHubScreen = ({navigation}) => {
       </View>
       <View style={styles.slide}>
         <DraftScreen navigation={navigation} />
+      </View>
+      <View style={styles.slide}>
+        <DownloadSurvScreen />
       </View>
       <View style={styles.slide}>
         <PreparedSurvScreen />

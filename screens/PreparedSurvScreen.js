@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useTheme, Title, Button } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -17,12 +21,13 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    padding: 20,
+    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
+    flexDirection: 'row',
   }
 });
 
@@ -33,6 +38,7 @@ const PreparedSurvScreen = ({ completedDrafts }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.075} />
         <Title style={[styles.title, { color: colors.primary }]}>Completed Surveys</Title>
       </View>
       {/* {completedDrafts.map((draft, index) => (

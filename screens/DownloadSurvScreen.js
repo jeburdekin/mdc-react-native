@@ -5,6 +5,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Text, Card, ProgressBar, Button, useTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { addSurvey } from '../Redux/Actions';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -18,12 +19,13 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    padding: 20,
+    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
+    flexDirection: 'row',
   },
   button: {
     width: windowWidth * 0.85,
@@ -111,7 +113,8 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{color: colors.primary, fontWeight: 'bold', fontSize: 25}}>Download Surveys</Text>
+        <MaterialCommunityIcons name="cloud-download-outline" color={colors.primary} size={windowHeight * 0.075} />
+        <Text style={{color: colors.primary, fontWeight: 'bold', fontSize: 30}}>Download Surveys</Text>
       </View>
       <Button mode="contained" onPress={() => downloadFile('Interviewer Questions')} style={styles.button}>
         <Text style={styles.buttonText}>Interviewer Questions</Text>

@@ -1,8 +1,14 @@
 import React from 'react';
 import { Button,  useTheme, Title } from 'react-native-paper';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { createDraft } from '../Redux/Actions'; // replace with the actual path to your actions
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -16,12 +22,13 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    padding: 20,
+    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
+    flexDirection: 'row',
   }
 });
 
@@ -31,7 +38,10 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Title style={[styles.title, {color: colors.primary}]}>Choose a Survey</Title>
+        <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.075} />
+        <Title style={[styles.title, {color: colors.primary}]}>
+          Choose a Survey
+        </Title>
       </View>
       <Button
         mode="contained"
