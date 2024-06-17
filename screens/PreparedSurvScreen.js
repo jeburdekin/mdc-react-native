@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useTheme, Title, Button } from 'react-native-paper';
-import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const PreparedSurvScreen = ({ completedDrafts }) => {
+const PreparedSurvScreen = ({ completedSurveys }) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
+  console.log('completedSurveys:', completedSurveys);
 
   return (
     <View style={styles.container}>
@@ -53,34 +54,36 @@ const PreparedSurvScreen = ({ completedDrafts }) => {
         </View>
       </View>
       <View style={styles.body}>
-
+        {completedSurveys.map((survey, index) => (
+          <Button
+            key={index}
+            mode="contained"
+            style={{
+              backgroundColor: colors.primary,
+              marginTop: 20,
+              borderWidth: 12,
+              width: windowWidth * 0.9,
+              height: windowHeight * 0.1,
+            }}
+            onPress={() => {
+              navigation.navigate('Survey Screen', { surveyData: survey });
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>
+              {typeof survey.name === 'string' ? survey.name : 'No name'}
+            </Text>
+          </Button>
+        ))}
       </View>
-      {/* {completedDrafts.map((draft, index) => (
-        <Button
-          key={index}
-          mode="contained"
-          style={{
-            backgroundColor: colors.primary,
-            marginTop: 20,
-            borderWidth: 12,
-            width: '90%',
-          }}
-          onPress={() => {
-            navigation.navigate('Survey Screen', { draftData: draft });
-          }}
-        >
-          <Text style={{ fontSize: 20 }}>
-            {typeof draft.name === 'string' ? draft.name : 'No name'}
-          </Text>
-        </Button>
-      ))} */}
     </View>
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   completedDrafts: state.completedDrafts, // replace with the actual path to your completed drafts in the state
-// });
+const mapStateToProps = (state) => {
+  console.log('State in mapStateToProps:', state);
+  return {
+    completedSurveys: state.surveys.filter((survey) => survey.isSurveyCompleted),
+  };
+};
 
-// export default connect(mapStateToProps)(PreparedSurvScreen);
-export default PreparedSurvScreen;
+export default connect(mapStateToProps)(PreparedSurvScreen);

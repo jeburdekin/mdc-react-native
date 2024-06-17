@@ -2,11 +2,18 @@ import { combineReducers } from 'redux';
 import { ADD_SURVEY, CREATE_DRAFT } from './Actions'; // replace with the actual path to your actions
 import { DELETE_DRAFT } from './Actions';
 import { SET_QUESTIONS, SET_RESPONSES } from './Actions';
+import { SET_SURVEY_COMPLETED } from './Actions';
 
 const surveysReducer = (state = [], action) => {
   switch (action.type) {
     case ADD_SURVEY:
       return [...state, action.payload];
+    case SET_SURVEY_COMPLETED:
+      return state.map(survey =>
+        survey.id === action.payload
+          ? { ...survey, isSurveyCompleted: true }
+          : survey
+      );
     default:
       return state;
   }
@@ -47,6 +54,8 @@ const draftsReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+
 
 const rootReducer = combineReducers({
   surveys: surveysReducer,

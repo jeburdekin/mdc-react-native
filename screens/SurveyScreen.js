@@ -80,6 +80,8 @@ import {
 } from "../Logic Files/QuestionTypes";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
+import { setSurveyCompleted } from "../Redux/Actions";
+import { useDispatch } from 'react-redux';
 // const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
 const pageSize = 5;
 
@@ -167,7 +169,7 @@ const initialState = {
   surveyKey: null,
   filteredQuestions: [],
   responses: {},
-  
+
 };
 
 function reducer(state, action) {
@@ -209,6 +211,7 @@ export default function SurveyScreen({ navigation }) {
   const scrollViewRef = useRef(null);
   const flashListRef = useRef(null);
   const questionRefs = useRef([]);
+  const dispatcher = useDispatch();
 
   const {
     currentPage,
@@ -271,7 +274,7 @@ export default function SurveyScreen({ navigation }) {
     if (showCondition.includes('(') && showCondition.includes(')')) {
       return evaluateComplexCondition(showCondition, responses);
     }
-    
+
     // Split the showCondition string into individual conditions
     let conditions;
     if (showCondition.includes('(')) {
@@ -279,7 +282,7 @@ export default function SurveyScreen({ navigation }) {
     } else {
       conditions = showCondition.split(",");
     }
-    
+
     // Evaluate each condition
     for (const condition of conditions) {
       // Check if the condition contains 'not'
@@ -490,27 +493,15 @@ export default function SurveyScreen({ navigation }) {
 
   // Remove survey data when the survey is completed
   const onSubmit = async () => {
-    // Check if all questions on the current page have been answered
-    const allAnswered = questions
-      .slice(startQuestion, endQuestion)
-      .every(
-        (question) =>
-          responses[question.questionID] !== null &&
-          responses[question.questionID] !== undefined
-      );
-    if (allAnswered) {
-      let nextPage = currentPage + 1;
-      if (nextPage <= questionsPerPage.length) {
-        dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
-      } else {
-        // or any other final submission logic
-        await AsyncStorage.removeItem(surveyKey); // Remove survey data
-      }
+    let nextPage = currentPage + 1;
+    if (nextPage < questionsPerPage.length) {
+      dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
     } else {
-      alert("Please answer all questions before proceeding.");
+      console.log("Survey completed! It should now appear on the completed surveys screen.");
+      dispatcher(setSurveyCompleted(surveyKey)); // replace `surveyId` with the actual id of the survey
+      navigation.navigate("Ready to Send");
     }
   };
-
   // Initialize the responses
   useEffect(() => {
     const initialResponses = questions.reduce((acc, question) => {
@@ -693,7 +684,6 @@ export default function SurveyScreen({ navigation }) {
           mode="elevated"
           style={{}}
           onPress={() => {
-            handleSubmit(onSubmit);
             if (currentPage < questionsPerPage.length) {
               const nextPage = currentPage + 1;
               dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
@@ -701,10 +691,12 @@ export default function SurveyScreen({ navigation }) {
                 offset: 0,
                 animated: true,
               });
+            } else {
+              onSubmit();
             }
           }}
         >
-          {currentPage < questionsPerPage.length ? "Next" : "Submit"}
+          {currentPage < questionsPerPage.length ? "Next" : "Complete"}
         </Button>
       </View>
       <BottomSheet

@@ -76,7 +76,10 @@
     "@iconify/icons-material-symbols": "^1.2.58",
     "@iconify/react": "^4.1.1",
     "@types/papaparse": "^5.3.14",
-    "metro-config": "^0.80.5"
+    "metro-config": "^0.80.5",
+    "redux-devtools-extension": "^2.13.9",
+    "remote-redux-devtools": "^0.5.16",
+    "remotedev-rn-debugger": "^0.8.4"
   },
   "private": true,
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"

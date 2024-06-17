@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     flex: 10,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
 });
 

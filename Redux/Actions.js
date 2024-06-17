@@ -3,6 +3,15 @@ export const CREATE_DRAFT = 'CREATE_DRAFT';
 export const DELETE_DRAFT = 'DELETE_DRAFT';
 export const SET_QUESTIONS = 'SET_QUESTIONS';
 export const SET_RESPONSES = 'SET_RESPONSES';
+export const SET_SURVEY_COMPLETED = 'SET_SURVEY_COMPLETED';
+
+export const setSurveyCompleted = (surveyId) => {
+  console.log('Dispatching setSurveyCompleted with surveyId:', surveyId);
+  return {
+    type: SET_SURVEY_COMPLETED,
+    payload: surveyId,
+  };
+};
 
 export const addSurvey = survey => ({
     type: 'ADD_SURVEY',
