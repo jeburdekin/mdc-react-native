@@ -17,21 +17,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title:{
-    fontSize: windowWidth * 0.07,
+    fontSize: windowWidth * 0.09,
     fontWeight: 'bold',
   },
   header: {
-    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    flex: 1,
+    flex: 2.2,
   },
   body: {
-    flex: 10,
+    flex: 12,
     width: '100%',
     alignItems: 'center',
   },
@@ -43,13 +42,12 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 2, alignItems: 'center'}} >
-
-          <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowWidth * 0.17} />
+        <View style={{flex: 2, alignItems: 'center', justifyContent: 'space-around'}} >
+          <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.11} />
         </View>
-        <Title style={[styles.title, {color: colors.primary, flex: 7, alignSelf: 'center'}]}>
-          Choose a Survey
-        </Title>
+        <Text style={[styles.title, {color: colors.primary, flex: 5.5, alignSelf: 'center'}]}>
+          Pick a Survey
+        </Text>
       </View>
       <View style={styles.body}>
         <Button

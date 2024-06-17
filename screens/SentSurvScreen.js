@@ -16,22 +16,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: windowWidth * 0.08,
+    fontSize: windowWidth * 0.1,
     fontWeight: 'bold',
   },
   header: {
     width: '100%',
-    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    flex: 1,
+    flex: 2.2,
   },
   body: {
-    flex: 10,
+    flex: 12,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -45,12 +43,14 @@ export default SentSurvScreen = ({ sentSurveys }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 2.5, alignItems: 'center'}}>
-          <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowWidth * 0.17} style={{justifyContent: 'center'}}/>
+        <View style={{flex: 0.28, alignItems: 'flex-end'}}>
+          <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowHeight * 0.11} />
         </View>
-        <Title style={[styles.title, {color: colors.primary, flex: 7, alignSelf: 'center'}]}>
-          Sent Surveys
-        </Title>
+        <View style={{flex: 1}}>
+          <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>
+            Sent Surveys
+          </Text>
+        </View>
       </View>
       <View style={styles.body}>
 

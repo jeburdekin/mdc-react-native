@@ -16,22 +16,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: 30,
+    fontSize: windowWidth * 0.1,
     fontWeight: 'bold',
   },
   header: {
     width: '100%',
-    padding: windowHeight * 0.03,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     borderBottomWidth: 6,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    flex: 1,
+    flex: 2.2,
   },
   body: {
-    flex: 10,
+    flex: 12,
     width: '100%',
     alignItems: 'center',
   },
@@ -45,10 +44,10 @@ const PreparedSurvScreen = ({ completedSurveys }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{alignItems: 'center'}}>
-          <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.075} />
+        <View style={{alignItems: 'flex-end', flex: 0.275}}>
+          <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <View>
+        <View style={{flex: 0.7}}>
           <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Completed</Text>
           <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Surveys</Text>
         </View>
