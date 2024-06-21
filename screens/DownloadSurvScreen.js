@@ -3,9 +3,9 @@ import { View, StyleSheet, Alert, Dimensions } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Text, Card, ProgressBar, Button, useTheme } from 'react-native-paper';
-import { connect } from 'react-redux';
-import { addSurvey } from '../Redux/Actions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { downloadStore } from "../Zustand State Management/zustandStore";
+
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -82,9 +82,11 @@ const generateDownloadUrl = async (surveyName) => {
   }
 }
 
-const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
+const DownloadSurveyScreen = ({ }) => {
   const [downloadProgress, setDownloadProgress] = useState(0);
   const { colors } = useTheme();
+  const addSurvey = downloadStore((state) => state.addSurvey);
+  const downloadedSurveys = downloadStore((state) => state.downloadedSurveys);
 
   const downloadFile = async (surveyName) => {
     if (downloadedSurveys.some(survey => survey.name === surveyName)) {
@@ -153,12 +155,4 @@ const DownloadSurveyScreen = ({ downloadedSurveys, addSurvey }) => {
   );
 }
 
-const mapStateToProps = state => ({
-  downloadedSurveys: state.surveys,
-});
-
-const mapDispatchToProps = {
-  addSurvey,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadSurveyScreen);
+export default DownloadSurveyScreen;

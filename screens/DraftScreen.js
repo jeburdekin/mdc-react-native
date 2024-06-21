@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useTheme, Title, Button, Menu, IconButton } from 'react-native-paper';
-import { connect } from 'react-redux';
-import { createDraft, deleteDraft } from '../Redux/Actions'; // replace with the actual path to your actions
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { surveyStore } from "../Zustand State Management/zustandStore.js";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -36,10 +35,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const DraftScreen = ({ drafts, navigation }) => {
+const DraftScreen = ({ navigation }) => {
   const { colors } = useTheme();
-  const [visible, setVisible] = React.useState(false);
-  const [selectedDrafts, setSelectedDrafts] = React.useState([]);
+  const surveyDrafts = surveyStore((state) => state.surveyDrafts);
+  const setCurrentlyUsedID = surveyStore((state) => state.setCurrentlyUsedID);
 
   return (
     <View style={styles.container}>
@@ -50,8 +49,7 @@ const DraftScreen = ({ drafts, navigation }) => {
         <Text style={[styles.title, { color: colors.primary, flex: 2.4, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
-
-        {drafts.map((draft, index) => (
+        {Object.entries(surveyDrafts).map(([key, draft], index) => (
           <Button
             key={index}
             mode="contained"
@@ -62,11 +60,12 @@ const DraftScreen = ({ drafts, navigation }) => {
               width: '90%',
             }}
             onPress={() => {
+              setCurrentlyUsedID(key);
               navigation.navigate('Survey Screen', { draftData: draft });
             }}
           >
             <Text style={{ fontSize: 20 }}>
-              {typeof draft.name === 'string' ? draft.name : 'No name'}
+              {draft.name + " " + (index + 1)}
             </Text>
           </Button>
         ))}
@@ -75,13 +74,6 @@ const DraftScreen = ({ drafts, navigation }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  drafts: state.drafts,
-});
 
-const mapDispatchToProps = (dispatch) => ({
-  createDraft: (survey) => dispatch(createDraft(survey)),
-  deleteDraft: (draftId) => dispatch(deleteDraft(draftId)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(DraftScreen);
+export default DraftScreen;

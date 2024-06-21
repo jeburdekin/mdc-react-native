@@ -1,9 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import { Button,  useTheme, Title } from 'react-native-paper';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { connect } from 'react-redux';
-import { createDraft } from '../Redux/Actions'; // replace with the actual path to your actions
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { surveyStore } from '../Zustand State Management/zustandStore';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigation } from '@react-navigation/native';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -36,8 +39,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToDraftScreen }) => {
+const SurveyCreatorScreen = ({ goToDraftScreen }) => {
   const { colors } = useTheme();
+  const addSurvey = surveyStore(state => state.addSurvey);
+  const addSurveyName = surveyStore(state => state.addSurveyName);
+  const setRecentlyCreatedDraftID = surveyStore(state => state.setRecentID);
+
+  const createDraft = () => {
+    const newDraftID = uuidv4();
+    addSurvey(newDraftID);
+    return newDraftID;
+  }
 
   return (
     <View style={styles.container}>
@@ -60,17 +72,17 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
           }}
           onPress={() => {
             // Create a draft for the "Internet Variant - W.H.O. Survey"
-            createDraft({
-              name: 'Internet Variant - W.H.O. Survey',
-              // Add any other data you need for the survey...
-            });
+            const newDraft = createDraft();
+            setRecentlyCreatedDraftID(newDraft);
+            addSurveyName(newDraft, 'Internet - W.H.O. Survey');
+
             // Navigate to the DraftScreen
             goToDraftScreen();
           }}
         >
           <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
         </Button>
-        {downloadedSurveys.map((survey, index) => (
+        {/* {downloadedSurveys.map((survey, index) => (
           <Button
             key={index}
             mode="contained"
@@ -89,20 +101,10 @@ const SurveyCreatorScreen = ({ navigation, downloadedSurveys, createDraft, goToD
               {survey.name}
             </Text>
           </Button>
-        ))}
+        ))} */}
       </View>
     </View>
   );
 }
 
-const mapStateToProps = state => ({
-  downloadedSurveys: state.surveys,
-  drafts: state.drafts,
-});
-
-const mapDispatchToProps = dispatch => ({
-  createDraft: survey => dispatch(createDraft(survey)),
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyCreatorScreen);
+export default SurveyCreatorScreen;

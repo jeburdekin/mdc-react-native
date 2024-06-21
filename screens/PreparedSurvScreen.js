@@ -1,88 +1,143 @@
-import * as React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import { useTheme, Title, Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { connect } from 'react-redux';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import * as React from "react";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
+import { useTheme, Title, Button, Portal, Dialog } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FlashList } from "@shopify/flash-list";
+import { surveyStore } from "../Zustand State Management/zustandStore";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#fffcf7',
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#fffcf7",
   },
   title: {
     fontSize: windowWidth * 0.1,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   header: {
-    width: '100%',
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    width: "100%",
+    backgroundColor: "#f5f5f5",
+    alignItems: "center",
+    justifyContent: "space-evenly",
     borderBottomWidth: 6,
-    borderBottomColor: '#ddd',
-    flexDirection: 'row',
+    borderBottomColor: "#ddd",
+    flexDirection: "row",
     flex: 2.2,
   },
   body: {
     flex: 12,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
+  },
+  button: {
+    width: windowWidth * 0.85,
+    padding: 12,
+    borderRadius: 20,
+    marginTop: 20,
   },
 });
 
-const PreparedSurvScreen = ({ completedSurveys }) => {
+const PreparedSurvScreen = ({}) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
-  console.log('completedSurveys:', completedSurveys);
+  const [visible, setVisible] = React.useState(false);
+  const [selectedSurvey, setSelectedSurvey] = React.useState([]);
+  const surveyDrafts = surveyStore((state) => state.surveyDrafts);
+
+  const getCompletedSurveys = () => {
+    const surveyDrafts = surveyStore.getState().surveyDrafts;
+    return Object.entries(surveyDrafts)
+      .filter(([key, survey]) => survey.isSurveyCompleted)
+      .map(([key, survey]) => survey);
+  };
+  const completedSurveys = getCompletedSurveys();
+
+  const handlePress = (survey) => {
+    setSelectedSurvey(survey);
+    setVisible(true);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{alignItems: 'flex-end', flex: 0.275}}>
-          <MaterialCommunityIcons name="checkbox-multiple-marked-outline" color={colors.primary} size={windowHeight * 0.115} />
+        <View style={{ alignItems: "flex-end", flex: 0.275 }}>
+          <MaterialCommunityIcons
+            name="checkbox-multiple-marked-outline"
+            color={colors.primary}
+            size={windowHeight * 0.115}
+          />
         </View>
-        <View style={{flex: 0.7}}>
-          <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Completed</Text>
-          <Text style={[styles.title, { color: colors.primary, alignSelf: 'center' }]}>Surveys</Text>
+        <View style={{ flex: 0.7 }}>
+          <Text
+            style={[
+              styles.title,
+              { color: colors.primary, alignSelf: "center" },
+            ]}
+          >
+            Completed
+          </Text>
+          <Text
+            style={[
+              styles.title,
+              { color: colors.primary, alignSelf: "center" },
+            ]}
+          >
+            Surveys
+          </Text>
         </View>
       </View>
       <View style={styles.body}>
-        {completedSurveys.map((survey, index) => (
+        {completedSurveys.map((surveyData, index) => (
           <Button
             key={index}
-            mode="contained"
-            style={{
-              backgroundColor: colors.primary,
-              marginTop: 20,
-              borderWidth: 12,
-              width: windowWidth * 0.9,
-              height: windowHeight * 0.1,
-            }}
-            onPress={() => {
-              navigation.navigate('Survey Screen', { surveyData: survey });
-            }}
+            onPress={() => handlePress(surveyData)}
+            style={[styles.button, { backgroundColor: colors.primary}]}
           >
-            <Text style={{ fontSize: 20 }}>
-              {typeof survey.name === 'string' ? survey.name : 'No name'}
+            <Text style={{color: 'white', fontSize: windowHeight * 0.024, fontWeight: 'bold'}}>
+              {`${surveyData.name}`}
             </Text>
           </Button>
         ))}
+        <Portal style={{ flex: 1 }}>
+          <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+            <Dialog.Title>Survey {selectedSurvey?.id}</Dialog.Title>
+            <Dialog.Content
+              style={{ height: windowHeight * 0.5, width: windowWidth * 0.9 }}
+            >
+              <FlashList
+                data={Object.entries(selectedSurvey?.responses || {}).filter(
+                  ([question, response]) =>
+                    !(Array.isArray(response) && response.length === 0)
+                )}
+                renderItem={({ item, index }) => (
+                  <View key={index}>
+                    <Text>
+                      Question {index + 1}: {item[0]}
+                    </Text>
+                    <Text>
+                      Response:{" "}
+                      {typeof item[1] === "object"
+                        ? JSON.stringify(item[1])
+                        : item[1]}
+                    </Text>
+                  </View>
+                )}
+                estimatedItemSize={400}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setVisible(false)}>Done</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
     </View>
   );
 };
 
-const mapStateToProps = (state) => {
-  console.log('State in mapStateToProps:', state);
-  return {
-    completedSurveys: state.surveys.filter((survey) => survey.isSurveyCompleted),
-  };
-};
-
-export default connect(mapStateToProps)(PreparedSurvScreen);
+export default PreparedSurvScreen;

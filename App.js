@@ -19,7 +19,6 @@ import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
 import SurveyCreatorScreen from "./screens/SurveyCreatorScreen";
 import SurveyHubScreen from "./screens/SurveyHubScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
-import store from './Redux/Store';
 import { Provider } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -51,31 +50,29 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <Provider store={store}>
-      <GestureHandlerRootView>
-        <PaperProvider>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Make Deaths Count">
-              <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
-              <Stack.Screen name="Sign In" component={SignInScreen} />
-              <Stack.Screen name="Survey Hub" component={SurveyHubScreen} />
-              <Stack.Screen name="Create Account" component={CreateAccountScreen} />
-              <Stack.Screen name="User Home" component={HomeScreen} />
-              <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
-              {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
-              <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
-              <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
-              <Stack.Screen name="Notes Screen" component={NoteScreen} />
-              <Stack.Screen name="Draft Screen" component={DraftScreen} />
-              <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
-              <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
-              <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
-              <Stack.Screen name="Survey Screen" component={SurveyScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </PaperProvider>
-      </GestureHandlerRootView>
-    </Provider>
+    <GestureHandlerRootView>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Make Deaths Count">
+            <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
+            <Stack.Screen name="Sign In" component={SignInScreen} />
+            <Stack.Screen name="Survey Hub" component={SurveyHubScreen} />
+            <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+            <Stack.Screen name="User Home" component={HomeScreen} />
+            <Stack.Screen name="Feedback Screen" component={FeedbackScreen} />
+            {/* <Stack.Screen name="Profile Screen" component={ProfileScreen} /> */}
+            <Stack.Screen name="Notes Folder" component={NoteFolderScreen} />
+            <Stack.Screen name="Deleted Note Folder Screen" component={DeletedNoteFolderScreen} />
+            <Stack.Screen name="Notes Screen" component={NoteScreen} />
+            <Stack.Screen name="Draft Screen" component={DraftScreen} />
+            <Stack.Screen name="Ready to Send" component={PreparedSurvScreen} />
+            <Stack.Screen name="Sent Surveys" component={SentSurvScreen} />
+            <Stack.Screen name="Download Surveys" component={DownloadSurveyScreen} />
+            <Stack.Screen name="Survey Screen" component={SurveyScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }
 
