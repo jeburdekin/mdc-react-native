@@ -16,9 +16,10 @@ import {
   Dimensions,
 } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Papa from "papaparse";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { useStore } from 'zustand';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text_Q,
@@ -80,7 +81,6 @@ import {
 } from "../Logic Files/QuestionTypes";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import { useDispatch } from 'react-redux';
 import { surveyStore } from "../Zustand State Management/zustandStore";
 // const questionsPerPage = [12, 7, 6, 8, 2]; // Define your own values here
 const pageSize = 5;
@@ -159,23 +159,17 @@ const questionTypeComponents = {
 
 // State variables n stuff
 const initialState = {
-  currentPage: 1,
   questions: [],
   questionsPerPage: [],
   startTime: new Date(),
   shownTip: null,
   isLoading: true,
   groupShowConditions: {},
-  surveyKey: null,
   filteredQuestions: [],
-  responses: {},
-
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SET_CURRENT_PAGE":
-      return { ...state, currentPage: action.payload };
     case "SET_QUESTIONS":
       return { ...state, questions: action.payload };
     case "SET_QUESTIONS_PER_PAGE":
@@ -188,12 +182,8 @@ function reducer(state, action) {
       return { ...state, isLoading: action.payload };
     case "SET_GROUP_SHOW_CONDITIONS":
       return { ...state, groupShowConditions: action.payload };
-    case "SET_SURVEY_KEY":
-      return { ...state, surveyKey: action.payload };
     case "SET_FILTERED_QUESTIONS":
       return { ...state, filteredQuestions: action.payload };
-    case "SET_RESPONSES":
-      return { ...state, responses: action.payload };
     // Extra handlers go here for whoever reads this in the future
     default:
       throw new Error(
@@ -202,37 +192,51 @@ function reducer(state, action) {
   }
 }
 
-export default function SurveyScreen({ route, navigation }) {
-  const { goToReadyScreen } = route.params;
+export default function SurveyScreen({ navigation }) {
+  const surveyId = surveyStore((state) => state.currentlyUsedDraftID);
+
   //Redux stuff for mainting question and response state
   const [state, dispatch] = useReducer(reducer, initialState);
   const bottomSheetRef = useRef(null);
-  const { control, handleSubmit } = useForm();
   const { colors } = useTheme();
   const scrollViewRef = useRef(null);
   const flashListRef = useRef(null);
   const questionRefs = useRef([]);
+  const initialStartTime = useRef(null);
+  const hasInitialized = useRef(false);
 
-  const surveyId = surveyStore((state) => state.currentlyUsedDraftID);
   // SurveyStore setters
   const setCurrentPage = surveyStore((state) => state.setCurrentPage);
   const setResponses = surveyStore((state) => state.setResponses);
   const setStartTime = surveyStore((state) => state.setStartTime);
   const setSurveyCompleted = surveyStore((state) => state.setSurveyCompleted);
 
+  // SurveryStore getters
+  const currentPage = surveyStore(state => state.surveyDrafts[surveyId].currentPage);
+  const responses = surveyStore(state => state.surveyDrafts[surveyId].responses);
+  console.log(currentPage);
+  console.log(responses);
+
+
   const {
-    currentPage,
     questions,
     questionsPerPage,
     startTime,
     shownTip,
     isLoading,
     groupShowConditions,
-    surveyKey,
     filteredQuestions,
-    responses,
   } = state;
 
+    // Set the start time only once
+    useEffect(() => {
+      if (!initialStartTime.current) {
+        const now = new Date();
+        initialStartTime.current = now;
+        setStartTime(surveyId, String(now));
+        dispatch({ type: "SET_START_TIME", payload: now });
+      }
+    }, [surveyId, setStartTime]);
   // Bottom sheet stuff
   const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
   // const handleSheetChange = useCallback((index) => {
@@ -452,96 +456,35 @@ export default function SurveyScreen({ route, navigation }) {
     }
   }, [startQuestion, endQuestion]);
 
-  useEffect(() => {
-    const generateSurveyKey = async () => {
-      let key = await AsyncStorage.getItem("surveyKey");
-      if (key === null) {
-        key = `surveyData-${Date.now()}`;
-        await AsyncStorage.setItem("surveyKey", key);
-      }
-      dispatch({ type: "SET_SURVEY_KEY", payload: key });
-    };
-    generateSurveyKey();
-  }, []);
 
-  // Save survey data when the user navigates away
-  useEffect(() => {
-    return navigation.addListener("beforeRemove", async () => {
-      if (surveyKey !== null) {
-        const surveyData = {
-          currentPage,
-          responses,
-          startTime,
-        };
-        await AsyncStorage.setItem(surveyKey, JSON.stringify(surveyData));
-      }
-    });
-  }, [navigation, currentPage, responses, startTime, surveyKey]);
-
-  // Load survey data when the screen is focused
-  useEffect(() => {
-    const loadSurveyData = async () => {
-      if (surveyKey !== null) {
-        const surveyData = await AsyncStorage.getItem(surveyKey);
-        if (surveyData !== null) {
-          const { currentPage, responses, startTime } = JSON.parse(surveyData);
-          dispatch({ type: "SET_CURRENT_PAGE", payload: currentPage });
-          dispatch({ type: "SET_RESPONSES", payload: responses });
-          dispatch({ type: "SET_START_TIME", payload: new Date(startTime) });
-          setCurrentPage(surveyId, currentPage);
-          setResponses(surveyId, responses);
-          setStartTime(surveyId, new Date(startTime));
-        }
-      }
-    };
-    if (surveyKey !== null) {
-      loadSurveyData();
-    }
-    const unsubscribe = navigation.addListener("focus", loadSurveyData);
-    return unsubscribe;
-  }, [navigation, surveyKey]);
 
   // Remove survey data when the survey is completed
   const onSubmit = async () => {
-    // Filter responses to include only those for currently visible questions
-    const visibleQuestionIDs = filteredQuestions.map(q => q.questionID);
-    const filteredResponses = Object.keys(responses)
-      .filter(key => visibleQuestionIDs.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = responses[key];
-        return obj;
-      }, {});
-
     let nextPage = currentPage + 1;
     if (nextPage < questionsPerPage.length) {
-      dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
       setCurrentPage(surveyId, nextPage);
     } else {
       console.log("Survey completed! It should now appear on the completed surveys screen.");
-      setResponses(surveyId, filteredResponses);
       setSurveyCompleted(surveyId);
-      // Clear AsyncStorage data
-      if (surveyKey !== null) {
-        await AsyncStorage.removeItem(surveyKey);
-      }
-      // Navigate to the Drafts screen
-      navigation.goBack();
-      goToReadyScreen();
+      navigation.navigate("Ready to Send");
     }
   };
   // Initialize the responses
   useEffect(() => {
-    const initialResponses = questions.reduce((acc, question) => {
-      // Check if there's already a saved response for this question
-      const savedResponse = responses[question.questionID];
-      // If there is, use that response. If there isn't, initialize it as an empty array
-      acc[question.questionID] =
-        savedResponse !== undefined ? savedResponse : [];
-      return acc;
-    }, {});
-    dispatch({ type: "SET_RESPONSES", payload: initialResponses });
-    setResponses(surveyId, initialResponses);
-  }, [questions]);
+
+    if (!hasInitialized.current && questions.length > 0) {
+      const initialResponses = questions.reduce((acc, question) => {
+        // Check if there's already a saved response for this question
+        const savedResponse = responses[question.questionID];
+        // If there is, use that response. If there isn't, initialize it as an empty array
+        acc[question.questionID] =
+          savedResponse !== undefined ? savedResponse : [];
+        return acc;
+      }, {});
+      setResponses(surveyId, initialResponses);
+      hasInitialized.current = true;
+    }
+  }, [questions, surveyId]);
 
   if (isLoading) {
     return (
@@ -645,15 +588,7 @@ export default function SurveyScreen({ route, navigation }) {
                   )}
                   <QuestionComponent
                     onChange={(newValue) => {
-                      dispatch({
-                        type: "SET_RESPONSES",
-                        payload: {
-                          ...responses,
-                          [question.questionID]: Array.isArray(newValue)
-                            ? newValue
-                            : [newValue],
-                        },
-                      });
+                      setResponses(surveyId, responses[]);
                     }}
                     // Ensure that the value is always an array
                     value={
@@ -684,7 +619,7 @@ export default function SurveyScreen({ route, navigation }) {
             mode="elevated"
             style={{}}
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("Draft Screen");
             }}
           >
             Home
@@ -695,7 +630,7 @@ export default function SurveyScreen({ route, navigation }) {
             mode="elevated"
             style={{}}
             onPress={() => {
-              dispatch({ type: "SET_CURRENT_PAGE", payload: currentPage - 1 });
+              setCurrentPage(surveyId, currentPage - 1);
             }}
           >
             Back
@@ -714,7 +649,7 @@ export default function SurveyScreen({ route, navigation }) {
           onPress={() => {
             if (currentPage < questionsPerPage.length) {
               const nextPage = currentPage + 1;
-              dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
+              setCurrentPage(surveyId, nextPage);
               flashListRef.current?.scrollToOffset({
                 offset: 0,
                 animated: true,
@@ -744,7 +679,7 @@ export default function SurveyScreen({ route, navigation }) {
             <Button
               onPress={() => {
                 const page = Math.ceil((index + 1) / pageSize);
-                dispatch({ type: "SET_CURRENT_PAGE", payload: page });
+                setCurrentPage(surveyId, page);
                 flashListRef.current.scrollToIndex({
                   index: index,
                   animated: true,

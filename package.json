@@ -49,6 +49,7 @@
     "react-native-audio-recorder-player": "^3.6.7",
     "react-native-date-picker": "^5.0.4",
     "react-native-gesture-handler": "^2.16.2",
+    "react-native-get-random-values": "^1.11.0",
     "react-native-paper": "^5.12.3",
     "react-native-picker-select": "^9.0.1",
     "react-native-ratings": "^8.1.0",
@@ -68,15 +69,20 @@
     "redux": "^5.0.1",
     "survey-react-ui": "^1.9.138",
     "typescript": "~5.3.3",
+    "uuid": "^10.0.0",
     "yup": "^1.4.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@iconify/icons-material-symbols": "^1.2.58",
     "@iconify/react": "^4.1.1",
     "@types/papaparse": "^5.3.14",
-    "metro-config": "^0.80.5"
+    "metro-config": "^0.80.5",
+    "redux-devtools-extension": "^2.13.9",
+    "remote-redux-devtools": "^0.5.16",
+    "remotedev-rn-debugger": "^0.8.4"
   },
   "private": true,
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
