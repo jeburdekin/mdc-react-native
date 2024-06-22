@@ -16,6 +16,16 @@ export const surveyStore = create(devtools((set) => ({
                 isSurveyCompleted: false,
                 startTime: null,
                 name: "",
+                originalQuestions: {},
+            },
+        },
+    })),
+    setOriginalQuestions: (surveyId, questions) => set((state) => ({
+        surveyDrafts: {
+            ...state.surveyDrafts,
+            [surveyId]: {
+                ...state.surveyDrafts[surveyId],
+                originalQuestions: questions,
             },
         },
     })),

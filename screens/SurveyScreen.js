@@ -219,6 +219,7 @@ export default function SurveyScreen({ route, navigation }) {
   const setResponses = surveyStore((state) => state.setResponses);
   const setStartTime = surveyStore((state) => state.setStartTime);
   const setSurveyCompleted = surveyStore((state) => state.setSurveyCompleted);
+  const setOriginalQuestions = surveyStore((state) => state.setOriginalQuestions);
 
   const {
     currentPage,
@@ -422,6 +423,18 @@ export default function SurveyScreen({ route, navigation }) {
                 response: "",
               };
             });
+
+            // Add the original questions to the survey store
+            const tempOriginalQuestions = {};
+            for (let i = 0; i < tempQuestions.length; i++) {
+              const questionID = tempQuestions[i].questionID;
+              const question = tempQuestions[i].details;
+              const number = tempQuestions[i].order;
+
+              tempOriginalQuestions[questionID] = { number, question };
+            }
+            setOriginalQuestions(surveyId, tempOriginalQuestions);
+
             dispatch({ type: "SET_QUESTIONS", payload: tempQuestions });
             dispatch({
               type: "SET_GROUP_SHOW_CONDITIONS",
@@ -454,15 +467,15 @@ export default function SurveyScreen({ route, navigation }) {
 
   useEffect(() => {
     const generateSurveyKey = async () => {
-      let key = await AsyncStorage.getItem("surveyKey");
+      let key = await AsyncStorage.getItem(`surveyKey-${surveyId}`);
       if (key === null) {
-        key = `surveyData-${Date.now()}`;
-        await AsyncStorage.setItem("surveyKey", key);
+        key = `surveyData-${surveyId}-${Date.now()}`;
+        await AsyncStorage.setItem(`surveyKey-${surveyId}`, key);
       }
       dispatch({ type: "SET_SURVEY_KEY", payload: key });
     };
     generateSurveyKey();
-  }, []);
+  }, [surveyId]);
 
   // Save survey data when the user navigates away
   useEffect(() => {
@@ -520,10 +533,12 @@ export default function SurveyScreen({ route, navigation }) {
       console.log("Survey completed! It should now appear on the completed surveys screen.");
       setResponses(surveyId, filteredResponses);
       setSurveyCompleted(surveyId);
+
       // Clear AsyncStorage data
       if (surveyKey !== null) {
         await AsyncStorage.removeItem(surveyKey);
       }
+
       // Navigate to the Drafts screen
       navigation.goBack();
       goToReadyScreen();
