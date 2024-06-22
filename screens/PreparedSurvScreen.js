@@ -50,7 +50,6 @@ const PreparedSurvScreen = ({}) => {
   const surveyDrafts = surveyStore((state) => state.surveyDrafts);
 
   const getCompletedSurveys = () => {
-    const surveyDrafts = surveyStore.getState().surveyDrafts;
     return Object.entries(surveyDrafts)
       .filter(([key, survey]) => survey.isSurveyCompleted)
       .map(([key, survey]) => survey);
@@ -114,20 +113,27 @@ const PreparedSurvScreen = ({}) => {
                   ([question, response]) =>
                     !(Array.isArray(response) && response.length === 0)
                 )}
-                renderItem={({ item, index }) => (
-                  <View key={index}>
-                    <Text>
-                      Question {index + 1}: {item[0]}
-                    </Text>
-                    <Text>
-                      Response:{" "}
-                      {typeof item[1] === "object"
-                        ? JSON.stringify(item[1])
-                        : item[1]}
-                    </Text>
-                  </View>
-                )}
-                estimatedItemSize={400}
+                renderItem={({ item, index }) => {
+                  const questionID = item[0];
+                  const response = item[1];
+                  const originalQuestion = selectedSurvey?.originalQuestions[String(questionID)];
+
+                  return (
+                    <View key={index} style={{ margin: 10 }}>
+                      <Text>
+                        Question {originalQuestion?.number}: {originalQuestion?.question}
+                      </Text>
+                      <Text>
+                        Question ID: {questionID}
+                      </Text>
+                      <Text>
+                        Response:{" "}
+                        {typeof response === "object" ? JSON.stringify(response) : response}
+                      </Text>
+                    </View>
+                  );
+                }}
+                estimatedItemSize={50}
               />
             </Dialog.Content>
             <Dialog.Actions>
