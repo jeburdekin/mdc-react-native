@@ -14,16 +14,20 @@ const SurveyHubScreen = ({navigation}) => {
     swiperRef.current.scrollBy(1); // scroll to next slide
   };
 
+  const goToReadyScreen = () => {
+    swiperRef.current.scrollBy(2); // scroll to next slide
+  }
+
   return (
     <Swiper ref={swiperRef} style={styles.wrapper} showsButtons={true}>
       <View style={styles.slide}>
         <SurveyCreatorScreen goToDraftScreen={goToDraftScreen} />
       </View>
       <View style={styles.slide}>
-        <DraftScreen navigation={navigation} />
+        <DraftScreen navigation={navigation} goToReadyScreen={goToReadyScreen}/>
       </View>
       <View style={styles.slide}>
-        <DownloadSurvScreen />
+        <DownloadSurvScreen  />
       </View>
       <View style={styles.slide}>
         <PreparedSurvScreen />

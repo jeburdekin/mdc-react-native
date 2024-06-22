@@ -35,10 +35,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const DraftScreen = ({ navigation }) => {
+const DraftScreen = ({ navigation, goToReadyScreen }) => {
   const { colors } = useTheme();
   const surveyDrafts = surveyStore((state) => state.surveyDrafts);
   const setCurrentlyUsedID = surveyStore((state) => state.setCurrentlyUsedID);
+
+  // Filter out completed surveys
+  const incompleteSurveys = Object.entries(surveyDrafts).filter(
+    ([key, draft]) => !draft.isSurveyCompleted
+  );
 
   return (
     <View style={styles.container}>
@@ -49,7 +54,7 @@ const DraftScreen = ({ navigation }) => {
         <Text style={[styles.title, { color: colors.primary, flex: 2.4, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
-        {Object.entries(surveyDrafts).map(([key, draft], index) => (
+        {incompleteSurveys.map(([key, draft], index) => (
           <Button
             key={index}
             mode="contained"
@@ -61,7 +66,7 @@ const DraftScreen = ({ navigation }) => {
             }}
             onPress={() => {
               setCurrentlyUsedID(key);
-              navigation.navigate('Survey Screen', { draftData: draft });
+              navigation.navigate('Survey Screen', { goToReadyScreen });
             }}
           >
             <Text style={{ fontSize: 20 }}>

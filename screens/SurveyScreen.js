@@ -202,8 +202,8 @@ function reducer(state, action) {
   }
 }
 
-export default function SurveyScreen({ navigation }) {
-
+export default function SurveyScreen({ route, navigation }) {
+  const { goToReadyScreen } = route.params;
   //Redux stuff for mainting question and response state
   const [state, dispatch] = useReducer(reducer, initialState);
   const bottomSheetRef = useRef(null);
@@ -503,14 +503,30 @@ export default function SurveyScreen({ navigation }) {
 
   // Remove survey data when the survey is completed
   const onSubmit = async () => {
+    // Filter responses to include only those for currently visible questions
+    const visibleQuestionIDs = filteredQuestions.map(q => q.questionID);
+    const filteredResponses = Object.keys(responses)
+      .filter(key => visibleQuestionIDs.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = responses[key];
+        return obj;
+      }, {});
+
     let nextPage = currentPage + 1;
     if (nextPage < questionsPerPage.length) {
       dispatch({ type: "SET_CURRENT_PAGE", payload: nextPage });
       setCurrentPage(surveyId, nextPage);
     } else {
       console.log("Survey completed! It should now appear on the completed surveys screen.");
-      setSurveyCompleted(surveyId); 
-      navigation.navigate("Ready to Send");
+      setResponses(surveyId, filteredResponses);
+      setSurveyCompleted(surveyId);
+      // Clear AsyncStorage data
+      if (surveyKey !== null) {
+        await AsyncStorage.removeItem(surveyKey);
+      }
+      // Navigate to the Drafts screen
+      navigation.goBack();
+      goToReadyScreen();
     }
   };
   // Initialize the responses
@@ -668,7 +684,7 @@ export default function SurveyScreen({ navigation }) {
             mode="elevated"
             style={{}}
             onPress={() => {
-              navigation.navigate("Draft Screen");
+              navigation.goBack();
             }}
           >
             Home
