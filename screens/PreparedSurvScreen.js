@@ -124,11 +124,11 @@ const PreparedSurvScreen = ({}) => {
                         Question {originalQuestion?.number}: {originalQuestion?.question}
                       </Text>
                       <Text>
-                        Question ID: {questionID}
+                        Response:{" "}
+                        {Array.isArray(response) ? response.join(", ") : response}
                       </Text>
                       <Text>
-                        Response:{" "}
-                        {typeof response === "object" ? JSON.stringify(response) : response}
+                        Question ID: {questionID}
                       </Text>
                     </View>
                   );
