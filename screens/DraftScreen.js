@@ -130,10 +130,10 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
                 }}
               >
                 <View>
-                  <Text style={{ fontSize: 20, color: 'white' }}>
+                  <Text style={{ fontSize: 20, color: 'white', alignSelf: 'center', fontWeight: 'bold ' }}>
                     {draft.name}
                   </Text>
-                  <Text style={{ fontSize: 14, color: 'white' }}>
+                  <Text style={{ fontSize: 14, color: 'white', alignSelf: 'center' }}>
                     {formatDate(draft.creationTime)}
                   </Text>
                 </View>
@@ -142,7 +142,7 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
           );
         })}
       </View>
-      <Modal visible={isModalVisible}>
+      <Modal visible={isModalVisible} onDismiss={() => setModalVisible(false)}>
         <View style={styles.modalContent}>
           <Text style={[styles.modalText,]}>Are you sure you want to delete this survey?</Text>
           <Button onPress={handleDelete} mode="elevated">
