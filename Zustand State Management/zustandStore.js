@@ -15,6 +15,7 @@ export const surveyStore = create(devtools((set) => ({
                 responses: {},
                 isSurveyCompleted: false,
                 startTime: null,
+                creationTime: new Date().toISOString(),
                 name: "",
                 originalQuestions: {},
             },
