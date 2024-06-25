@@ -13,7 +13,7 @@ import NoteFolderScreen from "./screens/NoteFolderScreen";
 import DeletedNoteFolderScreen from "./screens/DeletedNoteFolderScreen";
 import NoteScreen from "./screens/NoteScreen";
 import DraftScreen from "./screens/DraftScreen";
-import PreparedSurvScreen from "./screens/PreparedSurvScreen";
+import PreparedSurvScreen from "./screens/ReadySurveyScreen";
 import SentSurvScreen from "./screens/SentSurvScreen";
 import DownloadSurveyScreen from "./screens/DownloadSurvScreen";
 import SurveyCreatorScreen from "./screens/SurveyCreatorScreen";

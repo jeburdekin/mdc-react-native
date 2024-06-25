@@ -9,9 +9,12 @@ import {
   Portal,
 } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Modal, } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Platform, ActivityIndicator, Modal, Dimensions } from "react-native";
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import { Audio } from 'expo-av';
 
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const useMyStyles = () => {
   const { colors } = useTheme();
@@ -218,36 +221,103 @@ export const Text_Q = ({ onChange, value }) => (
   />
 );
 
-// export const Audio_Q = () => {
-//   const [isRecording, setIsRecording] = useState(false);
-//   const audioRecorderPlayer = new AudioRecorderPlayer();
-//   const styles = useMyStyles();
+export const Audio_Q = () => {
+  const [recording, setRecording] = useState(null);
+  const [recordUri, setRecordUri] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [sound, setSound] = useState(null);
 
-//   const onStartRecord = async () => {
-//     const result = await audioRecorderPlayer.startRecorder();
-//     audioRecorderPlayer.addRecordBackListener((e) => {
-//       return;
-//     });
-//     setIsRecording(true);
-//     console.log(result);
-//   };
+  const startRecording = async () => {
+    try {
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access microphone is required!');
+        return;
+      }
 
-//   const onStopRecord = async () => {
-//     const result = await audioRecorderPlayer.stopRecorder();
-//     audioRecorderPlayer.removeRecordBackListener();
-//     setIsRecording(false);
-//     console.log(result);
-//   };
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+        playThroughEarpieceAndroid: false,
+      });
 
-//   return (
-//     <View>
-//       <Button
-//       title={isRecording ? 'Stop Recording' : 'Start Recording'}
-//       onPress={isRecording ? onStopRecord : onStartRecord}
-//       style={styles.radioButton}/>
-//     </View>
-//   );
-// };
+      if (recording) {
+        await recording.stopAndUnloadAsync();
+        setRecording(null);
+      }
+
+      setTimeout(async () => {
+        const { recording: newRecording } = await Audio.Recording.createAsync(
+          Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+        );
+        setRecording(newRecording);
+        setIsRecording(true);
+      }, 100);
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  };
+
+  const stopRecording = async () => {
+    if (!recording) {
+      return;
+    }
+    setRecording(null);
+    await recording.stopAndUnloadAsync();
+    const uri = recording.getURI();
+    setRecordUri(uri);
+    setIsRecording(false);
+  };
+
+  const playRecording = async () => {
+    if (recordUri) {
+      if (sound) {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+        setSound(null);
+      }
+
+      setIsPlaying(true); // Set isPlaying to true before starting playback
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: recordUri },
+        { shouldPlay: true }
+      );
+      setSound(newSound);
+      newSound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          setIsPlaying(false); // Set isPlaying to false when playback finishes
+          setSound(null);
+        }
+      });
+      await newSound.playAsync();
+    }
+  };
+
+  return (
+    <View style={{margin: windowHeight * 0.01,}}>
+      <Button mode="contained" onPress={recording ? stopRecording : startRecording} style={{borderRadius: windowWidth * 0.02, width: windowWidth * 0.95, alignSelf: 'center', marginBottom: windowHeight * 0.015}}>
+        {recording ? 'Stop Recording' : 'Start Recording'}
+      </Button>
+      {isRecording && (
+        <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="small" color="red" />
+          <Text style={{ marginLeft: 10 }}>Recording...</Text>
+        </View>
+      )}
+      <Button mode="contained" onPress={playRecording} disabled={!recordUri || isPlaying} style={{borderRadius: windowWidth * 0.02, width: windowWidth * 0.95, alignSelf: 'center'}}>
+        Play Recording
+      </Button>
+      {isPlaying && (
+        <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', maginTop: 5}}>
+          <ActivityIndicator size="small" color="blue" />
+          <Text style={{ marginLeft: 10 }}>Playing...</Text>
+        </View>
+      )}
+    </View>
+  );
+};
 
 export const DateQuestionType = () => {
   const [date, setDate] = useState(new Date());

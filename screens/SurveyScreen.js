@@ -99,7 +99,7 @@ const questionTypeComponents = {
   text: Text_Q,
   Text: Text_Q,
   note: Text_Q,
-  //  audio: Audio_Q,
+  audio: Audio_Q,
   date: DateQuestionType,
   today: Today_Q,
   start: Start_Q,
@@ -380,6 +380,7 @@ export default function SurveyScreen({ route, navigation }) {
   useEffect(() => {
     if (!startTime) {
       dispatch({ type: "SET_START_TIME", payload: new Date() });
+      setStartTime(surveyId, new Date(startTime));
     }
     const fetchAndParseCSV = async () => {
       try {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button,  useTheme, Title } from 'react-native-paper';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { surveyStore } from '../Zustand State Management/zustandStore';
 import 'react-native-get-random-values';
@@ -43,9 +43,14 @@ const SurveyCreatorScreen = ({ goToDraftScreen }) => {
   const { colors } = useTheme();
   const addSurvey = surveyStore(state => state.addSurvey);
   const addSurveyName = surveyStore(state => state.addSurveyName);
-  const setRecentlyCreatedDraftID = surveyStore(state => state.setRecentID);
+  const setCurrentlyUsedID = surveyStore(state => state.setCurrentlyUsedID);
+  const surveyDrafts = surveyStore(state => state.surveyDrafts);
 
   const createDraft = () => {
+    if (Object.keys(surveyDrafts).length >= 5) {
+      Alert.alert('Limit Reached', 'Please finish and submit one of your current drafts before creating a new one.');
+      return null;
+    }
     const newDraftID = uuidv4();
     addSurvey(newDraftID);
     return newDraftID;
@@ -73,14 +78,14 @@ const SurveyCreatorScreen = ({ goToDraftScreen }) => {
           onPress={() => {
             // Create a draft for the "Internet Variant - W.H.O. Survey"
             const newDraft = createDraft();
-            setRecentlyCreatedDraftID(newDraft);
-            addSurveyName(newDraft, 'Internet - W.H.O. Survey');
-
-            // Navigate to the DraftScreen
-            goToDraftScreen();
+            if (newDraft) {
+              setCurrentlyUsedID(newDraft);
+              addSurveyName(newDraft, 'Internet - W.H.O. Survey');
+              goToDraftScreen();
+            }
           }}
         >
-          <Text style={{fontSize: 20, color: 'white'}}>Internet - W.H.O. Survey</Text>
+          <Text style={{fontSize: 20, color: 'white', fontWeight: 'bold'}}>Internet - W.H.O. Survey</Text>
         </Button>
         {/* {downloadedSurveys.map((survey, index) => (
           <Button

@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 export const surveyStore = create(devtools((set) => ({
     surveyDrafts: {},
+    completedSurveys: {},
     recentlyCreatedDraftID: null,
     currentlyUsedDraftID: null,
     setRecentID : (id) => set((state) => ({ recentlyCreatedDraftID: id })),
@@ -15,6 +16,7 @@ export const surveyStore = create(devtools((set) => ({
                 responses: {},
                 isSurveyCompleted: false,
                 startTime: null,
+                creationTime: new Date().toISOString(),
                 name: "",
                 originalQuestions: {},
             },
@@ -42,15 +44,17 @@ export const surveyStore = create(devtools((set) => ({
         const { [surveyId]: _, ...remainingSurveys } = state.surveyDrafts;
         return { surveyDrafts: remainingSurveys };
     }),
-    setSurveyCompleted: (surveyId) => set((state) => ({
-        surveyDrafts: {
-            ...state.surveyDrafts,
-            [surveyId]: {
-                ...state.surveyDrafts[surveyId],
-                isSurveyCompleted: true,
+    setSurveyCompleted: (surveyId) => set((state) => {
+        const completedSurvey = { ...state.surveyDrafts[surveyId], isSurveyCompleted: true };
+        const { [surveyId]: _, ...remainingSurveys } = state.surveyDrafts;
+        return {
+            surveyDrafts: remainingSurveys,
+            completedSurveys: {
+                ...state.completedSurveys,
+                [surveyId]: completedSurvey,
             },
-        },
-    })),
+        };
+    }),
     setCurrentPage: (id, currentPage) => set((state) => ({
         surveyDrafts: {
             ...state.surveyDrafts,
