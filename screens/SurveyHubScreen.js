@@ -4,7 +4,7 @@ import Swiper from 'react-native-swiper';
 import SurveyCreatorScreen from './SurveyCreatorScreen';
 import DraftScreen from './DraftScreen';
 import SentSurvScreen from './SentSurvScreen';
-import PreparedSurvScreen from './PreparedSurvScreen';
+import PreparedSurvScreen from './ReadySurveyScreen';
 import DownloadSurvScreen from './DownloadSurvScreen';
 
 const SurveyHubScreen = ({navigation}) => {

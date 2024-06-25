@@ -42,23 +42,37 @@ const styles = StyleSheet.create({
   },
 });
 
-const PreparedSurvScreen = ({}) => {
+const ReadySurveyScreen = ({}) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const [visible, setVisible] = React.useState(false);
   const [selectedSurvey, setSelectedSurvey] = React.useState([]);
-  const surveyDrafts = surveyStore((state) => state.surveyDrafts);
-
-  const getCompletedSurveys = () => {
-    return Object.entries(surveyDrafts)
-      .filter(([key, survey]) => survey.isSurveyCompleted)
-      .map(([key, survey]) => survey);
-  };
-  const completedSurveys = getCompletedSurveys();
+  const completedSurveys = surveyStore((state) => state.completedSurveys);
 
   const handlePress = (survey) => {
     setSelectedSurvey(survey);
     setVisible(true);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) {
+      console.log("Invalid Date");
+      return "Invalid Date";
+    }
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        console.log("Invalid date string:", dateString);
+        return "Invalid Date";
+    }
+
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(date);
+    const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+
+    return `${formattedDate} ${formattedTime}`;
   };
 
   return (
@@ -91,20 +105,25 @@ const PreparedSurvScreen = ({}) => {
         </View>
       </View>
       <View style={styles.body}>
-        {completedSurveys.map((surveyData, index) => (
+        {Object.values(completedSurveys).map((surveyData, index) => (
           <Button
             key={index}
             onPress={() => handlePress(surveyData)}
             style={[styles.button, { backgroundColor: colors.primary}]}
           >
-            <Text style={{color: 'white', fontSize: windowHeight * 0.024, fontWeight: 'bold'}}>
-              {`${surveyData.name}`}
-            </Text>
+            <View>
+              <Text style={{color: 'white', fontSize: windowWidth * 0.05, fontWeight: 'bold'}}>
+                {`${surveyData.name}`}
+              </Text>
+              <Text style={{color: 'white', fontSize: windowWidth * 0.03, textAlign: 'center'}}>
+                {`Created: ${formatDate(surveyData.creationTime)}`}
+              </Text>
+            </View>
           </Button>
         ))}
         <Portal style={{ flex: 1 }}>
           <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-            <Dialog.Title>Survey {selectedSurvey?.id}</Dialog.Title>
+            <Dialog.Title style={{textAlign: 'center'}}>Results</Dialog.Title>
             <Dialog.Content
               style={{ height: windowHeight * 0.5, width: windowWidth * 0.9 }}
             >
@@ -146,4 +165,4 @@ const PreparedSurvScreen = ({}) => {
   );
 };
 
-export default PreparedSurvScreen;
+export default ReadySurveyScreen;

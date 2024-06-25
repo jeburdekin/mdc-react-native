@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { surveyStore } from "../Zustand State Management/zustandStore.js";
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { FlashList } from '@shopify/flash-list';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -72,9 +73,6 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedDraft, setSelectedDraft] = React.useState(null);
 
-  useEffect(() => {
-  }, [surveyDrafts]);
-
   // Filter out completed surveys
   const incompleteSurveys = Object.entries(surveyDrafts)
     .filter(([key, draft]) => !draft.isSurveyCompleted)
@@ -110,7 +108,7 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
     const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
 
     return `${formattedDate} ${formattedTime}`;
-};
+  };
 
 
   return (
@@ -122,6 +120,7 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
         <Text style={[styles.title, { color: colors.primary, flex: 2.4, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
+
         {incompleteSurveys.map(([key, draft], index) => {
           const longPressGesture = Gesture.LongPress()
             .runOnJS(true)
@@ -147,8 +146,8 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
                   <Text style={{ fontSize: windowWidth * 0.05, color: 'white', alignSelf: 'center', fontWeight: 'bold' }}>
                     {draft.name}
                   </Text>
-                  <Text style={{ fontSize: windowWidth * 0.035, color: 'white', alignSelf: 'center' }}>
-                    {formatDate(draft.creationTime)}
+                  <Text style={{color: 'white', fontSize: windowWidth * 0.03, textAlign: 'center'}}>
+                    {`Created: ${formatDate(draft.creationTime)}`}
                   </Text>
                 </View>
               </Button>
