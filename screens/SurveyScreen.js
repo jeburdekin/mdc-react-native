@@ -380,6 +380,7 @@ export default function SurveyScreen({ route, navigation }) {
   useEffect(() => {
     if (!startTime) {
       dispatch({ type: "SET_START_TIME", payload: new Date() });
+      setStartTime(surveyId, new Date(startTime));
     }
     const fetchAndParseCSV = async () => {
       try {

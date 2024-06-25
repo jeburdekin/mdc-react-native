@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, Dimensions, Alert } from 'react-native';
 import { useTheme, Button, Modal } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.8,
   },
   modalText: {
-    fontSize: 20,
+    fontSize: windowWidth * 0.05,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
@@ -72,11 +72,14 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedDraft, setSelectedDraft] = React.useState(null);
 
+  useEffect(() => {
+  }, [surveyDrafts]);
+
   // Filter out completed surveys
   const incompleteSurveys = Object.entries(surveyDrafts)
     .filter(([key, draft]) => !draft.isSurveyCompleted)
-    .sort((a, b) => new Date(a[1].creationTime) - new Date(b[1].creationTime));
-  ;
+    .sort((a, b) => new Date(a[1].creationTime) - new Date(b[1].creationTime)
+  );
 
   const handleLongPress = (key) => {
     setSelectedDraft(key);
@@ -89,15 +92,26 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
   };
 
   const formatDate = (dateString) => {
-    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' }; // date part
-    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }; // time part
+    if (!dateString) {
+      console.log("Invalid Date");
+      return "Invalid Date";
+    }
 
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        console.log("Invalid date string:", dateString);
+        return "Invalid Date";
+    }
+
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+
     const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(date);
     const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
 
-    return `${formattedDate} ${formattedTime}`; // Combines date and time
-  };
+    return `${formattedDate} ${formattedTime}`;
+};
+
 
   return (
     <View style={styles.container}>
@@ -130,10 +144,10 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
                 }}
               >
                 <View>
-                  <Text style={{ fontSize: 20, color: 'white', alignSelf: 'center', fontWeight: 'bold ' }}>
+                  <Text style={{ fontSize: windowWidth * 0.05, color: 'white', alignSelf: 'center', fontWeight: 'bold' }}>
                     {draft.name}
                   </Text>
-                  <Text style={{ fontSize: 14, color: 'white', alignSelf: 'center' }}>
+                  <Text style={{ fontSize: windowWidth * 0.035, color: 'white', alignSelf: 'center' }}>
                     {formatDate(draft.creationTime)}
                   </Text>
                 </View>

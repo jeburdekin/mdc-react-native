@@ -12,28 +12,29 @@ const SurveyHubScreen = ({navigation}) => {
 
   const goToDraftScreen = () => {
     swiperRef.current.scrollBy(1); // scroll to next slide
+    navigation.navigate('Survey Screen', { goToReadyScreen });
   };
 
   const goToReadyScreen = () => {
-    swiperRef.current.scrollBy(2); // scroll to next slide
+    swiperRef.current.scrollBy(1); // scroll to next slide
   }
 
   return (
     <Swiper ref={swiperRef} style={styles.wrapper} showsButtons={true}>
       <View style={styles.slide}>
-        <SurveyCreatorScreen goToDraftScreen={goToDraftScreen} />
+        <SurveyCreatorScreen goToDraftScreen={goToDraftScreen} goToReadyScreen={goToReadyScreen}/>
       </View>
       <View style={styles.slide}>
         <DraftScreen navigation={navigation} goToReadyScreen={goToReadyScreen}/>
-      </View>
-      <View style={styles.slide}>
-        <DownloadSurvScreen  />
       </View>
       <View style={styles.slide}>
         <PreparedSurvScreen />
       </View>
       <View style={styles.slide}>
         <SentSurvScreen />
+      </View>
+      <View style={styles.slide}>
+        <DownloadSurvScreen  />
       </View>
     </Swiper>
   );

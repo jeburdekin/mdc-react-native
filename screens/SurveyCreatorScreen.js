@@ -43,7 +43,7 @@ const SurveyCreatorScreen = ({ goToDraftScreen }) => {
   const { colors } = useTheme();
   const addSurvey = surveyStore(state => state.addSurvey);
   const addSurveyName = surveyStore(state => state.addSurveyName);
-  const setRecentlyCreatedDraftID = surveyStore(state => state.setRecentID);
+  const setCurrentlyUsedID = surveyStore(state => state.setCurrentlyUsedID);
 
   const createDraft = () => {
     const newDraftID = uuidv4();
@@ -73,10 +73,8 @@ const SurveyCreatorScreen = ({ goToDraftScreen }) => {
           onPress={() => {
             // Create a draft for the "Internet Variant - W.H.O. Survey"
             const newDraft = createDraft();
-            setRecentlyCreatedDraftID(newDraft);
+            setCurrentlyUsedID(newDraft);
             addSurveyName(newDraft, 'Internet - W.H.O. Survey');
-
-            // Navigate to the DraftScreen
             goToDraftScreen();
           }}
         >
