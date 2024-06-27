@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { surveyStore } from "../Zustand State Management/zustandStore";
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -40,18 +42,74 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 20,
   },
+  selectedButton: {
+    backgroundColor: 'white',
+    borderColor: 'green',
+    borderWidth: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    fontSize: windowWidth * 0.01,
+    fontWeight: "bold",
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: windowWidth * 0.85,
+    marginVertical: windowHeight * 0.01,
+    marginHorizontal: windowWidth * 0.05,
+  },
+
 });
 
 const ReadySurveyScreen = ({}) => {
   const { colors } = useTheme();
-  const navigation = useNavigation();
   const [visible, setVisible] = React.useState(false);
   const [selectedSurvey, setSelectedSurvey] = React.useState([]);
+  const [selectedSurveys, setSelectedSurveys] = React.useState([]);
+  const [isSelecting, setIsSelecting] = React.useState(false);
+
   const completedSurveys = surveyStore((state) => state.completedSurveys);
 
   const handlePress = (survey) => {
-    setSelectedSurvey(survey);
-    setVisible(true);
+    if (isSelecting) {
+      if (selectedSurveys.includes(survey)) {
+        setSelectedSurveys(selectedSurveys.filter(s => s !== survey));
+      } else {
+        setSelectedSurveys([...selectedSurveys, survey]);
+      }
+    } else {
+      setSelectedSurvey(survey);
+      setVisible(true);
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selectedSurveys.length === Object.values(completedSurveys).length) {
+      setSelectedSurveys([]);
+    } else {
+      setSelectedSurveys(Object.values(completedSurveys));
+    }
+  };
+
+  const handleLongPress = (survey) => {
+    setIsSelecting(true);
+    setSelectedSurveys([survey]);
+  };
+
+  const handleSend = () => {
+    // Implement send functionality here
+    console.log("Sending surveys:", selectedSurveys);
+  };
+
+  const toggleSelecting = () => {
+    setIsSelecting(!isSelecting);
+    setSelectedSurveys([]);
   };
 
   const formatDate = (dateString) => {
@@ -105,22 +163,41 @@ const ReadySurveyScreen = ({}) => {
         </View>
       </View>
       <View style={styles.body}>
-        {Object.values(completedSurveys).map((surveyData, index) => (
-          <Button
-            key={index}
-            onPress={() => handlePress(surveyData)}
-            style={[styles.button, { backgroundColor: colors.primary}]}
-          >
-            <View>
-              <Text style={{color: 'white', fontSize: windowWidth * 0.05, fontWeight: 'bold'}}>
-                {`${surveyData.name}`}
-              </Text>
-              <Text style={{color: 'white', fontSize: windowWidth * 0.03, textAlign: 'center'}}>
-                {`Created: ${formatDate(surveyData.creationTime)}`}
-              </Text>
-            </View>
-          </Button>
-        ))}
+        <View style={{flex: 12}}>
+          <View style={{flex: 0.1}}>
+            {isSelecting && (
+              <View style={styles.actionButtons}>
+                <Button onPress={handleSelectAll}>Select All</Button>
+                <Button onPress={handleSend}>Send</Button>
+              </View>
+            )}
+          </View>
+          <View style={{flex: 0.9, alignItems: 'center'}}>
+            {Object.values(completedSurveys).map((surveyData, index) => (
+              <Button
+                key={index}
+                onPress={() => handlePress(surveyData)}
+                onLongPress={() => handleLongPress(surveyData)}
+                style={[
+                  styles.button,
+                  selectedSurveys.includes(surveyData) ? styles.selectedButton : { backgroundColor: colors.primary }
+                ]}
+              >
+                <View>
+                  <Text style={{color: selectedSurveys.includes(surveyData) ? colors.primary : 'white', fontSize: windowWidth * 0.05, fontWeight: 'bold'}}>
+                    {`${surveyData.name}`}
+                  </Text>
+                  <Text style={{color: selectedSurveys.includes(surveyData) ? colors.primary : 'white', fontSize: windowWidth * 0.03, textAlign: 'center'}}>
+                    {`Created: ${formatDate(surveyData.creationTime)}`}
+                  </Text>
+                </View>
+              </Button>
+            ))}
+          </View>
+        </View>
+        <Button onPress={toggleSelecting} style={{ alignSelf: 'center', flex: 2, }}>
+          {isSelecting ? 'Cancel' : 'Select'}
+        </Button>
         <Portal style={{ flex: 1 }}>
           <Dialog visible={visible} onDismiss={() => setVisible(false)}>
             <Dialog.Title style={{textAlign: 'center'}}>Results</Dialog.Title>
@@ -160,6 +237,7 @@ const ReadySurveyScreen = ({}) => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
+
       </View>
     </View>
   );
