@@ -58,8 +58,6 @@ export default function SplashScreen({ navigation }) {
       <Video
         source={require('../assets/CompMDC.mp4')}
         rate={1.0}
-        volume={1.0}
-        isMuted={false}
         resizeMode="cover"
         shouldPlay
         isLooping

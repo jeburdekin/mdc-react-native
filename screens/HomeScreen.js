@@ -12,6 +12,7 @@ import {
   Animated,
 } from "react-native";
 import { Button, BottomNavigation } from "react-native-paper";
+import { Video } from "expo-av";
 
 // import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 // const styles = StyleSheet.create({});
@@ -34,7 +35,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 20
+    fontSize: windowWidth * 0.05,
+    fontWeight: "bold",
   },
   titleBox: {
     backgroundColor: "#ecece5",
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     color: "#FFFFFF",
-    fontSize: 35,
+    fontSize: windowWidth * 0.1,
     flex: 2,
   },
 });
@@ -135,6 +137,8 @@ export default function HomeScreen({ navigation }) {
   return (
 
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
+
+
       <Animated.ScrollView
       style={{backgroundColor: "#fffcf7"}}
 
@@ -181,6 +185,35 @@ export default function HomeScreen({ navigation }) {
           </View>
         </Animated.View>
         <View style={styles.background}>
+          <Video
+            source={require("../assets/Mdc Home Sprite.mp4")}
+            rate={1.0}
+            resizeMode="contain"
+            shouldPlay
+            isLooping
+            style={{
+              position: "absolute",
+              width: windowWidth * 0.3,
+              height: windowHeight * 0.2,
+              top: windowHeight * 0.575,
+              opacity: 0.6,
+            }}
+          />
+          <Video
+            source={require("../assets/Mdc Home Sprite.mp4")}
+            rate={1.0}
+            resizeMode="contain"
+            shouldPlay
+            isLooping
+            style={{
+              position: "absolute",
+              alignSelf: 'center',
+              width: windowWidth * 0.3,
+              height: windowHeight * 0.2,
+              top: windowHeight * 0.575,
+              opacity: 0.55,
+            }}
+          />
           <SafeAreaView>
             <Button
               mode="elevated"

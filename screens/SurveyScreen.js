@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useReducer,
 } from "react";
+
 import {
   View,
   StyleSheet,
@@ -582,7 +583,7 @@ export default function SurveyScreen({ route, navigation }) {
     >
       <FlashList
         ref={flashListRef}
-        estimatedItemSize={200}
+        estimatedItemSize={10}
         data={filteredQuestions.slice(startQuestion, endQuestion)}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item: question, index }) => {
