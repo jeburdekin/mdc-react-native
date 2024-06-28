@@ -1,7 +1,7 @@
 import * as React from "react";
 // import { SafeAreaView, StyleSheet, View, Text, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import CreateAccountScreen from "./screens/CreateAccountScreen";
@@ -46,14 +46,24 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
+
+// Custom fade transition for screens
+const forFade = ({ current }) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
 
 function App() {
   return (
     <GestureHandlerRootView>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Make Deaths Count">
+          <Stack.Navigator
+            initialRouteName="Make Deaths Count"
+            screenOptions={{cardStyleInterpolator: forFade}}
+          >
             <Stack.Screen name="Make Deaths Count" component={SplashScreen} />
             <Stack.Screen name="Sign In" component={SignInScreen} />
             <Stack.Screen name="Survey Hub" component={SurveyHubScreen} />
