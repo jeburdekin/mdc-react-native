@@ -43,7 +43,7 @@ export default SentSurvScreen = ({ sentSurveys }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 0.28, alignItems: 'flex-end'}}>
+        <View style={{flex: 0.3, alignItems: 'flex-end'}}>
           <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowHeight * 0.11} />
         </View>
         <View style={{flex: 1}}>

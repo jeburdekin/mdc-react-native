@@ -27,7 +27,6 @@
     "@shopify/flash-list": "^1.6.4",
     "@types/react": "~18.2.79",
     "@ui-kitten/components": "^5.3.1",
-    "@wdragon/react-native-voice": "^3.3.11",
     "axios": "^1.6.8",
     "eas-cli": "^9.0.10",
     "expo": "^51.0.2",

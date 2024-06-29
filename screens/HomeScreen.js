@@ -148,7 +148,7 @@ export default function HomeScreen({ navigation }) {
       )}
       scrollEventThrottle={1}
       bounces={false}
-      contentContainerStyle={{paddingBottom: windowHeight * 0.15}}
+      contentContainerStyle={{paddingBottom: windowHeight * 0.025}}
       >
         <Animated.View
           style={{
@@ -185,35 +185,7 @@ export default function HomeScreen({ navigation }) {
           </View>
         </Animated.View>
         <View style={styles.background}>
-          <Video
-            source={require("../assets/Mdc Home Sprite.mp4")}
-            rate={1.0}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{
-              position: "absolute",
-              width: windowWidth * 0.3,
-              height: windowHeight * 0.2,
-              top: windowHeight * 0.575,
-              opacity: 0.6,
-            }}
-          />
-          <Video
-            source={require("../assets/Mdc Home Sprite.mp4")}
-            rate={1.0}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{
-              position: "absolute",
-              alignSelf: 'center',
-              width: windowWidth * 0.3,
-              height: windowHeight * 0.2,
-              top: windowHeight * 0.575,
-              opacity: 0.55,
-            }}
-          />
+          
           <SafeAreaView>
             <Button
               mode="elevated"
@@ -298,7 +270,22 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
           </SafeAreaView>
+          <Video
+            source={require("../assets/Mdc Home Sprite.mp4")}
+            rate={1.0}
+            resizeMode="contain"
+            shouldPlay
+            isLooping
+            style={{
+              alignSelf: 'center',
+              width: windowWidth * 0.5,
+              height: windowHeight * 0.2,
+              opacity: 0.55,
+              zIndex: -1,
+            }}
+          />
         </View>
+        
       </Animated.ScrollView>
     </View>
   );

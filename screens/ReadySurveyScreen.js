@@ -61,8 +61,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth * 0.85,
+    height: windowHeight * 0.05,
+    alignContent: 'center',
     marginVertical: windowHeight * 0.01,
-    marginHorizontal: windowWidth * 0.05,
   },
 
 });
