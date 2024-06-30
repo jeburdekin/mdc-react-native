@@ -114,10 +114,10 @@ const DraftScreen = ({ navigation, goToReadyScreen }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'space-around'}}>
+        <View style={{flex: 3, alignItems: 'center', justifyContent: 'space-around'}}>
           <MaterialCommunityIcons name="file-sign" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <Text style={[styles.title, { color: colors.primary, flex: 2.4, alignSelf: 'center' }]}>Survey Drafts</Text>
+        <Text style={[styles.title, { color: colors.primary, flex: 5.5, alignSelf: 'center' }]}>Survey Drafts</Text>
       </View>
       <View style={styles.body}>
 

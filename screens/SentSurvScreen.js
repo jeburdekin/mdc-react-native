@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffcf7',
   },
   title: {
-    fontSize: windowWidth * 0.1,
+    fontSize: windowHeight * 0.05,
     fontWeight: 'bold',
   },
   header: {
@@ -43,12 +43,15 @@ export default SentSurvScreen = ({ sentSurveys }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 0.3, alignItems: 'flex-end'}}>
-          <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowHeight * 0.11} />
+        <View style={{flex: 2.5, alignItems: 'flex-end'}}>
+          <MaterialCommunityIcons name="file-replace-outline" color={colors.primary} size={windowHeight * 0.115} />
         </View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 5.5}}>
           <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>
-            Sent Surveys
+            Sent
+          </Text>
+          <Text style={[styles.title, {color: colors.primary, alignSelf: 'center'}]}>
+            Surveys 
           </Text>
         </View>
       </View>

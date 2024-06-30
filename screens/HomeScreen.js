@@ -148,7 +148,7 @@ export default function HomeScreen({ navigation }) {
       )}
       scrollEventThrottle={1}
       bounces={false}
-      contentContainerStyle={{paddingBottom: windowHeight * 0.025}}
+      contentContainerStyle={{paddingBottom: windowHeight * 0.1}}
       >
         <Animated.View
           style={{
@@ -262,7 +262,7 @@ export default function HomeScreen({ navigation }) {
             </Button>
             <Button
               mode="elevated"
-              style={[styles.button, {marginBottom: windowHeight * 0.03}]}
+              style={[styles.button, {marginBottom: windowHeight * 0.01}]}
               icon="logout"
               labelStyle={styles.buttonIcon}
               onPress={() => navigation.navigate("Make Deaths Count")}
@@ -278,10 +278,11 @@ export default function HomeScreen({ navigation }) {
             isLooping
             style={{
               alignSelf: 'center',
-              width: windowWidth * 0.5,
+              width: windowWidth * 0.3,
               height: windowHeight * 0.2,
               opacity: 0.55,
               zIndex: -1,
+              justifyContent: 'flex-start'
             }}
           />
         </View>

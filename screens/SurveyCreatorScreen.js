@@ -59,8 +59,8 @@ const SurveyCreatorScreen = ({ goToDraftScreen }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 2, alignItems: 'center', justifyContent: 'space-around'}} >
-          <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.11} />
+        <View style={{flex: 3, alignItems: 'center', justifyContent: 'space-around'}} >
+          <MaterialCommunityIcons name="gesture-tap-button" color={colors.primary} size={windowHeight * 0.115} />
         </View>
         <Text style={[styles.title, {color: colors.primary, flex: 5.5, alignSelf: 'center'}]}>
           Pick a Survey
