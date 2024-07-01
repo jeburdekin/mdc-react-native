@@ -44,32 +44,28 @@ const styles = StyleSheet.create({
     borderBottomWidth: 5,
     flex: 1,
     flexDirection: "row",
-    alignContent: "center",
   },
   imageTouch: {
-    zIndex: 3,
     width: windowWidth / 6,
     height: windowWidth / 6,
     borderRadius: 40,
-    top: windowHeight * 0.013,
-    left: windowWidth / 10,
-    flex: 1,
+    position: 'absolute',
+    alignSelf: 'center',
+    zIndex: 2
   },
-  image: {
-    zIndex: 2,
-    width: windowWidth / 6,
+  profile: {
+    flex: 1,
     height: windowWidth / 6,
     borderRadius: 30,
-    right: windowWidth / 15,
-    top: windowHeight * 0.013,
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    justifyContent: 'flex-start',
+    zIndex: 1,
   },
   logo: {
-    zIndex: 1,
-    width: windowWidth / 2,
     height: windowWidth / 5,
-    left: windowWidth / 10,
-    flex: 4,
-    alignSelf: "center",
+    alignSelf: 'center',
+    flex: 4.5,
   },
   buttonIcon: {
     color: "#FFFFFF",
@@ -135,10 +131,7 @@ export default function HomeScreen({ navigation }) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-
     <View style={{ flex: 1, backgroundColor: "#fffcf7" }}>
-
-
       <Animated.ScrollView
       style={{backgroundColor: "#fffcf7"}}
 
@@ -148,7 +141,7 @@ export default function HomeScreen({ navigation }) {
       )}
       scrollEventThrottle={1}
       bounces={false}
-      contentContainerStyle={{paddingBottom: windowHeight * 0.1}}
+      contentContainerStyle={{}}
       >
         <Animated.View
           style={{
@@ -171,17 +164,30 @@ export default function HomeScreen({ navigation }) {
           }}
         >
           <View style={styles.titleBox}>
+            <Video
+              source={require("../assets/Mdc Home Sprite.mp4")}
+              rate={1.0}
+              resizeMode="resize"
+              shouldPlay
+              isLooping
+              style={{
+                flex: 1.5,
+                alignContent: 'flex-start',
+                opacity: 0.55,
+              }}
+            />
             <Image
               source={require("../assets/mdc logo short.png")}
               style={styles.logo}
             />
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Profile Screen")}
-              style={styles.imageTouch}
-            >
-            </TouchableOpacity>
-            <Image source={require("../assets/Layer 1.png")} style={styles.image} />
+            <View style={{flex: 2, flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Profile Screen")}
+                style={styles.imageTouch}
+              >
+              </TouchableOpacity>
+              <Image source={require("../assets/Layer 1.png")} style={styles.profile} />
+            </View>
           </View>
         </Animated.View>
         <View style={styles.background}>
@@ -270,21 +276,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
           </SafeAreaView>
-          <Video
-            source={require("../assets/Mdc Home Sprite.mp4")}
-            rate={1.0}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{
-              alignSelf: 'center',
-              width: windowWidth * 0.3,
-              height: windowHeight * 0.2,
-              opacity: 0.55,
-              zIndex: -1,
-              justifyContent: 'flex-start'
-            }}
-          />
+          
         </View>
         
       </Animated.ScrollView>
