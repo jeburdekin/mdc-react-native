@@ -165,13 +165,11 @@ const ReadySurveyScreen = ({}) => {
       </View>
       <View style={styles.body}>
         <View style={{flex: 12}}>
-          <View style={{flex: 0.1}}>
-            {isSelecting && (
-              <View style={styles.actionButtons}>
-                <Button onPress={handleSelectAll}>Select All</Button>
-                <Button onPress={handleSend}>Send</Button>
-              </View>
-            )}
+          <View style={{flex: 0.075}}>
+            <View style={styles.actionButtons}>
+              <Button onPress={handleSelectAll}>Select All</Button>
+              <Button onPress={handleSend}>Send</Button>
+            </View>
           </View>
           <View style={{flex: 0.9, alignItems: 'center'}}>
             {Object.values(completedSurveys).map((surveyData, index) => (
